@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
 interface ISidenavProps {
     isOpen: boolean,
@@ -7,10 +7,15 @@ interface ISidenavProps {
 
 // https://bootstrapious.com/p/bootstrap-sidebar
 const Sidenav: React.FC<ISidenavProps> = (props) => {
+    let history = useHistory();
+    
+    const goHome = () => {
+        history.push("/");
+    };
+
     return (
         <div id="sidebar" className={props.isOpen ? "" : " active"}>
-            <div className="sidebar-header">
-            </div>
+            <div className="sidebar-header" onClick={goHome}></div>
             <div className="flex-column nav">
                 <NavLink to="/tournaments" className="nav-link" activeClassName="active">Tournaments</NavLink>
                 <NavLink to="/match-play" className="nav-link" activeClassName="active">Team Match Play</NavLink>

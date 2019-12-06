@@ -36,6 +36,7 @@ $theme-colors: (
     background-image: url('../assets/img/mpga-lg.png');
     background-size: cover;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
 #sidebar a {
@@ -43,12 +44,27 @@ $theme-colors: (
 }
 
 #sidebar a.active {
+    outline: dotted $teal thin;
     background: $gray-700;
 }
+
+#navbar 
+.navbar-light .navbar-nav .show > .nav-link,
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .nav-link.active {
+  color: rgba(0, 0, 0, 0.9); 
+  text-decoration: underline;
+}
+
 
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
+
+#page {
+    padding: 20px;
+}
 
 #content {
     width: calc(100% - 250px);
@@ -68,9 +84,10 @@ $theme-colors: (
 }
 
 #sidebarCollapse {
-    width: 40px;
+    width: 50px;
     height: 40px;
     background: $teal;
+    margin-left: -12px;
 }
 
 #sidebarCollapse span {

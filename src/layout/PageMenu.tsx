@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useRouteMatch } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 export interface IPageMenuProps {
     subMenu: string;
@@ -22,34 +23,34 @@ export const PageMenu: React.FC<IPageMenuProps> = (props) => {
                         <NavDropdown.Item href="http://www.wirthgolfassociation.org/tcc.html" target="_blank">Twin Cities Championship</NavDropdown.Item>
                         <NavDropdown.Item href="https://www.usga.org/" target="_blank">USGA</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link href="/login">Club Login</Nav.Link>
+                    <NavLink to="/login" className="nav-link" activeClassName="active">Club Login</NavLink>
                 </Nav>;
             case 'tournaments':
                 return <Nav>
-                    <Nav.Link href={`${url}/hard-card`}>Hard Card</Nav.Link>
-                    <Nav.Link href={`${url}/code-of-conduct`}>Code of Conduct</Nav.Link>
-                    <Nav.Link href={`${url}/bid`}>Tournament Bid</Nav.Link>
+                    <NavLink to={`${url}/hard-card`} className="nav-link" activeClassName="active">Hard Card</NavLink>
+                    <NavLink to={`${url}/code-of-conduct`} className="nav-link" activeClassName="active">Code of Conduct</NavLink>
+                    <NavLink to={`${url}/bid`} className="nav-link" activeClassName="active">Tournament Bid</NavLink>
                 </Nav>;
             case 'tournament':
                 return <></>;
             case 'match-play':
                 return <Nav>
-                    <Nav.Link href={`${url}/rules`}>Rules</Nav.Link>
-                    <Nav.Link href={`${url}/sign-up`}>Sign Up</Nav.Link>
-                    <Nav.Link href={`${url}/past-results`}>Past Results</Nav.Link>
+                    <NavLink to={`${url}/rules`} className="nav-link" activeClassName="active">Rules</NavLink>
+                    <NavLink to={`${url}/register`} className="nav-link" activeClassName="active">Sign Up</NavLink>
+                    <NavLink to={`${url}/results`} className="nav-link" activeClassName="active">Past Results</NavLink>
                 </Nav>;
             case 'clubs':
                 return <Nav>
-                    <Nav.Link href={`${url}/current`}>Current Members</Nav.Link>
+                    <NavLink to={`${url}/current`} className="nav-link" activeClassName="active">Current Members</NavLink>
                 </Nav>;;
             case 'club':
                 return <></>;
             case 'about':
                 return <Nav>
-                <Nav.Link href={`${url}/committee`}>Executive Committee</Nav.Link>
-                <Nav.Link href={`${url}/past-presidents`}>Past Presidents</Nav.Link>
-                <Nav.Link href={`${url}/awards`}>Awards</Nav.Link>
-                <Nav.Link href={`${url}/history`}>History</Nav.Link>
+                <NavLink to={`${url}/committee`} className="nav-link" activeClassName="active">Executive Committee</NavLink>
+                <NavLink to={`${url}/past-presidents`} className="nav-link" activeClassName="active">Past Presidents</NavLink>
+                <NavLink to={`${url}/awards`} className="nav-link" activeClassName="active">Awards</NavLink>
+                <NavLink to={`${url}/history`} className="nav-link" activeClassName="active">History</NavLink>
             </Nav>;
             default:
                 return null;
@@ -58,7 +59,7 @@ export const PageMenu: React.FC<IPageMenuProps> = (props) => {
 
     return (
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-            <Nav>
+            <Nav id="topnav">
                 {selectMenu(props.subMenu)}
             </Nav>
         </Navbar.Collapse>

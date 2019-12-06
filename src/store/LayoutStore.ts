@@ -50,7 +50,8 @@ export const reducer: Reducer<ILayoutState, KnownActions> =
         }
         case LayoutActionTypes.ROUTE_CHANGED: {
             var segments = action.payload.split("/");
-            return {...state, subMenu: segments[1]};
+            var submenu = segments[1].length > 0 ? segments[1] : "home";
+            return {...state, subMenu: submenu};
         }
     }
 

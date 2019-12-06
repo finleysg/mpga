@@ -14,13 +14,13 @@ export const MemberClubRoutes: React.FC = () => {
                 <Route path={`${path}/current`}>
                     <p>Current year members</p>
                 </Route>
-                <Route exact path={`${path}/:name`}>
+                <Route exact path={`${path}/m/:name`}>
                     <p>club name here</p>
                 </Route>
-                <Route exact path={`${path}/:name/register`}>
+                <Route exact path={`${path}/m/:name/register`}>
                     <p>club name here online registration</p>
                 </Route>
-                <Route exact path={`${path}/:name/edit`}>
+                <Route exact path={`${path}/m/:name/edit`}>
                     <p>club name here club update</p>
                 </Route>
             </ConnectedLayout>
