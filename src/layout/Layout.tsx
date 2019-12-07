@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import { IApplicationState } from '../store';
 import { actionCreators } from '../store/LayoutStore';
 import { useLocation } from 'react-router';
+import PageMenu from './PageMenu';
+import ErrorBoundary from '../components/ErrorBoundary';
 import './layout.scss';
-import { PageMenu } from './PageMenu';
 
 export interface ILayoutProps {
   showSidenav: boolean;
@@ -45,7 +46,9 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
           }
         </Navbar>
         <div id="page">
-          {props.children}
+          <ErrorBoundary>
+            {props.children}
+          </ErrorBoundary>
         </div>
       </div>
     </div>

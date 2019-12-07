@@ -9,7 +9,7 @@ export interface IPageMenuProps {
     subMenu: string;
 }
 
-export const PageMenu: React.FC<IPageMenuProps> = (props) => {
+const PageMenu: React.FC<IPageMenuProps> = (props) => {
 
     let { url } = useRouteMatch();
 
@@ -65,3 +65,5 @@ export const PageMenu: React.FC<IPageMenuProps> = (props) => {
         </Navbar.Collapse>
     );
 };
+
+export default PageMenu;
