@@ -1,19 +1,19 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import HomePage from '../pages/HomePage';
-import { ConnectedLayout } from '../layout/Layout';
-import ContactUsPage from '../pages/ContactUsPage';
-import { TournamentRoutes } from './TournamentRoutes';
-import { MatchPlayRoutes } from './MatchPlayRoutes';
-import { MemberClubRoutes } from './MemberClubRoutes';
-import { AboutUsRoutes } from './AboutUsRoutes';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import { ConnectedLayout } from "../layout/Layout";
+import ContactUsPage from "../pages/ContactUsPage";
+import { TournamentRoutes } from "./TournamentRoutes";
+import { MatchPlayRoutes } from "./MatchPlayRoutes";
+import { MemberClubRoutes } from "./MemberClubRoutes";
+import { AboutUsRoutes } from "./AboutUsRoutes";
+import ConnectedHomePage from "../pages/HomePage";
 
 export const AppRoutes: React.FC = () => {
     return (
         <Switch>
             <Route exact path="/">
                 <ConnectedLayout>
-                    <HomePage />
+                    <ConnectedHomePage />
                 </ConnectedLayout>
             </Route>
             <Route path="/tournaments">
