@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
-import AnnouncementList from "../components/AnnouncementList";
+import AnnouncementList from "../features/announcements/AnnouncementList";
 
 const HomePage: React.FC = () => {
     return (

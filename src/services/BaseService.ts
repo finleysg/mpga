@@ -1,4 +1,4 @@
-const useLocal = false;
+const useLocal = true;
 
 export const getRawUrl = (): string => {
   if (useLocal && window.location.hostname.indexOf('localhost') >= 0) {

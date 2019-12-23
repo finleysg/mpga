@@ -15,8 +15,8 @@ function buildRootReducer(reducers: any) {
 }
 
 function configureStore(history: History, initialState?: IApplicationState) {
-    const windowIfDefined = typeof window === "undefined" ? null : window as any;
-    const devTools = windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__ as () => StoreEnhancer;
+    // const windowIfDefined = typeof window === "undefined" ? null : window as any;
+    // const devTools = windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__ as () => StoreEnhancer;
     const createStoreWithMiddleware = compose <StoreEnhancerStoreCreator<any>>(
         applyMiddleware(thunk, routerMiddleware(history)), 
         // devTools ? devTools() : <S>(next: StoreEnhancerStoreCreator<S>) => next,

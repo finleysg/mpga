@@ -10,6 +10,7 @@ $theme-colors: (
 );
 
 @import '~bootstrap/scss/bootstrap.scss';
+@import '~react-datepicker/dist/react-datepicker.css';
 
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -155,4 +156,13 @@ $theme-colors: (
     .mpga {
         visibility: visible;
     }
+}
+
+.wrapper {
+    position: relative;
+    height: 100vh;
+}
+
+.full-width {
+    width: 100%;
 }

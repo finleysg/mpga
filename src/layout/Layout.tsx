@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import Sidenav from './Sidenav';
-import SidenavToggle from './SidenavToggle';
-import { connect } from 'react-redux';
-import { IApplicationState } from '../store';
-import { actionCreators } from '../store/LayoutStore';
-import { useLocation } from 'react-router';
-import PageMenu from './PageMenu';
-import ErrorBoundary from '../components/ErrorBoundary';
-import './layout.scss';
+import React, { useEffect } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Sidenav from "./Sidenav";
+import SidenavToggle from "./SidenavToggle";
+import { connect } from "react-redux";
+import { IApplicationState } from "../store";
+import { LayoutActions } from "../store/LayoutActions";
+import { useLocation } from "react-router";
+import PageMenu from "./PageMenu";
+import ErrorBoundary from "../components/ErrorBoundary";
+import { Toaster } from "../components/Toaster";
+import "./layout.scss";
 
 export interface ILayoutProps {
   showSidenav: boolean;
@@ -47,6 +48,7 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
           }
         </Navbar>
         <div id="page">
+          <Toaster />
           <ErrorBoundary>
             {props.children}
           </ErrorBoundary>
@@ -56,4 +58,4 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
   );
 };
 
-export const ConnectedLayout = connect(mapStateToProps, { ...actionCreators })(Layout);
+export const ConnectedLayout = connect(mapStateToProps, { ...LayoutActions })(Layout);

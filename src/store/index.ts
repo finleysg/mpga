@@ -1,10 +1,12 @@
 import * as AnnouncementStore from "./AnnouncementStore";
 import * as LayoutStore from "./LayoutStore";
+import * as NotificationStore from "./NotificationStore";
 
 // The top-level state object
 export interface IApplicationState {
 	layout: LayoutStore.ILayoutState,
-	// announcements: AnnouncementStore.IAnnouncementState,
+	notifications: NotificationStore.INotificationState,
+	announcements: AnnouncementStore.IAnnouncementState,
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -12,7 +14,8 @@ export interface IApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
 	layout: LayoutStore.reducer,
-	// announcements: AnnouncementStore.AnnouncementsReducer,
+	notifications: NotificationStore.NotificationReducer,
+	announcements: AnnouncementStore.AnnouncementsReducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
