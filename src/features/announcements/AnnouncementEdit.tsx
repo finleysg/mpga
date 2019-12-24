@@ -119,7 +119,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                             </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="announcement.ExternalUrl">
-                            <Form.Label>Link</Form.Label>
+                            <Form.Label>Link (optional)</Form.Label>
                             <Form.Control type="url" placeholder="Url" name="externalUrl"
                                 value={values.externalUrl}
                                 isValid={touched.externalUrl && !errors.externalUrl}
@@ -131,7 +131,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="announcement.ExternalName">
-                            <Form.Label>Link name</Form.Label>
+                            <Form.Label>Link name (optional)</Form.Label>
                             <Form.Control placeholder="Display name for url" name="externalName"
                                 value={values.externalName}
                                 isValid={touched.externalName && !errors.externalName}
@@ -142,11 +142,12 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                                 {errors.externalName}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" type="submit" disabled={isSubmitting}>
+                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
                             Submit
                         </Button>
+                        <Button className="ml-1" variant="outline-primary" size="sm">Add Document</Button>
                         {announcement.id === 0 &&
-                            <Button className="ml-1" variant="light" onClick={props.Cancel}>Cancel</Button>
+                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>Cancel</Button>
                         }
                     </Form>
                 )}
