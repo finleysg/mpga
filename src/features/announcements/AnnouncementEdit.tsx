@@ -29,7 +29,7 @@ const schema = yup.object({
 const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
     let announcement = props.announcement;
     return (
-        <Card.Body>
+        <div>
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
@@ -152,7 +152,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                     </Form>
                 )}
             </Formik>
-        </Card.Body>
+        </div>
     );
 }
 

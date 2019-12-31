@@ -6,7 +6,7 @@ import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { reducers, IApplicationState } from './store';
 import * as serviceWorker from './serviceWorker';
 import { AppRoutes } from './routes/AppRoutes';
-import { createStore, combineReducers, StoreEnhancer, compose, StoreEnhancerStoreCreator, applyMiddleware, Store } from 'redux';
+import { createStore, combineReducers, compose, StoreEnhancerStoreCreator, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 

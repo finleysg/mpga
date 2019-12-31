@@ -12,6 +12,10 @@ $theme-colors: (
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~react-datepicker/dist/react-datepicker.css';
 
+html {
+    font-size: 14px;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -70,6 +74,8 @@ $theme-colors: (
 #content {
     width: calc(100% - 250px);
     min-height: 100vh;
+    height: 100vh;
+    overflow-y: scroll;
     transition: all 0.3s;
     position: absolute;
     top: 0;

@@ -56,9 +56,9 @@ export const Toaster: React.FC = () => {
 
     return <ToastContainer>
         {state.data.map((message: INotificationContent) => {
-            return <Toast animation={true}
+            return <Toast animation={true} key={message.id}
                 onClose={() => dispatch(NotificationActions.RemoveToast(message.id))}
-                show={message.visible} delay={5000} autohide={true}>
+                show={message.visible} delay={3000} autohide={true}>
                     <Toast.Header className={background(message)}>
                         <strong className="mr-auto">{icon(message)} {message.title}</strong>
                     </Toast.Header>

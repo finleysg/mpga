@@ -1,7 +1,8 @@
-import axios from "axios";
-import { Announcement } from "../models/Announcement";
-import { getBaseUrl } from "../services/BaseService";
-import NotificationActions from "./NotificationActions";
+import axios from 'axios';
+
+import constants from '../constants';
+import { Announcement } from '../models/Announcement';
+import NotificationActions from './NotificationActions';
 
 export enum AnnouncementActionTypes {
     APPEND_ANNOUNCEMENT = "APPEND_ANNOUNCEMENT",
@@ -14,7 +15,7 @@ export enum AnnouncementActionTypes {
     SAVE_ANNOUNCEMENT_FAILED = "SAVE_ANNOUNCEMENT_FAILED",
 };
 
-const url = getBaseUrl() + "/announcements/";
+const url = constants.ApiUrl + "/announcements/";
 
 const AnnouncementActions = {
     AddNew: () => (dispatch: any) => {

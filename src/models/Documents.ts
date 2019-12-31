@@ -1,38 +1,43 @@
 import moment from 'moment';
 import { Model } from './Model';
 
-export interface Tag {
+export interface ITag {
   id: number;
-  tag: string;
+  name: string;
 }
 
-export interface DocumentTag {
+export interface IDocumentTag {
   id: number;
   document: number;
-  tag: Tag;
+  tag: ITag;
 }
 
-export interface PhotoTag {
+export interface IPhotoTag {
   id: number;
   photo: number;
-  tag: Tag;
+  tag: ITag;
 }
 
 export class MpgaDocument extends Model {
-  year: number | undefined;
-  title: string | undefined;
-  documentType: string | undefined;
-  file: string | undefined;
-  lastUpdate: moment.Moment | undefined;
-  createdBy: string | undefined;
-  tournament: number | undefined;
-  tags: string[] | undefined;
+  year = moment().year();
+  title = "";
+  documentType = "Other";
+  file?: string;
+  lastUpdate?: Date;
+  createdBy?: string;
+  tournament?: number;
+  tags?: ITag[];
 
   constructor(json: any) {
     super();
     const obj = this.fromJson(json);
     if (json && json.tags) {
-      obj.tags = json.tags.map((t: any) => t.tag);
+      obj.tags = json.tags.map((t: any) => {
+        return {
+          id: t.id,
+          name: t.tag,
+        };
+      });
     }
     Object.assign(this, obj);
   }

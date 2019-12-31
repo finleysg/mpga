@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from "react-bootstrap/Card";
 import { Announcement } from '../../models/Announcement';
+import MarkdownDiv from '../../components/MarkdownDiv';
 
 export interface IAnnouncementView {
     announcement: Announcement,
@@ -9,16 +9,14 @@ export interface IAnnouncementView {
 const AnnouncementView: React.FC<IAnnouncementView> = (props) => {
     const announcement = props.announcement;
     return (
-        <Card.Body>
-            <Card.Title>{announcement.title}</Card.Title>
-            <Card.Text>
-                {announcement.text}
-            </Card.Text>
+        <div>
+            <h5>{announcement.title}</h5>
+            <MarkdownDiv text={announcement.text} />
             {announcement.externalUrl && 
-                <Card.Link href={announcement.externalUrl}>{announcement.externalName}</Card.Link>}
+                <a href={announcement.externalUrl}>{announcement.externalName}</a>}
             {announcement.document && 
-                <Card.Link href={announcement.document.file}>{announcement.document.title}</Card.Link>}
-        </Card.Body>
+                <a href={announcement.document.file}>{announcement.document.title}</a>}
+        </div>
     );
 }
 

@@ -17,16 +17,16 @@ export class Address {
 }
 
 export class GolfCourse extends Model {
-  name: string | undefined;
-  addressTxt: string | undefined;
-  city: string | undefined;
-  state: string | undefined;
-  zip: string | undefined;
-  website: string | undefined;
-  logoUrl: string | undefined;
-  email: string | undefined;
-  phone: string | undefined;
-  notes: string | undefined;
+  name: string = "";
+  addressTxt?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  website?: string;
+  logoUrl?: string;
+  email?: string;
+  phone?: string;
+  notes?: string;
 
   constructor(obj: any) {
     super();

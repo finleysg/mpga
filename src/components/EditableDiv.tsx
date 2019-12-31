@@ -1,23 +1,39 @@
-import React, { useState } from "react";
-import Card from "react-bootstrap/Card";
+import React, { useState, ReactNode } from "react";
 import { TiEdit, TiTimes } from "react-icons/ti";
 import styled from "styled-components";
-import { IEditable } from "./EditableDiv";
+
+const ToggleDiv = styled<IEditState | any>('div')`
+    border-width: ${props => props.doEdit ? "1px" : "0"};
+    border-color: #cccccc;
+    margin-bottom: 2rem;
+`
+ToggleDiv.displayName = "ToggleDiv";
 
 const ToggleEditButton = styled.a`
+    float: right;
     width: 30px;
     height: 30px; 
     text-align: center;
-    margin: 5px 5px -35px auto;
     z-index: 999;
     cursor: pointer;
 `;
 ToggleEditButton.displayName = "ToggleEditButton";
 
-const EditableCard: React.FC<IEditable> = (props) => {
+export interface IEditable {
+    viewComponent: ReactNode,
+    editComponent: ReactNode,
+    initEdit: boolean,
+    canEdit: boolean,
+};
+
+export interface IEditState {
+    doEdit: boolean;
+}
+
+const EditableDiv: React.FC<IEditable> = (props) => {
     const [doEdit, setDoEdit] = useState(props.initEdit);
     return (
-        <Card border={doEdit ? "secondary" : "light"} className="mb-2">
+        <ToggleDiv doEdit={doEdit}>
             {props.canEdit &&
             <ToggleEditButton title="Edit" onClick={() => setDoEdit(!doEdit)}>
                 {doEdit
@@ -27,8 +43,8 @@ const EditableCard: React.FC<IEditable> = (props) => {
             {doEdit ?
                 props.editComponent :
                 props.viewComponent }
-        </Card>
+        </ToggleDiv>
     );
 }
 
-export default EditableCard;
+export default EditableDiv;
