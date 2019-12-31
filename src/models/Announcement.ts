@@ -11,8 +11,6 @@ export class Announcement extends Model {
             text: "",
             starts: moment().toDate(),
             expires: moment().add(7, "days").toDate(),
-            // starts: moment().format(),
-            // expires: moment().add(7, "days").format(),
         });
         return instance;
     }

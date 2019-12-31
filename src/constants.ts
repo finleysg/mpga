@@ -13,4 +13,7 @@ export default class Constants {
 	public static MemberClubYear: number = Number(getStringFromConfig("REACT_APP_MEMBER_CLUB_YEAR"));
 	public static MembershipDues: number = Number(getStringFromConfig("REACT_APP_MEMBERSHIP_DUES"));
 	public static StripePublicKey: number = Number(getStringFromConfig("REACT_APP_STRIPE_PUBLIC_KEY"));
+
+	public static BearerTokenName: string = "mpga-token";
+	public static CrsfCookieName: string = "crsftoken";
 }

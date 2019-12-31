@@ -10,6 +10,7 @@ import { IApplicationState } from "../../store";
 const AnnouncementList: React.FC = () => {
     const dispatch = useDispatch();
     const state = useSelector((state: IApplicationState) => state.announcements);
+    const session = useSelector((state: IApplicationState) => state.session);
     const canAdd = state.data.findIndex(a => a.id === 0) < 0; // no pending add
 
     // Info on why we memoize the callback passed to a child component
@@ -34,12 +35,12 @@ const AnnouncementList: React.FC = () => {
                     Cancel={() => dispatch(AnnouncementActions.CancelNew())}
                     Save={saveAnnouncement} />
             })}
-        <Button variant="outline-secondary" 
-            size="sm" 
+        {session.user.isFullEditor && <Button variant="outline-secondary" 
+            size="sm"
             disabled={!canAdd} 
             onClick={() => dispatch(AnnouncementActions.AddNew())}>
             Add Announcement
-        </Button>
+        </Button>}
     </div>
 }
 

@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-import constants from '../constants';
+import { Api } from '../http';
 import { Policy, PageContent } from '../models/Policies';
 import NotificationActions from './NotificationActions';
 
@@ -23,8 +21,8 @@ export enum ContentActionTypes {
     SAVE_PAGE_FAILED = "SAVE_PAGE_FAILED",
 };
 
-const policyUrl = constants.ApiUrl + "/policies/";
-const pageUrl = constants.ApiUrl + "/pages/";
+const policyUrl = "/policies/";
+const pageUrl = "/pages/";
 
 const ContentActions = {
     AddNew: () => (dispatch: any) => {
@@ -42,7 +40,7 @@ const ContentActions = {
     LoadPolicies: (policyType: string) => async (dispatch: any) => {
         dispatch({ type: ContentActionTypes.GET_POLICIES_REQUESTED});
         try {
-            const result = await axios.get(policyUrl + "?type=" + policyType);
+            const result = await Api.get(policyUrl + "?type=" + policyType);
             const data = result.data.map((json: any) => new Policy().fromJson(json));
             dispatch({ type: ContentActionTypes.GET_POLICIES_SUCCEEDED, payload: data });
         } catch (error) {
@@ -56,9 +54,9 @@ const ContentActions = {
         try {
             const payload = policy.prepJson();
             if (!policy.id) {
-                await axios.post(policyUrl, payload);
+                await Api.post(policyUrl, payload);
             } else {
-                await axios.put(`${policyUrl}${policy.id}/`, payload);
+                await Api.put(`${policyUrl}${policy.id}/`, payload);
             }
             dispatch({ type: ContentActionTypes.SAVE_POLICY_SUCCEEDED });
             dispatch(ContentActions.LoadPolicies(policy.policyType));
@@ -76,7 +74,7 @@ const ContentActions = {
     LoadPageContent: (pageType: string) => async (dispatch: any) => {
         dispatch({ type: ContentActionTypes.GET_PAGE_REQUESTED});
         try {
-            const result = await axios.get(pageUrl + "?page=" + pageType);
+            const result = await Api.get(pageUrl + "?page=" + pageType);
             const data = new PageContent().fromJson(result.data[0]);
             dispatch({ type: ContentActionTypes.GET_PAGE_SUCCEEDED, payload: data });
         } catch (error) {
@@ -90,9 +88,9 @@ const ContentActions = {
         try {
             const payload = pageContent.prepJson();
             if (!pageContent.id) {
-                await axios.post(pageUrl, payload);
+                await Api.post(pageUrl, payload);
             } else {
-                await axios.put(`${pageUrl}${pageContent.id}/`, payload);
+                await Api.put(`${pageUrl}${pageContent.id}/`, payload);
             }
             dispatch({ type: ContentActionTypes.SAVE_PAGE_SUCCEEDED });
             dispatch(ContentActions.LoadPageContent(pageContent.pageType));

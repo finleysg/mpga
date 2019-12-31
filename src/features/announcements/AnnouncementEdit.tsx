@@ -2,7 +2,6 @@ import * as yup from "yup";
 import React from "react";
 import { Formik } from "formik";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import { Announcement } from "../../models/Announcement";
 import { IAnnouncementView } from "./AnnouncementView";

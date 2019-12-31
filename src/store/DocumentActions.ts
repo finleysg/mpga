@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-import constants from '../constants';
+import { Api } from '../http';
 import { MpgaDocument } from '../models/Documents';
 import NotificationActions from './NotificationActions';
 
@@ -15,7 +13,7 @@ export enum DocumentActionTypes {
     SAVE_DOCUMENT_FAILED = "SAVE_DOCUMENT_FAILED",
 };
 
-const url = constants.ApiUrl + "/documents/";
+const url = "/documents/";
 
 const prepareFormData = (file: File, document: MpgaDocument): FormData => {
     const form = new FormData();
@@ -47,7 +45,7 @@ const DocumentActions = {
     Load: () => async (dispatch: any) => {
         dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_REQUESTED});
         try {
-            const result = await axios.get(url);
+            const result = await Api.get(url);
             const data = result.data.map((json: any) => new MpgaDocument(json));
             dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED, payload: data });
         } catch (error) {
@@ -61,9 +59,9 @@ const DocumentActions = {
         try {
             const payload = prepareFormData(file, document);
             if (!document.id) {
-                await axios.post(url, payload);
+                await Api.post(url, payload);
             } else {
-                await axios.put(`${url}${document.id}/`, payload);
+                await Api.put(`${url}${document.id}/`, payload);
             }
             dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED });
             dispatch(DocumentActions.Load());

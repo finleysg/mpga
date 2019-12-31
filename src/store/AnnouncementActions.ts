@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-import constants from '../constants';
+import { Api } from '../http';
 import { Announcement } from '../models/Announcement';
 import NotificationActions from './NotificationActions';
 
@@ -15,7 +13,7 @@ export enum AnnouncementActionTypes {
     SAVE_ANNOUNCEMENT_FAILED = "SAVE_ANNOUNCEMENT_FAILED",
 };
 
-const url = constants.ApiUrl + "/announcements/";
+const url = "/announcements/";
 
 const AnnouncementActions = {
     AddNew: () => (dispatch: any) => {
@@ -29,7 +27,7 @@ const AnnouncementActions = {
     Load: () => async (dispatch: any) => {
         dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_REQUESTED});
         try {
-            const result = await axios.get(url);
+            const result = await Api.get(url);
             const data = result.data.map((json: any) => new Announcement(json));
             dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_SUCCEEDED, payload: data });
         } catch (error) {
@@ -48,9 +46,9 @@ const AnnouncementActions = {
                 payload.document = null;
             }
             if (!announcement.id) {
-                await axios.post(url, payload);
+                await Api.post(url, payload);
             } else {
-                await axios.put(`${url}${announcement.id}/`, payload);
+                await Api.put(`${url}${announcement.id}/`, payload);
             }
             dispatch({ type: AnnouncementActionTypes.SAVE_ANNOUNCEMENT_SUCCEEDED });
             dispatch(AnnouncementActions.Load());

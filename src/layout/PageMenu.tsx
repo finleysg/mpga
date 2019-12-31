@@ -2,8 +2,13 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import NavItem from 'react-bootstrap/NavItem';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { NavLink } from 'react-router-dom';
+
+import { IApplicationState } from '../store';
+import UserActions from '../store/UserActions';
 
 export interface IPageMenuProps {
     subMenu: string;
@@ -11,6 +16,8 @@ export interface IPageMenuProps {
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
 
+    const session = useSelector((state: IApplicationState) => state.session);
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
 
     const selectMenu = (menu: string) => {
@@ -23,7 +30,13 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                         <NavDropdown.Item href="http://www.wirthgolfassociation.org/tcc.html" target="_blank">Twin Cities Championship</NavDropdown.Item>
                         <NavDropdown.Item href="https://www.usga.org/" target="_blank">USGA</NavDropdown.Item>
                     </NavDropdown>
-                    <NavLink to="/login" className="nav-link" activeClassName="active">Club Login</NavLink>
+                    {session.user.isAuthenticated ?
+                    <>
+                      <NavLink to="/profile" className="nav-link" activeClassName="active">{session.user.name}</NavLink>
+                      <NavItem onClick={() => dispatch(UserActions.Logout())} className="nav-link clickable">Logout</NavItem>
+                    </>
+                    : <NavLink to="/login" className="nav-link" activeClassName="active">Club Login</NavLink>
+                    }
                 </Nav>;
             case 'tournaments':
                 return <Nav>

@@ -1,14 +1,17 @@
-import { History, createBrowserHistory } from 'history';
+import { createBrowserHistory, History } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { routerMiddleware, routerReducer } from 'react-router-redux';
-import { reducers, IApplicationState } from './store';
-import * as serviceWorker from './serviceWorker';
-import { AppRoutes } from './routes/AppRoutes';
-import { createStore, combineReducers, compose, StoreEnhancerStoreCreator, applyMiddleware, Store } from 'redux';
-import { Provider } from 'react-redux';
+import {
+    applyMiddleware, combineReducers, compose, createStore, Store, StoreEnhancerStoreCreator
+} from 'redux';
 import thunk from 'redux-thunk';
+
+import { AppRoutes } from './routes/AppRoutes';
+import * as serviceWorker from './serviceWorker';
+import { IApplicationState, reducers } from './store';
 
 function buildRootReducer(reducers: any) {
     return combineReducers<IApplicationState>(Object.assign({}, reducers, { routing: routerReducer }));

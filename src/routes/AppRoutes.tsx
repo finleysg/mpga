@@ -1,14 +1,25 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
-import { ConnectedLayout } from "../layout/Layout";
-import ContactUsPage from "../pages/ContactUsPage";
-import { TournamentRoutes } from "./TournamentRoutes";
-import { MatchPlayRoutes } from "./MatchPlayRoutes";
-import { MemberClubRoutes } from "./MemberClubRoutes";
-import { AboutUsRoutes } from "./AboutUsRoutes";
-import ConnectedHomePage from "../pages/HomePage";
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+
+import { ConnectedLayout } from '../layout/Layout';
+import ContactUsPage from '../pages/ContactUsPage';
+import ConnectedHomePage from '../pages/HomePage';
+import LoginPage from '../pages/LoginPage';
+import UserActions from '../store/UserActions';
+import { AboutUsRoutes } from './AboutUsRoutes';
+import { MatchPlayRoutes } from './MatchPlayRoutes';
+import { MemberClubRoutes } from './MemberClubRoutes';
+import { TournamentRoutes } from './TournamentRoutes';
 
 export const AppRoutes: React.FC = () => {
+    const dispatch = useDispatch();
+    useEffect(
+        () => {
+          dispatch(UserActions.GetUser())
+        },
+        [dispatch]
+    );
     return (
         <Switch>
             <Route exact path="/">
@@ -31,6 +42,11 @@ export const AppRoutes: React.FC = () => {
             <Route path="/contact">
                 <ConnectedLayout>
                     <ContactUsPage />
+                </ConnectedLayout>
+            </Route>
+            <Route path="/login">
+                <ConnectedLayout>
+                    <LoginPage />
                 </ConnectedLayout>
             </Route>
         </Switch>
