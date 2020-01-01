@@ -1,11 +1,12 @@
 import { Formik } from 'formik';
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import * as yup from 'yup';
 
 import { Policy } from '../../models/Policies';
 import { IPolicyViewProps } from './PolicyView';
+import Confirm from '../../components/Confirm';
 
 export interface IPolicyEditProps extends IPolicyViewProps {
     Cancel: () => void,
@@ -20,7 +21,18 @@ const schema = yup.object({
 });
 
 const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const policy = props.policy;
+
+    const handleConfirmDeleteCancel = () => {
+        setShowConfirmation(false);
+    }
+
+    const handleConfirmDeleteContinue = () => {
+        setShowConfirmation(false);
+        props.Delete(policy);
+    }
+
     return (
         <div>
             <Formik
@@ -92,7 +104,7 @@ const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
                             Save
                         </Button>
                         {policy.id !== 0 &&
-                            <Button className="ml-1" variant="outline-danger" size="sm" onClick={() => props.Delete(policy)}>Delete</Button>
+                            <Button className="ml-1" variant="outline-danger" size="sm" onClick={() => setShowConfirmation(true)}>Delete</Button>
                         }
                         {policy.id === 0 &&
                             <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>Cancel</Button>
@@ -100,6 +112,14 @@ const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
                     </Form>
                 )}
             </Formik>
+            <Confirm 
+                show={showConfirmation}
+                titleText="Delete Policy?"
+                messageText="Please confirm that we should delete this policy."
+                confirmText="Delete Policy"
+                DoCancel={handleConfirmDeleteCancel}
+                DoConfirm={handleConfirmDeleteContinue}
+            />
         </div>
     );
 }
