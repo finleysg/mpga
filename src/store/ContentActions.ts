@@ -5,13 +5,15 @@ import NotificationActions from './NotificationActions';
 export enum ContentActionTypes {
     APPEND_POLICY = "APPEND_POLICY",
     CANCEL_NEW_POLICY = "CANCEL_NEW_POLICY",
-    PREVIEW_POLICY = "PREVIEW_POLICY",
     GET_POLICIES_REQUESTED = "GET_POLICIES_REQUESTED",
     GET_POLICIES_SUCCEEDED = "GET_POLICIES_SUCCEEDED",
     GET_POLICIES_FAILED = "GET_POLICIES_FAILED",
     SAVE_POLICY_REQUESTED = "SAVE_POLICY_REQUESTED",
     SAVE_POLICY_SUCCEEDED = "SAVE_POLICY_SUCCEEDED",
     SAVE_POLICY_FAILED = "SAVE_POLICY_FAILED",
+    DELETE_POLICY_REQUESTED = "DELETE_POLICY_REQUESTED",
+    DELETE_POLICY_SUCCEEDED = "DELETE_POLICY_SUCCEEDED",
+    DELETE_POLICY_FAILED = "DELETE_POLICY_FAILED",
     PREVIEW_PAGE = "PREVIEW_PAGE",
     GET_PAGE_REQUESTED = "GET_PAGE_REQUESTED",
     GET_PAGE_SUCCEEDED = "GET_PAGE_SUCCEEDED",
@@ -25,23 +27,19 @@ const policyUrl = "/policies/";
 const pageUrl = "/pages/";
 
 const ContentActions = {
-    AddNew: () => (dispatch: any) => {
-        dispatch({type: ContentActionTypes.APPEND_POLICY});
+    AddNewPolicy: (policyCode: string) => (dispatch: any) => {
+        dispatch({type: ContentActionTypes.APPEND_POLICY, payload: policyCode});
     },
 
-    CancelNew: () => (dispatch: any) => {
-        dispatch({type: ContentActionTypes.CANCEL_NEW_POLICY});
-    },
-
-    PreviewPolicy: () => (dispatch: any) => {
-        dispatch({type: ContentActionTypes.PREVIEW_POLICY});
+    CancelNewPolicy: (policyCode: string) => (dispatch: any) => {
+        dispatch({type: ContentActionTypes.CANCEL_NEW_POLICY, payload: policyCode});
     },
 
     LoadPolicies: (policyType: string) => async (dispatch: any) => {
         dispatch({ type: ContentActionTypes.GET_POLICIES_REQUESTED});
         try {
             const result = await Api.get(policyUrl + "?type=" + policyType);
-            const data = result.data.map((json: any) => new Policy().fromJson(json));
+            const data = result.data.map((json: any) => new Policy(json));
             dispatch({ type: ContentActionTypes.GET_POLICIES_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch({ type: ContentActionTypes.GET_POLICIES_FAILED });
@@ -67,6 +65,19 @@ const ContentActions = {
         }
     },
 
+    DeletePolicy: (policy: Policy) => async (dispatch: any) => {
+        dispatch({ type: ContentActionTypes.DELETE_POLICY_REQUESTED});
+        try {
+            await Api.delete(`${policyUrl}${policy.id}/`);
+            dispatch({ type: ContentActionTypes.DELETE_POLICY_SUCCEEDED });
+            dispatch(ContentActions.LoadPolicies(policy.policyType));
+            dispatch(NotificationActions.ToastSuccess(`${policy.title} has been deleted.`))
+        } catch (error) {
+            dispatch({ type: ContentActionTypes.DELETE_POLICY_FAILED });
+            dispatch(NotificationActions.ToastError(error));
+        }
+    },
+
     PreviewPageContent: () => (dispatch: any) => {
         dispatch({type: ContentActionTypes.PREVIEW_PAGE});
     },
@@ -75,7 +86,7 @@ const ContentActions = {
         dispatch({ type: ContentActionTypes.GET_PAGE_REQUESTED});
         try {
             const result = await Api.get(pageUrl + "?page=" + pageType);
-            const data = new PageContent().fromJson(result.data[0]);
+            const data = new PageContent(result.data[0]);
             dispatch({ type: ContentActionTypes.GET_PAGE_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch({ type: ContentActionTypes.GET_PAGE_FAILED });

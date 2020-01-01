@@ -27,10 +27,6 @@ export interface IPolicyCancel extends Action {
     payload: string;
 }
 
-export interface IPolicyPreview extends Action {
-    type: ContentActionTypes.PREVIEW_POLICY;
-}
-
 export interface IPoliciesGetRequested extends Action {
     type: ContentActionTypes.GET_POLICIES_REQUESTED;
 }
@@ -54,6 +50,18 @@ export interface IPolicySaveSucceeded extends Action {
 
 export interface IPolicySaveFailed extends Action {
     type: ContentActionTypes.SAVE_POLICY_FAILED;
+}
+
+export interface IPolicyDeleteRequested extends Action {
+    type: ContentActionTypes.DELETE_POLICY_REQUESTED;
+}
+
+export interface IPolicyDeleteSucceeded extends Action {
+    type: ContentActionTypes.DELETE_POLICY_SUCCEEDED;
+}
+
+export interface IPolicyDeleteFailed extends Action {
+    type: ContentActionTypes.DELETE_POLICY_FAILED;
 }
 
 export interface IPagePreview extends Action {
@@ -87,13 +95,15 @@ export interface IPageSaveFailed extends Action {
 
 type KnownActions = IPolicyAppend 
     | IPolicyCancel
-    | IPolicyPreview
     | IPoliciesGetRequested 
     | IPoliciesGetSucceeded 
     | IPoliciesGetFailed
     | IPolicySaveRequested
     | IPolicySaveSucceeded
     | IPolicySaveFailed
+    | IPolicyDeleteRequested
+    | IPolicyDeleteSucceeded
+    | IPolicyDeleteFailed
     | IPagePreview
     | IPageGetRequested 
     | IPageGetSucceeded 
@@ -113,7 +123,7 @@ export const ContentReducer: Reducer<IContentState, KnownActions> =
         case ContentActionTypes.APPEND_POLICY: {
             const policies = state.policies;
             const policySet = policies?.get(action.payload)
-            policySet?.unshift(new Policy().fromJson({
+            policySet?.push(new Policy({
                 id: 0,
                 policyType: action.payload,
                 title: "",
@@ -155,6 +165,15 @@ export const ContentReducer: Reducer<IContentState, KnownActions> =
             return {...state, isBusy: false};
         }
         case ContentActionTypes.SAVE_POLICY_FAILED: {
+            return {...state, isBusy: false, hasError: true};
+        }
+        case ContentActionTypes.DELETE_POLICY_REQUESTED: {
+            return {...state, isBusy: true, hasError: false};
+        }
+        case ContentActionTypes.DELETE_POLICY_SUCCEEDED: {
+            return {...state, isBusy: false};
+        }
+        case ContentActionTypes.DELETE_POLICY_FAILED: {
             return {...state, isBusy: false, hasError: true};
         }
         case ContentActionTypes.GET_PAGE_REQUESTED: {

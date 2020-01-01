@@ -1,6 +1,5 @@
 import { Action, Reducer } from 'redux';
 
-import constants from '../constants';
 import { User } from '../models/User';
 import { UserActionTypes } from './UserActions';
 

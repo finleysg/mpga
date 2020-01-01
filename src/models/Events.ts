@@ -102,7 +102,7 @@ export class EventPolicy extends Model {
 
   fromJson(obj: any): any {
     const ep = super.fromJson(obj);
-    ep.policy = new Policy().fromJson(obj["policy"]);
+    ep.policy = new Policy(obj["policy"]);
     return ep;
   }
 }
