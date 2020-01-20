@@ -26,16 +26,17 @@ export interface ICalendarItemProps {
     hostCourceImageUrl?: string,
     startDate: Date,
     rounds: number,
-    OnSelect: (id: number) => void,
+    linkName?: string,
+    OnSelect: (linkName: string) => void,
 }
 
-const TournamentCalendarItem: React.FC<ICalendarItemProps> = (props) => {
-    const { eventId, tournamentName, hostCourseName, hostCourceImageUrl, startDate, rounds } = props;
+const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
+    const { linkName, tournamentName, hostCourseName, hostCourceImageUrl, startDate, rounds } = props;
     const tournamentDates = rounds > 1 ?
         `${moment(startDate).format("dddd, MMM D")} - ${moment(startDate).add("d", rounds-1).format("dddd, MMM D")}` :
         moment(startDate).format("dddd, MMM D");
     return (
-        <CalendarItem onClick={() => props.OnSelect(eventId)}>
+        <CalendarItem onClick={() => linkName && props.OnSelect(linkName)}>
             {hostCourceImageUrl && <img src={hostCourceImageUrl} alt={hostCourseName} />}
             <p className="text-secondary"><strong>{tournamentName}</strong></p>
             <p>{hostCourseName}</p>
@@ -44,4 +45,4 @@ const TournamentCalendarItem: React.FC<ICalendarItemProps> = (props) => {
     );
 }
 
-export default TournamentCalendarItem;
+export default EventCalendarItem;

@@ -34,17 +34,17 @@ export class Award extends Model {
 }
 
 export class TournamentWinner extends Model {
-  year: number | undefined;
-  location: string | undefined;
-  winner: string | undefined;
-  winnerClub: string | undefined;
-  coWinner: string | undefined;
-  coWinnerClub: string | undefined;
-  flightOrDivision: string | undefined;
-  score: string | undefined;
-  isNet: boolean | undefined;
-  isMatch: boolean | undefined;
-  notes: string | undefined;
+  year: number = 0;
+  location: string = "";
+  winner: string = "";
+  winnerClub: string = "";
+  coWinner?: string;
+  coWinnerClub?: string;
+  flightOrDivision: string = "";
+  score: string = "";
+  isNet: boolean = false;
+  isMatch: boolean = false;
+  notes?: string;
 
   constructor(json: string) {
     super();
@@ -52,7 +52,14 @@ export class TournamentWinner extends Model {
     Object.assign(this, obj);
   }
 
-  winnersFormatted(): string {
+  get scoreFormatted(): string {
+    if (this.isNet) {
+      return this.score + "*";
+    }
+    return this.score;
+  }
+
+  get winnersFormatted(): string {
     if (this.isMatch) {
       return `${this.winner} defeated ${this.coWinner}`;
     }
@@ -63,10 +70,17 @@ export class TournamentWinner extends Model {
   }
 }
 
+export interface ITournamentWinnerGroup {
+  year: number;
+  location: string;
+  winners: TournamentWinner[]
+}
+
 export class Tournament extends Model {
-  name: string | undefined;
-  description: string | undefined;
-  winners: TournamentWinner[] | undefined;
+  name: string = "";
+  systemName: string = "";
+  description: string = "";
+  winners: TournamentWinner[] = [];
 
   constructor(obj: any) {
     super();
@@ -125,11 +139,11 @@ export class EventLink extends Model {
 
 export class EventDetail extends Model {
   location?: GolfCourse;
+  tournament?: Tournament;
   name: string = "";
   shortName: string = "";
   description: string = "";
   rounds: number = 0;
-  tournament: number = 0;
   notes?: string;
   eventType: string = "";
   startDate: Date = new Date();
@@ -150,6 +164,7 @@ export class EventDetail extends Model {
     const evt = super.fromJson(obj);
     if (obj) {
       evt.location = new GolfCourse(obj["location"]);
+      evt.tournament = new Tournament(obj["tournament"]);
       evt.year = evt.startDate.year();
       if (obj["policies"]) {
         evt.policies = obj["policies"].map((o: any) => new EventPolicy().fromJson(o));

@@ -14,6 +14,7 @@ import "./layout.scss";
 export interface ILayoutProps {
   showSidenav: boolean;
   subMenu: string;
+  segments: string[];
   ToggleSidenav: (showSidenav: boolean) => void;
   RouteChange: (path: string) => void;
 }
@@ -21,6 +22,7 @@ export interface ILayoutProps {
 const mapStateToProps = (state: IApplicationState) => ({
   showSidenav: state.layout.sideNavOpen,
   subMenu: state.layout.subMenu,
+  segments: state.layout.segments,
 });
 
 export const Layout: React.FC<ILayoutProps> = (props) => {
@@ -44,7 +46,7 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
           <Navbar.Brand className="ml-2 mpga" href="/home">MPGA.net</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           {props.subMenu &&
-            <PageMenu subMenu={props.subMenu} />
+            <PageMenu subMenu={props.subMenu} segments={props.segments} />
           }
         </Navbar>
         <div id="page">

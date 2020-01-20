@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { ConnectedLayout } from '../layout/Layout';
 import TournamentsPage from '../pages/TournamentsPage';
+import TournamentHistoryPage from '../pages/TournamentHistoryPage';
 
 export const TournamentRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -24,7 +25,7 @@ export const TournamentRoutes: React.FC = () => {
                     <p>tournament name here</p>
                 </Route>
                 <Route exact path={`${path}/t/:name/history`}>
-                    <p>tournament history</p>
+                    <TournamentHistoryPage />
                 </Route>
                 <Route exact path={`${path}/t/:name/gallery`}>
                     <p>tournament gallery</p>

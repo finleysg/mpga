@@ -12,6 +12,7 @@ import UserActions from '../store/UserActions';
 
 export interface IPageMenuProps {
     subMenu: string;
+    segments: string[];
 }
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
@@ -20,8 +21,9 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
     const dispatch = useDispatch();
     let { url } = useRouteMatch();
 
-    const selectMenu = (menu: string) => {
-        switch (menu) {
+    const selectMenu = () => {
+        const {subMenu, segments} = props;
+        switch (subMenu) {
             case 'home':
                 return <Nav>
                     <NavDropdown title="Affiliated Organizations" id="collasible-nav-dropdown">
@@ -39,13 +41,20 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                     }
                 </Nav>;
             case 'tournaments':
-                return <Nav>
-                    <NavLink to={`${url}/hard-card`} className="nav-link" activeClassName="active">Hard Card</NavLink>
-                    <NavLink to={`${url}/code-of-conduct`} className="nav-link" activeClassName="active">Code of Conduct</NavLink>
-                    <NavLink to={`${url}/bid`} className="nav-link" activeClassName="active">Tournament Bid</NavLink>
-                </Nav>;
-            case 'tournament':
-                return <></>;
+                if (segments.indexOf('t') >= 0) {
+                    url = `${url}/t/${segments[2]}`;
+                    return <Nav>
+                        <NavLink to={`${url}/history`} className="nav-link" activeClassName="active">History</NavLink>
+                        <NavLink to={`${url}/gallery`} className="nav-link" activeClassName="active">Gallery</NavLink>
+                        <NavLink to={`${url}/contact`} className="nav-link" activeClassName="active">Contact</NavLink>
+                    </Nav>;
+                } else {
+                    return <Nav>
+                        <NavLink to={`${url}/hard-card`} className="nav-link" activeClassName="active">Hard Card</NavLink>
+                        <NavLink to={`${url}/code-of-conduct`} className="nav-link" activeClassName="active">Code of Conduct</NavLink>
+                        <NavLink to={`${url}/bid`} className="nav-link" activeClassName="active">Tournament Bid</NavLink>
+                    </Nav>;
+                }
             case 'match-play':
                 return <Nav>
                     <NavLink to={`${url}/rules`} className="nav-link" activeClassName="active">Rules</NavLink>
@@ -73,7 +82,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
     return (
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
             <Nav id="topnav">
-                {selectMenu(props.subMenu)}
+                {selectMenu()}
             </Nav>
         </Navbar.Collapse>
     );

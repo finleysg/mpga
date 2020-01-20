@@ -14,11 +14,13 @@ export interface IRouteChanged extends Action {
 export interface ILayoutState {
     sideNavOpen: boolean;
     subMenu: string;
+    segments: string[];
 }
 
 export const defaultState: ILayoutState = {
     sideNavOpen: true,
     subMenu: "home",
+    segments: [],
 };
 
 type KnownActions = ISidenavToggled | IRouteChanged;
@@ -37,7 +39,7 @@ export const reducer: Reducer<ILayoutState, KnownActions> =
         case LayoutActionTypes.ROUTE_CHANGED: {
             var segments = action.payload.split("/");
             var submenu = segments[1].length > 0 ? segments[1] : "home";
-            return {...state, subMenu: submenu};
+            return {...state, subMenu: submenu, segments: segments.slice(1)};
         }
         default:
             return state;
