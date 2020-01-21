@@ -1,8 +1,10 @@
 import * as AnnouncementStore from "./AnnouncementStore";
 import * as DocumentStore from "./DocumentStore";
+import * as EventStore from "./EventStore";
 import * as LayoutStore from "./LayoutStore";
 import * as NotificationStore from "./NotificationStore";
 import * as TournamentStore from "./TournamentStore";
+import * as TournamentWinnerStore from "./TournamentWinnerStore";
 import * as ContentStore from "./ContentStore";
 import * as UserStore from "./UserStore";
 
@@ -12,7 +14,9 @@ export interface IApplicationState {
 	notifications: NotificationStore.INotificationState,
 	announcements: AnnouncementStore.IAnnouncementState,
 	documents: DocumentStore.IDocumentState,
-	tournaments: TournamentStore.ITournamentState,
+	tournament: TournamentStore.ITournamentState,
+	winners: TournamentWinnerStore.ITournamentWinnerState,
+	events: EventStore.IEventState,
 	content: ContentStore.IContentState,
 	session: UserStore.IUserState,
 }
@@ -25,7 +29,9 @@ export const reducers = {
 	notifications: NotificationStore.NotificationReducer,
 	announcements: AnnouncementStore.AnnouncementsReducer,
 	documents: DocumentStore.DocumentsReducer,
-	tournaments: TournamentStore.TournamentsReducer,
+	tournament: TournamentStore.TournamentReducer,
+	winners: TournamentWinnerStore.TournamentWinnersReducer,
+	events: EventStore.EventsReducer,
 	content: ContentStore.ContentReducer,
 	session: UserStore.UsersReducer,
 };

@@ -5,18 +5,17 @@ import { useHistory } from 'react-router-dom';
 import Loading from '../../components/Loading';
 import constants from '../../constants';
 import { IApplicationState } from '../../store';
-import TournamentActions from '../../store/TournamentActions';
 import EventCalendarItem from './EventCalendarItem';
+import EventActions from '../../store/EventActions';
 
 const EventCalendar: React.FC = () => {
     const dispatch = useDispatch();
-    const state = useSelector((state: IApplicationState) => state.tournaments);
+    const state = useSelector((state: IApplicationState) => state.events);
 
     let history = useHistory();
     
     useEffect(() => {
-        dispatch(TournamentActions.LoadTournaments());  
-        dispatch(TournamentActions.LoadEvents());
+        dispatch(EventActions.LoadEvents());
     }, [dispatch]);
 
     const handleNavigation = (linkName: string) => {
@@ -33,6 +32,7 @@ const EventCalendar: React.FC = () => {
             <Loading /> :
             state.events.map(event => {
                 return <EventCalendarItem
+                    key={event.id!}
                     eventId={event.id!}
                     tournamentName={event.name}
                     hostCourseName={event.location!.name}

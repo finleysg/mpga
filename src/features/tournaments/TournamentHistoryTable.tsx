@@ -18,11 +18,13 @@ const TournamentHistoryTable: React.FC<ITournamentHistoryTableProps> = (props) =
             <h4>{year} {location}</h4>
             <Table>
                 <thead>
-                    <th>Flight/Division</th>
-                    <th>Winner(s)</th>
-                    <th>Score</th>
-                    <th>Notes</th>
-                    {session.user.isFullEditor && <th>Edit</th>}
+                    <tr>
+                        <th>Flight/Division</th>
+                        <th>Winner(s)</th>
+                        <th>Score</th>
+                        <th>Notes</th>
+                        {session.user.isFullEditor && <th>Edit</th>}
+                    </tr>
                 </thead>
                 <tbody>
                     {winners.map((winner: TournamentWinner) => <TournamentHistoryRow key={winner.id} winner={winner} />)}

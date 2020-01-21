@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import EditableDiv from '../../components/EditableDiv';
@@ -9,19 +9,21 @@ import { Tournament } from '../../models/Events';
 import TournamentHistoryOverview from './TournamentHistoryOverview';
 import TournamentHistoryEdit from './TournamentHistoryEdit';
 
-export interface ITournamentHistoryDetailProps {
+export interface ITournamentProps {
     tournamentName: string;
 }
 
-const TournamentHistoryDetail: React.FC<ITournamentHistoryDetailProps> = (props) => {
+const TournamentHistoryDetail: React.FC<ITournamentProps> = (props) => {
     const { tournamentName } = props;
-    const state = useSelector((state: IApplicationState) => state.tournaments);
+    const state = useSelector((state: IApplicationState) => state.tournament);
     const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
 
-    const getPage = () => {
-        return state.tournaments.get(tournamentName);
-    }
+    useEffect(() => {
+        if (tournamentName) {
+            dispatch(TournamentActions.LoadTournament(tournamentName));
+        }
+    }, [dispatch, tournamentName]);
 
     const saveTournament = useCallback(
         (tournament: Tournament) => dispatch(TournamentActions.SaveTournament(tournament)),
@@ -29,14 +31,14 @@ const TournamentHistoryDetail: React.FC<ITournamentHistoryDetailProps> = (props)
     )
 
     return (
-        <>
+        <React.Fragment>
             {state.isBusy ?
             <Loading /> :
             <EditableDiv initEdit={false} canEdit={session.user.isFullEditor}
-                viewComponent={<TournamentHistoryOverview tournament={getPage() || new Tournament({})} />}
-                editComponent={<TournamentHistoryEdit tournament={getPage() || new Tournament({})} Save={saveTournament} />}>
+                viewComponent={<TournamentHistoryOverview tournament={state.tournament} />}
+                editComponent={<TournamentHistoryEdit tournament={state.tournament} Save={saveTournament} />}>
             </EditableDiv>}
-        </>
+        </React.Fragment>
     );
 }
 

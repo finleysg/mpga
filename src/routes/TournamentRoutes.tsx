@@ -18,8 +18,8 @@ export const TournamentRoutes: React.FC = () => {
                 <Route exact path={`${path}/code-of-conduct`}>
                     <p>Code of Conduct</p>
                 </Route>
-                <Route exact path={`${path}/bid`}>
-                    <p>Bid</p>
+                <Route exact path={`${path}/pace-of-play`}>
+                    <p>Pace of Play</p>
                 </Route>
                 <Route exact path={`${path}/t/:name`}>
                     <p>tournament name here</p>
@@ -32,6 +32,9 @@ export const TournamentRoutes: React.FC = () => {
                 </Route>
                 <Route exact path={`${path}/t/:name/contact`}>
                     <p>tournament contact</p>
+                </Route>
+                <Route exact path={`${path}/t/:name/bid`}>
+                    <p>Bid</p>
                 </Route>
             </ConnectedLayout>
         </Switch>
