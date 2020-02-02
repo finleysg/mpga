@@ -1,6 +1,6 @@
 import { Action, Reducer } from 'redux';
 
-import { ITournamentWinnerGroup } from '../models/Events';
+import { ITournamentWinnerGroup, TournamentWinner } from '../models/Events';
 import { TournamentWinnerActionTypes } from './TournamentWinnerActions';
 
 export interface ITournamentWinnerState {
@@ -21,12 +21,15 @@ export interface ITournamentWinnersGetRequested extends Action {
 
 export interface ITournamentWinnersGetSucceeded extends Action {
     type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED;
-    payload: ITournamentWinnerGroup[];
+    payload: {
+        winners: ITournamentWinnerGroup[];
+    }
 }
 
 export interface ITournamentWinnersGetFailed extends Action {
     type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_FAILED;
 }
+
 export interface ITournamentWinnerSaveRequested extends Action {
     type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_REQUESTED;
 }
@@ -39,8 +42,31 @@ export interface ITournamentWinnerSaveFailed extends Action {
     type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_FAILED;
 }
 
+export interface ITournamentWinnerDeleteRequested extends Action {
+    type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED;
+}
+
+export interface ITournamentWinnerDeleteSucceeded extends Action {
+    type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_SUCCEEDED;
+}
+
+export interface ITournamentWinnerDeleteFailed extends Action {
+    type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_FAILED;
+}
+
+export interface ITournamentWinnerAppendNew extends Action {
+    type: TournamentWinnerActionTypes.APPEND_NEW_TOURNAMENT_WINNER;
+    payload: { year: number, location: string }
+}
+
+export interface ITournamentWinnerCancelNew extends Action {
+    type: TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER;
+}
+
 type KnownActions = ITournamentWinnersGetRequested | ITournamentWinnersGetSucceeded | ITournamentWinnersGetFailed
-    | ITournamentWinnerSaveRequested | ITournamentWinnerSaveSucceeded | ITournamentWinnerSaveFailed;
+    | ITournamentWinnerSaveRequested | ITournamentWinnerSaveSucceeded | ITournamentWinnerSaveFailed
+    | ITournamentWinnerDeleteRequested | ITournamentWinnerDeleteSucceeded | ITournamentWinnerDeleteFailed
+    | ITournamentWinnerAppendNew | ITournamentWinnerCancelNew;
 
 export const TournamentWinnersReducer: Reducer<ITournamentWinnerState, KnownActions> =
     (state: ITournamentWinnerState = defaultState, action: KnownActions): ITournamentWinnerState => {
@@ -50,7 +76,11 @@ export const TournamentWinnersReducer: Reducer<ITournamentWinnerState, KnownActi
             return {...state, isBusy: true, hasError: false};
         }
         case TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED: {
-            return {...state, isBusy: false, winners: action.payload }
+            return {
+                ...state, 
+                isBusy: false, 
+                winners: action.payload.winners,
+            }
         }
         case TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_FAILED: {
             return {...state, isBusy: false, hasError: true};
@@ -63,6 +93,31 @@ export const TournamentWinnersReducer: Reducer<ITournamentWinnerState, KnownActi
         }
         case TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_FAILED: {
             return {...state, isBusy: false, hasError: true};
+        }
+        case TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED: {
+            return {...state, isBusy: true, hasError: false};
+        }
+        case TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_SUCCEEDED: {
+            return {...state, isBusy: false};
+        }
+        case TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_FAILED: {
+            return {...state, isBusy: false, hasError: true};
+        }
+        case TournamentWinnerActionTypes.APPEND_NEW_TOURNAMENT_WINNER: {
+            const winner = new TournamentWinner({
+                id: -1,
+                year: action.payload.year,
+                location: action.payload.location,
+            });
+            const winners = state.winners.slice(0);
+            const group = winners
+                .find(w => w.year === action.payload.year && 
+                           w.location === action.payload.location);
+            group?.winners.push(winner);
+            return {...state, winners: winners }
+        }
+        case TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER: {
+            return {...state};
         }
         default:
             return state;

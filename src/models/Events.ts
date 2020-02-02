@@ -46,7 +46,7 @@ export class TournamentWinner extends Model {
   isMatch: boolean = false;
   notes?: string;
 
-  constructor(json: string) {
+  constructor(json: any) {
     super();
     const obj = this.fromJson(json);
     Object.assign(this, obj);
@@ -73,6 +73,7 @@ export class TournamentWinner extends Model {
 export interface ITournamentWinnerGroup {
   year: number;
   location: string;
+  tournament: Tournament;
   winners: TournamentWinner[]
 }
 

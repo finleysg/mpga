@@ -20,6 +20,7 @@ const TournamentHistoryList: React.FC<ITournamentProps> = (props) => {
 
     return (
         <div>
+            <h4 className="text-primary mb-2">Past Champions</h4>
             {state.winners.map((group: ITournamentWinnerGroup) => 
                 <TournamentHistoryTable key={group.year} group={group} />)}
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, ReactNode } from "react";
 import { TiEdit, TiTimes } from "react-icons/ti";
 import styled from "styled-components";
+import ToggleEditButton from "./ToggleEditButton";
 
 const ToggleDiv = styled<IEditState | any>('div')`
     border-width: ${props => props.doEdit ? "1px" : "0"};
@@ -8,16 +9,6 @@ const ToggleDiv = styled<IEditState | any>('div')`
     margin-bottom: 2rem;
 `
 ToggleDiv.displayName = "ToggleDiv";
-
-const ToggleEditButton = styled.a`
-    float: right;
-    width: 30px;
-    height: 30px; 
-    text-align: center;
-    z-index: 999;
-    cursor: pointer;
-`;
-ToggleEditButton.displayName = "ToggleEditButton";
 
 export interface IEditable {
     viewComponent: ReactNode,
@@ -35,7 +26,7 @@ const EditableDiv: React.FC<IEditable> = (props) => {
     return (
         <ToggleDiv doEdit={doEdit}>
             {props.canEdit &&
-            <ToggleEditButton title="Edit" onClick={() => setDoEdit(!doEdit)}>
+            <ToggleEditButton isEditting={doEdit} Toggled={() => setDoEdit(!doEdit)}>
                 {doEdit
                     ? <TiTimes size={24} color={"teal"} />
                     : <TiEdit size={24} color={"teal"} />}
