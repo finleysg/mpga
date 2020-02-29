@@ -3,6 +3,8 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { ConnectedLayout } from '../layout/Layout';
 import TournamentsPage from '../pages/TournamentsPage';
 import TournamentHistoryPage from '../pages/TournamentHistoryPage';
+import HardCardPage from "../pages/HardCardPage";
+import CodeOfConductPage from "../pages/CodeOfConductPage";
 
 export const TournamentRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -13,10 +15,10 @@ export const TournamentRoutes: React.FC = () => {
                     <TournamentsPage />
                 </Route>
                 <Route exact path={`${path}/hard-card`}>
-                    <p>Hard card</p>
+                    <HardCardPage />
                 </Route>
                 <Route exact path={`${path}/code-of-conduct`}>
-                    <p>Code of Conduct</p>
+                    <CodeOfConductPage />
                 </Route>
                 <Route exact path={`${path}/pace-of-play`}>
                     <p>Pace of Play</p>

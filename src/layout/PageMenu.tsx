@@ -62,10 +62,6 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                     <NavLink to={`${url}/results`} className="nav-link" activeClassName="active">Past Results</NavLink>
                 </Nav>;
             case 'clubs':
-                return <Nav>
-                    <NavLink to={`${url}/current`} className="nav-link" activeClassName="active">Current Members</NavLink>
-                </Nav>;;
-            case 'club':
                 return <></>;
             case 'about':
                 return <Nav>

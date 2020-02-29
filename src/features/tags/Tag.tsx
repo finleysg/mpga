@@ -22,6 +22,6 @@ const Tag: React.FC<ITagProps> = (props) => {
             {tag.name} <TagRemover onClick={() => props.RemoveTag(tag)}><TiTimes size={16} /></TagRemover>
         </Badge>
     );
-}
+};
 
 export default Tag;

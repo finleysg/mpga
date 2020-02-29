@@ -19,7 +19,7 @@ export interface IToggleEditProps {
 
 const ToggleEditButton: React.FC<IToggleEditProps> = (props) => {
     return (
-        <EditButton title="Edit" onClick={() => props.Toggled()}>
+        <EditButton title={props.isEditting ? "Cancel" : "Edit"} onClick={() => props.Toggled()}>
             {props.isEditting
                 ? <TiTimes size={24} color={"teal"} />
                 : <TiEdit size={24} color={"teal"} />}

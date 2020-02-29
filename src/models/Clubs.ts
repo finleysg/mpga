@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { Model } from './Model';
+import { IContactData } from '../features/contacts/ContactApi';
 
 export class Address {
   addressTxt: string | undefined;
@@ -8,11 +9,7 @@ export class Address {
   zip: string | undefined;
 
   get isComplete(): boolean {
-    return true &&
-      this.addressTxt!.length > 0 &&
-      this.city!.length > 0 &&
-      this.state!.length > 0 &&
-      this.zip!.length > 0;
+    return this.addressTxt!.length > 0 && this.city!.length > 0 && this.state!.length > 0 && this.zip!.length > 0;
   }
 }
 
@@ -48,17 +45,17 @@ export class GolfCourse extends Model {
 }
 
 export class Contact extends Model {
-  firstName: string | undefined;
-  lastName: string | undefined;
-  contactType: string | undefined;
-  primaryPhone: string | undefined;
-  alternatePhone: string | undefined;
-  email: string | undefined;
-  addressTxt: string | undefined;
-  city: string | undefined;
-  state: string | undefined;
-  zip: string | undefined;
-  notes: string | undefined;
+  firstName: string = "";
+  lastName: string = "";
+  contactType: string = "";
+  primaryPhone?: string;
+  alternatePhone?: string;
+  email: string = "";
+  addressTxt?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  notes?: string;
 
   constructor(obj: any) {
     super();
@@ -83,16 +80,27 @@ export class Contact extends Model {
   }
 }
 
+export interface IClub {
+  id: number;
+  name: string;
+  systemName: string;
+  isCurrent: boolean;
+  website: string;
+  location: GolfCourse;
+  size?: number;
+  president?: string;
+}
+
 export class Club extends Model {
-  name: string | undefined;
-  shortName: string | undefined;
-  website: string | undefined;
-  type2: boolean | undefined;
-  notes: string | undefined;
-  size: number | undefined;
-  golfCourse: GolfCourse | undefined;
-  clubContacts: ClubContact[] | undefined;
-  years: number[] | undefined;  // years for which we have membership data
+  name: string = "";
+  systemName: string = "";
+  website?: string;
+  type2: boolean = false;
+  notes?: string;
+  size?: number;
+  golfCourse?: GolfCourse;
+  clubContacts: ClubContact[] = [];
+  years: number[] = [];  // years for which we have membership data
 
   constructor(obj: any) {
     super();
@@ -106,9 +114,10 @@ export class Club extends Model {
     }
   }
 
-  addContact(contact: Contact): ClubContact {
+  addContact(contact: IContactData): ClubContact {
     const cc = new ClubContact({'contact': contact});
     cc.club = this.id;
+    cc.id = 0;
     if (!this.clubContacts) {
       this.clubContacts = [];
     }
@@ -130,19 +139,19 @@ export class Club extends Model {
 }
 
 export class Membership extends Model {
-  year: number | undefined;
-  club: number | undefined;
-  paymentDate: moment.Moment | undefined;
-  paymentType: string | undefined;
-  paymentCode: string | undefined;
-  createDate: moment.Moment | undefined;
-  notes: string | undefined;
+  year: number = 0;
+  club: number = 0;
+  paymentDate: string = "";
+  paymentType: string = "";
+  paymentCode?: string;
+  createDate: Date = new Date();
+  notes?: string;
 
   constructor(obj: any) {
     super();
     if (obj) {
       const mem = super.fromJson(obj);
-      // mem.club = new Club(obj['club']);
+      mem.paymentDate = obj.payment_date;
       Object.assign(this, mem);
     }
   }

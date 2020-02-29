@@ -13,10 +13,8 @@ const Auth = axios.create({
 });
 
 Api.interceptors.request.use((config: AxiosRequestConfig) => {
-    if (config.method?.toLowerCase() !== "get") {
-        const token = getTokenFromStorage();
-        config.headers["Authorization"] = "Token " + token;
-    }
+    const token = getTokenFromStorage();
+    config.headers["Authorization"] = "Token " + token;
     return config;
 });
 

@@ -26,11 +26,7 @@ const EditableDiv: React.FC<IEditable> = (props) => {
     return (
         <ToggleDiv doEdit={doEdit}>
             {props.canEdit &&
-            <ToggleEditButton isEditting={doEdit} Toggled={() => setDoEdit(!doEdit)}>
-                {doEdit
-                    ? <TiTimes size={24} color={"teal"} />
-                    : <TiEdit size={24} color={"teal"} />}
-            </ToggleEditButton>}
+            <ToggleEditButton isEditting={doEdit} Toggled={() => setDoEdit(!doEdit)} />}
             {doEdit ?
                 props.editComponent :
                 props.viewComponent }

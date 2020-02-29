@@ -1,10 +1,23 @@
 import React from 'react';
+import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
+import Container from 'react-bootstrap/Container';
+import MemberClubList from '../features/members/MemberClubList';
+import PageContentDetail from '../features/content/PageContentDetail';
+import { PageCodes } from '../constants';
 
 const MemberClubsPage: React.FC = () => {
     return (
-        <div>
-            <p>Member Clubs Page</p>
-        </div>
+        <Container fluid={true}>
+            <LargeLeftSmallRight
+                Column1={
+                    <div>
+                        <PageContentDetail pageCode={PageCodes.MemberClubs} />
+                        <MemberClubList />
+                    </div>
+                }
+                Column2={"Interested in joining the MPGA?"}
+            />
+        </Container>
     );
 }
 

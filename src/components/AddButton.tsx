@@ -1,9 +1,11 @@
 import React from "react";
 import { TiPlus } from "react-icons/ti";
 import styled from "styled-components";
+import { FaPlusCircle } from "react-icons/fa";
 
 const AddButtonContainer = styled.a`
     float: right;
+    margin-top: -30px;
     width: 30px;
     height: 30px; 
     text-align: center;
@@ -18,8 +20,8 @@ export interface IAddProps {
 
 const AddButton: React.FC<IAddProps> = (props) => {
     return (
-        <AddButtonContainer title="Add" onClick={() => props.AddRequested()}>
-            <TiPlus size={24} color={"teal"} />
+        <AddButtonContainer title="Add New" onClick={() => props.AddRequested()}>
+            <FaPlusCircle size={24} color={"purple"} />
         </AddButtonContainer>
     );
 }

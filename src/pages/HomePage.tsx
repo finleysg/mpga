@@ -22,6 +22,6 @@ const HomePage: React.FC = () => {
             />
         </Container>
     );
-}
+};
 
 export default HomePage

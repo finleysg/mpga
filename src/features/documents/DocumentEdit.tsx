@@ -1,19 +1,19 @@
-import { Formik } from 'formik';
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import * as yup from 'yup';
+import { Formik } from "formik";
+import React from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import * as yup from "yup";
 
-import FilePicker from '../../components/FilePicker';
-import { MpgaDocument, ITag } from '../../models/Documents';
-import TagPicker from '../tags/TagPicker';
-import { IDocumentView } from './DocumentView';
+import FilePicker from "../../components/FilePicker";
+import { MpgaDocument, ITag } from "../../models/Documents";
+import TagPicker from "../tags/TagPicker";
+import { IDocumentView } from "./DocumentView";
 
 export interface IDocumentEdit extends IDocumentView {
     file?: File,
     Cancel: () => void,
     Save: (file: File, document: MpgaDocument) => void,
-};
+}
 
 interface IDocument {
     id?: number,
@@ -22,7 +22,7 @@ interface IDocument {
     type: string,
     file?: File,
     tags?: ITag[],
-};
+}
 
 const schema = yup.object({
     year: yup.number().required(),

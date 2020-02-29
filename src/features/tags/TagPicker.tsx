@@ -24,7 +24,7 @@ const TagPicker: React.FC<ITagPickerProps> = (props) => {
             updateTags(updatedTags);
             props.OnChange(updatedTags);
         }
-    }
+    };
 
     return (
         <div>
