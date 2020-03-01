@@ -1,13 +1,13 @@
 import React from 'react';
 
-import OneCenteredColumn from '../components/layouts/OneCenteredColumn';
+import OneSmallColumn from '../components/layouts/OneSmallColumn';
 import Login from '../features/session/Login';
 
 const LoginPage: React.FC = () => {
     return (
-        <OneCenteredColumn>
+        <OneSmallColumn>
             <Login />
-        </OneCenteredColumn>
+        </OneSmallColumn>
     );
 }
 

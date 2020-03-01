@@ -11,21 +11,8 @@ const ContactSearch: React.FC<IContactSearchProps> = (props) => {
     const [{ isLoading, isError, data }, setQuery] = useContactApi("", []);
     let instance: any;
 
-    const _renderContact = (option: any, props: any, index: any) => {
-        return [
-            <>
-                <Highlighter key="last_name" search={props.text}>
-                    {option.first_name + " " + option.last_name}
-                </Highlighter>
-                <div key="email">
-                    <small>Email: {option.email}</small>
-                </div>
-            </>
-        ];
-    }
-
     return (
-        <div>
+        <div className="mb-3">
             <p>
                 First search for a contact already in our database. If you don't find
                 one, select "Create new contact".
@@ -34,11 +21,20 @@ const ContactSearch: React.FC<IContactSearchProps> = (props) => {
                 id="contact-search"
                 ref={(typeahead) => instance = typeahead}
                 placeholder="Search for contact..."
+                labelKey="name"
                 isLoading={isLoading}
                 minLength={3}
-                renderMenuItemChildren={_renderContact}
-                highlightOnlyResult={true}
-                selectHintOnEnter={true}
+                renderMenuItemChildren={(option, props) => (
+                    <>
+                        <Highlighter key="name" search={props.text}>
+                            {option.name}
+                        </Highlighter>
+                        <div key="email">
+                            <small>Email: {option.email}</small>
+                        </div>
+                    </>
+                  )}
+                highlightOnlyResult={!props.allowNew}
                 newSelectionPrefix={"Create new contact: "}
                 allowNew={props.allowNew}
                 onSearch={query => {

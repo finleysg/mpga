@@ -1,11 +1,12 @@
 import React, { useState, ReactNode } from "react";
-import { TiEdit, TiTimes } from "react-icons/ti";
 import styled from "styled-components";
 import ToggleEditButton from "./ToggleEditButton";
 
 const ToggleDiv = styled<IEditState | any>('div')`
     border-width: ${props => props.doEdit ? "1px" : "0"};
-    border-color: #cccccc;
+    border-color: teal;
+    border-style: solid;
+    padding: ${props => props.doEdit ? "10px" : "0"};
     margin-bottom: 2rem;
 `
 ToggleDiv.displayName = "ToggleDiv";

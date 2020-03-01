@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import ThreeEvenColumns from '../components/layouts/ThreeEvenColumns';

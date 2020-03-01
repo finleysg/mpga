@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Model } from './Model';
 import { IContactData } from '../features/contacts/ContactApi';
+import { IClubContactData } from '../features/members/ClubContactEdit';
 
 export class Address {
   addressTxt: string | undefined;
@@ -47,7 +48,6 @@ export class GolfCourse extends Model {
 export class Contact extends Model {
   firstName: string = "";
   lastName: string = "";
-  contactType: string = "";
   primaryPhone?: string;
   alternatePhone?: string;
   email: string = "";
@@ -59,7 +59,18 @@ export class Contact extends Model {
 
   constructor(obj: any) {
     super();
-    const contact = this.fromJson(obj);
+    const contact = {
+      firstName: obj?.first_name || obj?.firstName,
+      lastName: obj?.last_name || obj?.lastName,
+      primaryPhone: obj?.primary_phone || obj?.primaryPhone,
+      alternatePhone: obj?.alternate_phone || obj?.alternatePhone,
+      email: obj?.email || obj?.email,
+      addressTxt: obj?.address_txt || obj?.addressTxt,
+      city: obj?.city || obj?.city,
+      state: obj?.state || obj?.state,
+      zip: obj?.zip || obj?.zip,
+      notes: obj?.notes || obj?.notes,
+    };
     Object.assign(this, contact);
   }
 
@@ -233,7 +244,7 @@ export class ClubContact extends Model {
   useForMailings = false;
   deleted = false;
   dirty = false;
-  roles: ClubContactRole[] = [];
+  roles?: ClubContactRole[] = [];
   notes: string | undefined;
 
   constructor(obj: any) {
@@ -246,6 +257,29 @@ export class ClubContact extends Model {
       }
       Object.assign(this, cc);
     }
+  }
+
+  static Create(clubId: number, data: IClubContactData): ClubContact {
+    const clubContact = new ClubContact({
+      is_primary: data.isPrimary,
+      use_for_mailings: data.useForMailings,
+      notes: data.notes,
+    });
+    clubContact.contact = new Contact({
+      first_name: data.firstName,
+      last_name: data.lastName,
+      contact_type: "Men's Club",
+      primary_phone: data.primaryPhone,
+      alternate_phone: data.alternatePhone,
+      email: data.email,
+      address_txt: data.addressTxt,
+      city: data.city,
+      state: data.state,
+      zip: data.zip
+    });
+    clubContact.roles = data.roles?.map(r => new ClubContactRole({ role: r.role }));
+    clubContact.club = clubId;
+    return clubContact;
   }
 
   addRole(name: string): void {
@@ -261,20 +295,16 @@ export class ClubContact extends Model {
   }
 
   get isCaptain(): boolean {
-    return this.roles && this.roles.some(r => r.role === 'Match Play Captain');
+    return this.roles !== undefined && this.roles.some(r => r.role === 'Match Play Captain');
   }
 
   get isSeniorCaptain(): boolean {
-    return this.roles && this.roles.some(r => r.role === 'Sr. Match Play Captain');
+    return this.roles !== undefined && this.roles.some(r => r.role === 'Sr. Match Play Captain');
   }
-
-  // get maybeCaptain(): boolean {
-  //   return !this.roles || this.roles.length === 0 || this.roles.some(r => r.role.indexOf('Captain') > 0);
-  // }
 
   prepJson(): any {
     const cc = super.snakeCase(this);
-    cc.roles = this.roles.map(r => r.prepJson());
+    cc.roles = this.roles?.map(r => r.prepJson());
     cc.contact = this.contact!.prepJson();
     return cc;
   }

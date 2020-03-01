@@ -1,6 +1,6 @@
 import { Action, Reducer } from 'redux';
 
-import { IClub, Club, Membership, ClubContact } from '../models/Clubs';
+import { IClub, Club, Membership, ClubContact, Contact } from '../models/Clubs';
 import { MemberClubActionTypes } from './MemberClubActions';
 import { IContactData } from '../features/contacts/ContactApi';
 
@@ -92,6 +92,18 @@ export interface IClubContactSaveFailed extends Action {
     type: MemberClubActionTypes.SAVE_CLUB_CONTACT_FAILED;
 }
 
+export interface IClubContactRemoveRequested extends Action {
+    type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_REQUESTED;
+}
+
+export interface IClubContactRemoveSucceeded extends Action {
+    type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_SUCCEEDED;
+}
+
+export interface IClubContactRemoveFailed extends Action {
+    type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_FAILED;
+}
+
 type KnownActions = ILoadMemberClubsRequested 
     | ILoadMemberClubsSucceeded
     | ILoadMemberClubsFailed 
@@ -108,7 +120,10 @@ type KnownActions = ILoadMemberClubsRequested
     | IClubContactCancel
     | IClubContactSaveRequested
     | IClubContactSaveSucceeded
-    | IClubContactSaveFailed;
+    | IClubContactSaveFailed
+    | IClubContactRemoveRequested
+    | IClubContactRemoveSucceeded
+    | IClubContactRemoveFailed;
 
 export const MemberClubsReducer: Reducer<IMemberClubState, KnownActions> =
     (state: IMemberClubState = defaultState, action: KnownActions): IMemberClubState => {
@@ -149,13 +164,21 @@ export const MemberClubsReducer: Reducer<IMemberClubState, KnownActions> =
         }
         case MemberClubActionTypes.ADD_CLUB_CONTACT: {
             const club = state.selectedClub;
-            club.addContact(action.payload);
+            const clubContacts = club.clubContacts.slice(0);
+            const newClubContact = new ClubContact({id: 0});
+            newClubContact.contact = new Contact(action.payload);
+            newClubContact.club = club.id;
+            clubContacts.unshift(newClubContact);
+            club.clubContacts = clubContacts;
             return {...state, selectedClub: club }
         }
         case MemberClubActionTypes.APPEND_CLUB_CONTACT: {
             const club = state.selectedClub;
             const clubContacts = club.clubContacts.slice(0);
-            clubContacts.unshift(new ClubContact({id: 0, contact: {}}));
+            const newClubContact = new ClubContact({id: 0});
+            newClubContact.contact = new Contact({id: 0});
+            newClubContact.club = club.id;
+            clubContacts.unshift(newClubContact);
             club.clubContacts = clubContacts;
             return {...state, selectedClub: club }
         }
@@ -175,6 +198,15 @@ export const MemberClubsReducer: Reducer<IMemberClubState, KnownActions> =
             return {...state, isBusy: false};
         }
         case MemberClubActionTypes.SAVE_CLUB_CONTACT_FAILED: {
+            return {...state, isBusy: false, hasError: true};
+        }
+        case MemberClubActionTypes.REMOVE_CLUB_CONTACT_REQUESTED: {
+            return {...state, isBusy: true, hasError: false};
+        }
+        case MemberClubActionTypes.REMOVE_CLUB_CONTACT_SUCCEEDED: {
+            return {...state, isBusy: false};
+        }
+        case MemberClubActionTypes.REMOVE_CLUB_CONTACT_FAILED: {
             return {...state, isBusy: false, hasError: true};
         }
         default:

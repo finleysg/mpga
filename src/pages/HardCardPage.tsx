@@ -1,9 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import EventCalendar from "../features/tournaments/EventCalendar";
 import {PolicyCodes} from "../constants";
 import PolicyList from "../features/content/PolicyList";
-import TwoEvenColumns from "../components/layouts/TwoEvenColumns";
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
 
 const HardCardPage: React.FC = () => {

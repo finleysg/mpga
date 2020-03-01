@@ -1,5 +1,5 @@
 import { Api } from "../http";
-import { Club, ClubContact, IClub, Membership } from "../models/Clubs";
+import { Club, ClubContact, IClub, Membership } from '../models/Clubs';
 import { IApplicationState } from "./";
 import NotificationActions from "./NotificationActions";
 import { IClubContactData } from "../features/members/ClubContactEdit";
@@ -23,6 +23,9 @@ export enum MemberClubActionTypes {
     SAVE_CLUB_CONTACT_REQUESTED = "SAVE_CLUB_CONTACT_REQUESTED",
     SAVE_CLUB_CONTACT_SUCCEEDED = "SAVE_CLUB_CONTACT_SUCCEEDED",
     SAVE_CLUB_CONTACT_FAILED = "SAVE_CLUB_CONTACT_FAILED",
+    REMOVE_CLUB_CONTACT_REQUESTED = "REMOVE_CLUB_CONTACT_REQUESTED",
+    REMOVE_CLUB_CONTACT_SUCCEEDED = "REMOVE_CLUB_CONTACT_SUCCEEDED",
+    REMOVE_CLUB_CONTACT_FAILED = "REMOVE_CLUB_CONTACT_FAILED",
 };
 
 const clubsUrl = "/clubs/";
@@ -111,15 +114,15 @@ const MemberClubActions = {
         dispatch({type: MemberClubActionTypes.CANCEL_NEW_CLUB_CONTACT});
     },
 
-    SaveClubContact: (id: number, contact: IClubContactData) => async (dispatch: any, getState: () => IApplicationState) => {
+    SaveClubContact: (clubContactId: number, contact: IClubContactData) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentClub = getState().memberClubs.selectedClub;
         dispatch({ type: MemberClubActionTypes.SAVE_CLUB_CONTACT_REQUESTED });
         try {
-            const payload = {}; // contact.prepJson();
-            if (!id) {
+            const payload = ClubContact.Create(currentClub.id!, contact).prepJson();
+            if (!clubContactId) {
                 await Api.post(clubContactsUrl, payload);
             } else {
-                await Api.put(`${clubContactsUrl}${id}/`, payload);
+                await Api.put(`${clubContactsUrl}${clubContactId}/`, payload);
             }
             dispatch({ type: MemberClubActionTypes.SAVE_CLUB_CONTACT_SUCCEEDED });
             dispatch(MemberClubActions.LoadMemberClub(currentClub.systemName));
@@ -128,7 +131,21 @@ const MemberClubActions = {
             dispatch({ type: MemberClubActionTypes.SAVE_CLUB_CONTACT_FAILED });
             dispatch(NotificationActions.ToastError(error));
         }
-    }
+    },
+
+    RemoveClubContact: (clubContact: ClubContact) => async (dispatch: any, getState: () => IApplicationState) => {
+        const currentClub = getState().memberClubs.selectedClub;
+        dispatch({ type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_REQUESTED });
+        try {
+            await Api.delete(`${clubContactsUrl}${clubContact.id}/`);
+            dispatch({ type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_SUCCEEDED });
+            dispatch(MemberClubActions.LoadMemberClub(currentClub.systemName));
+            dispatch(NotificationActions.ToastSuccess(`${clubContact.contact?.firstName + " " + clubContact.contact?.lastName} has been removed.`))
+        } catch (error) {
+            dispatch({ type: MemberClubActionTypes.REMOVE_CLUB_CONTACT_FAILED });
+            dispatch(NotificationActions.ToastError(error));
+        }
+    },
 }
 
 export default MemberClubActions;

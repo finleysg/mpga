@@ -34,7 +34,7 @@ const Login: React.FC = () => {
 
     const history = useHistory();
     const location = useLocation();
-    const { from } = location.state || { from: { pathname: "/" } };
+    const { from } = { from: { pathname: location.pathname || "/" } };
     const login = (email: string, password: string, remember: boolean) => {
         dispatch(UserActions.Login(email, password, remember, history, from));
     };

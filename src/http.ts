@@ -14,7 +14,9 @@ const Auth = axios.create({
 
 Api.interceptors.request.use((config: AxiosRequestConfig) => {
     const token = getTokenFromStorage();
-    config.headers["Authorization"] = "Token " + token;
+    if (token) {
+        config.headers["Authorization"] = "Token " + token;
+    }
     return config;
 });
 

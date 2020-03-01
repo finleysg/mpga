@@ -13,7 +13,6 @@ import {IRole} from "../roles/Role";
 export interface IClubContactData {
     firstName: string;
     lastName: string;
-    contactType: string;
     primaryPhone?: string;
     alternatePhone?: string;
     email: string;
@@ -29,7 +28,7 @@ export interface IClubContactData {
 
 export interface IClubContactEditProps extends IClubContactProps {
     Cancel: () => void,
-    Delete: (id: number) => void,
+    Delete: (clubContact: ClubContact) => void,
     Save: (id: number, data: IClubContactData) => void,
 }
 
@@ -40,7 +39,6 @@ const schema = yup.object({
     email: yup.string().email().required(),
     primaryPhone: yup.string().matches(phoneRegEx).required(),
     alternatePhone: yup.string().matches(phoneRegEx).nullable(),
-    contactType: yup.string().required(),
     isPrimary: yup.boolean(),
     useForMailings: yup.boolean(),
     addressTxt: yup.string().when('useForMailings', {
@@ -70,7 +68,6 @@ const translateClubContact = (cc: ClubContact): IClubContactData => {
     return {
         firstName: contact.firstName,
         lastName: contact.lastName,
-        contactType: contact.contactType,
         primaryPhone: contact.primaryPhone,
         alternatePhone: contact.alternatePhone,
         email: contact.email,
@@ -98,7 +95,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
 
     const handleConfirmDeleteContinue = () => {
         setShowConfirmation(false);
-        props.Delete(props.clubContact.id!);
+        props.Delete(props.clubContact);
     };
 
     return (
@@ -190,14 +187,6 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                         <Form.Group controlId="cc.roles">
                             <Form.Label>Roles</Form.Label>
                             <RolePicker selectedRoles={values.roles || []} OnChange={(roles: IRole[]) => values.roles = roles} />
-                            {/*<Form.Control name="contactType"*/}
-                            {/*    as="select"*/}
-                            {/*    value={values.contactType}*/}
-                            {/*    onChange={handleChange}*/}
-                            {/*    onBlur={handleBlur}>*/}
-                            {/*        <option>Men's Club</option>*/}
-                            {/*        <option>Facilities</option>*/}
-                            {/*</Form.Control>*/}
                         </Form.Group>
                         <Form.Group controlId="cc.isPrimary">
                             <Form.Check name="isPrimary"

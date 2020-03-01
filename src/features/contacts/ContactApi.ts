@@ -1,11 +1,12 @@
-import axios from 'axios';
 import { useEffect, useReducer, useState } from 'react';
 
 import constants from '../../constants';
+import { Api } from '../../http';
 
 // raw contact data received from the api
 export interface IContactData {
     id: number;
+    name: string;
     first_name: string;
     last_name: string;
     contact_type: string;
@@ -30,11 +31,15 @@ const contactApiReducer = (state: IContactDataState, action: any): IContactDataS
         case "GET_CONTACTS_INIT":
             return { ...state, isLoading: true, isError: false };
         case "GET_CONTACTS_SUCCESS":
+            const contacts = action.payload.map((c: IContactData) => {
+                c.name = c.first_name + " " + c.last_name;
+                return c;
+            });
             return {
                 ...state,
                 isLoading: false,
                 isError: false,
-                data: action.payload,
+                data: contacts,
             };
         case "GET_CONTACTS_FAILURE":
             return {
@@ -65,7 +70,7 @@ const useContactApi = (initialQuery: string, initialData: IContactData[]): [ICon
                 dispatch({ type: "GET_CONTACTS_INIT" });
                 try {
                     console.log("searching for " + query);
-                    const result = await axios(url + "?pattern=" + query);
+                    const result = await Api.get(url + "?pattern=" + query);
                     if (!didCancel) {
                         dispatch({ type: "GET_CONTACTS_SUCCESS", payload: result.data });
                     }

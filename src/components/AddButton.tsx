@@ -1,5 +1,4 @@
 import React from "react";
-import { TiPlus } from "react-icons/ti";
 import styled from "styled-components";
 import { FaPlusCircle } from "react-icons/fa";
 

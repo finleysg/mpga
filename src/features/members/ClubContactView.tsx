@@ -12,10 +12,17 @@ const ClubContactView: React.FC<IClubContactProps> = (props) => {
     const { clubContact } = props;
     return (
         <div>
-            <h5>{clubContact.contact?.firstName + " " + clubContact.contact?.lastName}</h5>
+            <h5>{clubContact.contact?.firstName + " " + clubContact.contact?.lastName}
+            {clubContact.isPrimary &&
+                <FaStar className="ml-1" size={16} color={"purple"} title="Primary contact" />
+            }
+            {clubContact.useForMailings &&
+                <FaEnvelope className="ml-1" size={16} color={"purple"} title="Mailing contact" />
+            }
+            </h5>
             <LabelAndValue
                 label={"Roles"}
-                value={clubContact.roles.map(r => r.role).join(", ")}
+                value={clubContact.roles?.map(r => r.role).join(", ") || []}
                 defaultValue="No roles defined"
                 labelStyle={LabelStyle.Inline}
                 valueType={ValueType.Text} />
@@ -31,12 +38,6 @@ const ClubContactView: React.FC<IClubContactProps> = (props) => {
                 defaultValue={"no email"}
                 labelStyle={LabelStyle.Inline}
                 valueType={ValueType.Text} />
-            {clubContact.isPrimary &&
-                <p><FaStar size={18} color={"purple"} /> Primary contact (email)</p>
-            }
-            {clubContact.useForMailings &&
-                <p><FaEnvelope size={18} color={"purple"} /> Primary contact (mailings)</p>
-            }
         </div>
     );
 };
