@@ -44,21 +44,26 @@ export class MpgaDocument extends Model {
 }
 
 export class MpgaPhoto extends Model {
-  year: number | undefined;
-  caption: string | undefined;
-  photoType: string | undefined;
-  thumbnailUrl: string | undefined;
-  imageUrl: string | undefined;
-  lastUpdate: moment.Moment | undefined;
-  createdBy: string | undefined;
-  tournament: number | undefined;
-  tags: string[] | undefined;
+  year = moment().year();
+  caption?: string;
+  photoType = "Other";
+  thumbnailUrl?: string;
+  imageUrl?: string;
+  lastUpdate?: Date;
+  createdBy?: string;
+  tournament?: number;
+  tags?: ITag[];
 
   constructor(json: any) {
     super();
     const obj = this.fromJson(json);
     if (json && json.tags) {
-      obj.tags = json.tags.map((t: any) => t.tag);
+      obj.tags = json.tags.map((t: any) => {
+        return {
+          id: t.id,
+          name: t.tag,
+        };
+      });
     }
     Object.assign(this, obj);
   }
