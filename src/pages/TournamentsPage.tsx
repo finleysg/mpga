@@ -1,18 +1,23 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import EventCalendar from "../features/tournaments/EventCalendar";
 import {PolicyCodes} from "../constants";
 import PolicyList from "../features/content/PolicyList";
 import TwoEvenColumns from "../components/layouts/TwoEvenColumns";
+import TournamentList from "../features/tournaments/TournamentList";
 
 const TournamentsPage: React.FC = () => {
     return (
         <Container fluid={true}>
             <TwoEvenColumns
-                LeftColumn={<EventCalendar />}
+                LeftColumn={
+                    <>
+                        <h3 className="text-primary mb-2">Tournaments</h3>
+                        <TournamentList />
+                    </>
+                }
                 RightColumn={
                     <>
-                        <h4 className="text-primary mb-2">Tournament Players Information</h4>
+                        <h3 className="text-primary mb-2">Tournament Policies</h3>
                         <PolicyList policyCode={PolicyCodes.TournamentPlayerInformation} />
                     </>}
             />

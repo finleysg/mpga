@@ -12,7 +12,7 @@ import PhotoModal from "../gallery/PhotoModal";
 const TournamentPhotoList: React.FC = () => {
     const dispatch = useDispatch();
     const state = useSelector((state: IApplicationState) => state.photos);
-    const tournament = useSelector((state: IApplicationState) => state.tournament?.tournament);
+    const tournament = useSelector((state: IApplicationState) => state.tournament?.currentTournament);
     // const session = useSelector((state: IApplicationState) => state.session);
     // const canAdd = state.data.findIndex(a => a.id === 0) < 0; // no pending add
 

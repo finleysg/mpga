@@ -24,7 +24,7 @@ const TournamentWinnerActions = {
     LoadTournamentWinners: (systemName: string) => async (dispatch: any, getState: () => IApplicationState) => {
         dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_REQUESTED});
         try {
-            const tournament = getState().tournament.tournament;
+            const tournament = getState().tournament.currentTournament;
             const result = await Api.get(`${tournamentWinnerUrl}?name=${systemName}`);
             const data = result.data.map((json: any) => new TournamentWinner(json));
             const grouped = data.reduce((acc: ITournamentWinnerGroup[], item: TournamentWinner) => {
@@ -55,7 +55,7 @@ const TournamentWinnerActions = {
     SaveTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
         dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_REQUESTED});
         try {
-            const tournament = getState().tournament.tournament;
+            const tournament = getState().tournament.currentTournament;
             const payload = winner.prepJson();
             payload.tournament = tournament.id;
             if (winner.id === -1) {
@@ -74,7 +74,7 @@ const TournamentWinnerActions = {
     DeleteTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
         dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED});
         try {
-            const tournament = getState().tournament.tournament;
+            const tournament = getState().tournament.currentTournament;
             await Api.delete(`${tournamentWinnerUrl}${winner.id}/`);
             dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_SUCCEEDED });
             dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament.systemName));

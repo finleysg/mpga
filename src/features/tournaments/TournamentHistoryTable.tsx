@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Table from 'react-bootstrap/Table';
 import { TournamentWinner, ITournamentWinnerGroup } from '../../models/Events';
 import { useSelector, useDispatch } from 'react-redux';
 import { IApplicationState } from '../../store';
 import TournamentWinnerRow from './TournamentWinnerRow';
-import ToggleOpenButton from '../../components/ToggleOpenButton';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import TournamentWinnerActions from '../../store/TournamentWinnerActions';
@@ -24,16 +23,14 @@ export interface ITournamentHistoryTableProps {
 const TournamentHistoryTable: React.FC<ITournamentHistoryTableProps> = (props) => {
     const { year, location, winners } = props.group;
     const dispatch = useDispatch();
-    const [isOpen, setIsOpen] = useState(false);
     const session = useSelector((state: IApplicationState) => state.session);
 
     return (
         <div>
-            <div>
-                <ToggleOpenButton isOpen={isOpen} Toggled={() => setIsOpen(!isOpen)} />
+            {/* <div>
                 <TournamentYearAndName>{year} {location}</TournamentYearAndName>
-            </div>
-            {isOpen &&
+            </div> */}
+            <h4 className="text-secondary mb-3">{year} {location}</h4>
             <Table>
                 <thead>
                     <tr>
@@ -47,11 +44,11 @@ const TournamentHistoryTable: React.FC<ITournamentHistoryTableProps> = (props) =
                 <tbody>
                     {winners.map((winner: TournamentWinner) => <TournamentWinnerRow key={winner.id} winner={winner} />)}
                 </tbody>
-            </Table>}
-            {isOpen && session.user.isFullEditor && <Button variant="outline-secondary" 
+            </Table>
+            {session.user.isFullEditor && <Button variant="outline-secondary" 
                 size="sm"
                 onClick={() => dispatch(TournamentWinnerActions.AddNew(year, location))}>
-                Add Result
+                Add Winner
             </Button>}
         </div>
     );

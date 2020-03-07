@@ -3,7 +3,6 @@ import Container from 'react-bootstrap/Container';
 import { useParams } from 'react-router-dom';
 
 import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
-import TournamentHistoryDetail from '../features/tournaments/TournamentHistoryDetail';
 import TournamentHistoryList from '../features/tournaments/TournamentHistoryList';
 
 const TournamentHistoryPage: React.FC = () => {
@@ -14,7 +13,7 @@ const TournamentHistoryPage: React.FC = () => {
             <LargeLeftSmallRight
                 Column1={
                     <div>
-                        {name && <TournamentHistoryDetail tournamentName={name} />}
+                        <h3 className="text-primary mb-2">Past Champions</h3>
                         {name && <TournamentHistoryList tournamentName={name} />}
                     </div>
                 }

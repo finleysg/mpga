@@ -4,10 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import * as yup from 'yup';
 
-import { ITournamentHistoryOverviewProps } from './TournamentHistoryOverview';
 import { Tournament } from '../../models/Events';
+import { ITournamentViewProps } from './TournamentView';
 
-export interface ITournamentHistoryEditProps extends ITournamentHistoryOverviewProps {
+export interface ITournamentEditProps extends ITournamentViewProps {
     Save: (tournament: Tournament) => void,
 };
 
@@ -16,7 +16,7 @@ const schema = yup.object({
     description: yup.string().required(),
 });
 
-const TournamentHistoryEdit: React.FC<ITournamentHistoryEditProps> = (props) => {
+const TournamentEdit: React.FC<ITournamentEditProps> = (props) => {
     const tournament = props.tournament;
     return (
         <div>
@@ -79,4 +79,4 @@ const TournamentHistoryEdit: React.FC<ITournamentHistoryEditProps> = (props) => 
     );
 }
 
-export default TournamentHistoryEdit;
+export default TournamentEdit;

@@ -6,6 +6,7 @@ import TournamentHistoryPage from '../pages/TournamentHistoryPage';
 import HardCardPage from "../pages/HardCardPage";
 import CodeOfConductPage from "../pages/CodeOfConductPage";
 import TournamentGalleryPage from '../pages/TournamentGalleryPage';
+import PaceOfPlayPage from '../pages/PaceOfPlayPage';
 
 export const TournamentRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -22,7 +23,7 @@ export const TournamentRoutes: React.FC = () => {
                     <CodeOfConductPage />
                 </Route>
                 <Route exact path={`${path}/pace-of-play`}>
-                    <p>Pace of Play</p>
+                    <PaceOfPlayPage />
                 </Route>
                 <Route exact path={`${path}/t/:name`}>
                     <p>tournament name here</p>

@@ -44,7 +44,7 @@ const PhotoActions = {
     },
 
     LoadTournamentPhotos: () => async (dispatch: any, getState: () => IApplicationState) => {
-        const tournament = getState().tournament.tournament;
+        const tournament = getState().tournament.currentTournament;
         if (tournament && tournament.id) {
             dispatch({ type: PhotoActionTypes.GET_PHOTOS_REQUESTED});
             try {

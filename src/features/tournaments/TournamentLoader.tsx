@@ -11,7 +11,7 @@ const TournamentLoader: React.FC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (name && state?.tournament.systemName !== name) {
+        if (name && state?.currentTournament.systemName !== name) {
             dispatch(TournamentActions.LoadTournament(name));
         }
     }, [dispatch, name]);

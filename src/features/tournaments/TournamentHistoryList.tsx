@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ITournamentWinnerGroup } from '../../models/Events';
 import { IApplicationState } from '../../store';
 import TournamentWinnerActions from '../../store/TournamentWinnerActions';
-import { ITournamentProps } from './TournamentHistoryDetail';
 import TournamentHistoryTable from './TournamentHistoryTable';
+
+export interface ITournamentProps {
+    tournamentName: string;
+}
 
 const TournamentHistoryList: React.FC<ITournamentProps> = (props) => {
     const { tournamentName } = props;
@@ -20,7 +23,6 @@ const TournamentHistoryList: React.FC<ITournamentProps> = (props) => {
 
     return (
         <div>
-            <h4 className="text-primary mb-2">Past Champions</h4>
             {state.winners.map((group: ITournamentWinnerGroup) => 
                 <TournamentHistoryTable key={group.year} group={group} />)}
         </div>
