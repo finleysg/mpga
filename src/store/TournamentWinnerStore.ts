@@ -1,6 +1,6 @@
 import { Action, Reducer } from 'redux';
 
-import { ITournamentWinnerGroup, TournamentWinner } from '../models/Events';
+import { ITournamentWinnerGroup, TournamentWinner, Tournament } from '../models/Events';
 import { TournamentWinnerActionTypes } from './TournamentWinnerActions';
 
 export interface ITournamentWinnerState {
@@ -56,7 +56,7 @@ export interface ITournamentWinnerDeleteFailed extends Action {
 
 export interface ITournamentWinnerAppendNew extends Action {
     type: TournamentWinnerActionTypes.APPEND_NEW_TOURNAMENT_WINNER;
-    payload: { year: number, location: string }
+    payload: { tournament: Tournament, year: number, location: string }
 }
 
 export interface ITournamentWinnerCancelNew extends Action {
@@ -106,15 +106,25 @@ export const TournamentWinnersReducer: Reducer<ITournamentWinnerState, KnownActi
         case TournamentWinnerActionTypes.APPEND_NEW_TOURNAMENT_WINNER: {
             const winner = new TournamentWinner({
                 id: -1,
+                tournament: action.payload.tournament.id,
                 year: action.payload.year,
                 location: action.payload.location,
             });
-            const winners = state.winners.slice(0);
-            const group = winners
+            const winnerGroups = state.winners.slice(0);
+            let group = winnerGroups
                 .find(w => w.year === action.payload.year && 
                            w.location === action.payload.location);
-            group?.winners.push(winner);
-            return {...state, winners: winners }
+            if (!group) {
+                group = {
+                    tournament: action.payload.tournament,
+                    year: action.payload.year,
+                    location: action.payload.location,
+                    winners: [],
+                } as ITournamentWinnerGroup;
+                winnerGroups.unshift(group);
+            }
+            group.winners.push(winner);
+            return {...state, winners: winnerGroups }
         }
         case TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER: {
             return {...state};

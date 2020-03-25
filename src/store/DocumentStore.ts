@@ -1,38 +1,44 @@
 import { Action, Reducer } from "redux";
 import { MpgaDocument } from "../models/Documents";
-import { DocumentActionTypes } from "./DocumentActions";
+import { DocumentActionTypes, IDocumentSearch } from "./DocumentActions";
 
 export interface IDocumentState {
-    data: MpgaDocument[];
+    documents: Map<string, MpgaDocument[]>;
+    queries: Map<string, IDocumentSearch>;
     isBusy: boolean;
     hasError: boolean;
 }
 
 export const defaultState: IDocumentState = {
-    data: [],
+    documents: new Map([]),
+    queries: new Map([]),
     isBusy: false,
     hasError: false,
 };
 
 export interface IDocumentAppend extends Action {
     type: DocumentActionTypes.APPEND_DOCUMENT;
+    payload: { query: IDocumentSearch };
 }
 
 export interface IDocumentCancel extends Action {
     type: DocumentActionTypes.CANCEL_NEW_DOCUMENT;
+    payload: { key: string };
 }
 
-export interface IDocumentsRequested extends Action {
+export interface IGetDocumentsRequested extends Action {
     type: DocumentActionTypes.GET_DOCUMENTS_REQUESTED;
+    payload: { key: string; query: IDocumentSearch };
 }
 
-export interface IDocumentsSucceeded extends Action {
+export interface IGetDocumentsSucceeded extends Action {
     type: DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED;
-    payload: MpgaDocument[];
+    payload: { key: string; documents: MpgaDocument[] };
 }
 
-export interface IDocumentsFailed extends Action {
+export interface IGetDocumentsFailed extends Action {
     type: DocumentActionTypes.GET_DOCUMENTS_FAILED;
+    payload: { key: string };
 }
 
 export interface IDocumentSaveRequested extends Action {
@@ -47,56 +53,84 @@ export interface IDocumentSaveFailed extends Action {
     type: DocumentActionTypes.SAVE_DOCUMENT_FAILED;
 }
 
-type KnownActions = IDocumentAppend 
+type KnownActions =
+    | IDocumentAppend
     | IDocumentCancel
-    | IDocumentsRequested 
-    | IDocumentsSucceeded 
-    | IDocumentsFailed
+    | IGetDocumentsRequested
+    | IGetDocumentsSucceeded
+    | IGetDocumentsFailed
     | IDocumentSaveRequested
     | IDocumentSaveSucceeded
     | IDocumentSaveFailed;
 
-export const DocumentsReducer: Reducer<IDocumentState, KnownActions> =
-    (state: IDocumentState | undefined, action: KnownActions): IDocumentState => {
-
+export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
+    state: IDocumentState | undefined,
+    action: KnownActions
+): IDocumentState => {
     if (!state) {
-        state = {...defaultState};
+        state = { ...defaultState };
     }
 
     switch (action.type) {
         case DocumentActionTypes.APPEND_DOCUMENT: {
-            const documents = state.data;
-            documents.unshift(new MpgaDocument({}));
-            return {...state, data: documents }
+            const query = action.payload.query;
+            const documentMap = state.documents;
+            const documents = documentMap?.get(query.key) || [];
+            const year = query.event?.eventYear || query.year;
+            const tournamentId = query.event?.tournament?.id || query.tournament?.id;
+            const documentType = query.documentTypes && query.documentTypes[0];  // constrained to one type
+            documents.push(
+                new MpgaDocument({
+                    id: 0,
+                    title: "",
+                    document_type: documentType,
+                    year: year,
+                    tournament: tournamentId,
+                })
+            );
+            documentMap.set(query.key, documents);
+            return { ...state, documents: documentMap };
         }
         case DocumentActionTypes.CANCEL_NEW_DOCUMENT: {
-            const idx = state.data.findIndex(a => a.id === 0);
-            if (idx >= 0) {
-                const documents = state.data;
+            const key = action.payload.key;
+            const documentMap = state.documents;
+            const documents = documentMap?.get(key) || [];
+            const idx = documents.findIndex(d => d.id === 0);
+            if (idx && idx >= 0) {
                 documents.splice(idx, 1);
-                return {...state, data: documents};
+                documentMap.set(key, documents);
+                return { ...state, documents: documentMap };
             }
-            return {...state, }
+            return { ...state };
         }
         case DocumentActionTypes.GET_DOCUMENTS_REQUESTED: {
-            return {...state, isBusy: true, hasError: false};
+            const key = action.payload.key;
+            const queries = state.queries;
+            queries.set(key, action.payload.query);
+            return { ...state, queries: queries, isBusy: true, hasError: false };
         }
         case DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED: {
-            return {...state, data: action.payload, isBusy: false};
+            const key = action.payload.key;
+            const documentMap = state.documents;
+            documentMap.set(key, action.payload.documents);
+            return { ...state, documents: documentMap, isBusy: false };
         }
         case DocumentActionTypes.GET_DOCUMENTS_FAILED: {
-            return {...state, isBusy: false, hasError: true};
+            const key = action.payload.key;
+            const documentMap = state.documents;
+            documentMap.delete(key);
+            return { ...state, documents: documentMap, isBusy: false };
         }
         case DocumentActionTypes.SAVE_DOCUMENT_REQUESTED: {
-            return {...state, isBusy: true, hasError: false};
+            return { ...state, isBusy: true, hasError: false };
         }
         case DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED: {
-            return {...state, isBusy: false};
+            return { ...state, isBusy: false };
         }
         case DocumentActionTypes.SAVE_DOCUMENT_FAILED: {
-            return {...state, isBusy: false, hasError: true};
+            return { ...state, isBusy: false, hasError: true };
         }
         default:
             return state;
     }
-}
+};

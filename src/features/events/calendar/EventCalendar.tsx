@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import Loading from '../../components/Loading';
-import constants from '../../constants';
-import { IApplicationState } from '../../store';
+import Loading from '../../../components/Loading';
+import constants from '../../../constants';
+import { IApplicationState } from '../../../store';
 import EventCalendarItem from './EventCalendarItem';
-import EventActions from '../../store/EventActions';
+import EventActions from '../../../store/EventActions';
 
 const EventCalendar: React.FC = () => {
     const dispatch = useDispatch();
@@ -20,8 +20,7 @@ const EventCalendar: React.FC = () => {
 
     const handleNavigation = (linkName: string) => {
         const location = {
-            pathname: `/tournaments/t/${linkName}`
-        }
+            pathname: `/tournaments/detail/${linkName}/${constants.EventCalendarYear}`}
         history.push(location);
     }
 

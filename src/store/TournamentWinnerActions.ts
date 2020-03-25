@@ -1,8 +1,8 @@
-import constants from '../constants';
-import { Api } from '../http';
-import { TournamentWinner, ITournamentWinnerGroup } from '../models/Events';
-import NotificationActions from './NotificationActions';
-import { IApplicationState } from '.';
+import constants from "../constants";
+import { Api } from "../http";
+import { ITournamentWinnerGroup, Tournament, TournamentWinner } from "../models/Events";
+import { IApplicationState } from "./";
+import NotificationActions from "./NotificationActions";
 
 export enum TournamentWinnerActionTypes {
     GET_TOURNAMENT_WINNERS_REQUESTED = "GET_TOURNAMENT_WINNERS_REQUESTED",
@@ -16,13 +16,13 @@ export enum TournamentWinnerActionTypes {
     DELETE_TOURNAMENT_WINNER_REQUESTED = "DELETE_TOURNAMENT_WINNER_REQUESTED",
     DELETE_TOURNAMENT_WINNER_SUCCEEDED = "DELETE_TOURNAMENT_WINNER_SUCCEEDED",
     DELETE_TOURNAMENT_WINNER_FAILED = "DELETE_TOURNAMENT_WINNER_FAILED",
-};
+}
 
 const tournamentWinnerUrl = constants.ApiUrl + "/tournament-winners/";
 
 const TournamentWinnerActions = {
     LoadTournamentWinners: (systemName: string) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_REQUESTED});
+        dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_REQUESTED });
         try {
             const tournament = getState().tournament.currentTournament;
             const result = await Api.get(`${tournamentWinnerUrl}?name=${systemName}`);
@@ -41,11 +41,11 @@ const TournamentWinnerActions = {
                 }
                 return acc;
             }, []);
-            dispatch({ 
-                type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED, 
+            dispatch({
+                type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED,
                 payload: {
                     winners: grouped,
-                }
+                },
             });
         } catch (error) {
             dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_FAILED });
@@ -53,7 +53,7 @@ const TournamentWinnerActions = {
         }
     },
     SaveTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_REQUESTED});
+        dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_REQUESTED });
         try {
             const tournament = getState().tournament.currentTournament;
             const payload = winner.prepJson();
@@ -65,34 +65,34 @@ const TournamentWinnerActions = {
             }
             dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_SUCCEEDED });
             dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament.systemName));
-            dispatch(NotificationActions.ToastSuccess("Tournament winner has been saved."))
+            dispatch(NotificationActions.ToastSuccess("Tournament winner has been saved."));
         } catch (error) {
             dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_FAILED });
             dispatch(NotificationActions.ToastError(error));
         }
     },
     DeleteTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED});
+        dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED });
         try {
             const tournament = getState().tournament.currentTournament;
             await Api.delete(`${tournamentWinnerUrl}${winner.id}/`);
             dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_SUCCEEDED });
             dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament.systemName));
-            dispatch(NotificationActions.ToastSuccess(`${winner.winner} has been deleted.`))
+            dispatch(NotificationActions.ToastSuccess(`${winner.winner} has been deleted.`));
         } catch (error) {
             dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_FAILED });
             dispatch(NotificationActions.ToastError(error));
         }
     },
-    AddNew: (year?: number, location?: string) => (dispatch: any) => {
+    AddNew: (tournament: Tournament, year?: number, location?: string) => (dispatch: any) => {
         dispatch({
             type: TournamentWinnerActionTypes.APPEND_NEW_TOURNAMENT_WINNER,
-            payload: { year: year, location: location }
+            payload: { tournament: tournament, year: year, location: location },
         });
     },
     CancelNew: () => (dispatch: any) => {
-        dispatch({type: TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER});
+        dispatch({ type: TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER });
     },
-}
+};
 
 export default TournamentWinnerActions;

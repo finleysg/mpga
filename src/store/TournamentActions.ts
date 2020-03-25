@@ -50,7 +50,7 @@ const TournamentActions = {
                 await Api.put(`${tournamentUrl}${tournament.id}/`, payload);
             }
             dispatch({ type: TournamentActionTypes.SAVE_TOURNAMENT_SUCCEEDED });
-            dispatch(TournamentActions.LoadTournament(tournament.systemName));
+            dispatch(TournamentActions.LoadTournaments());
             dispatch(NotificationActions.ToastSuccess(`${tournament.name} has been saved.`))
         } catch (error) {
             dispatch({ type: TournamentActionTypes.SAVE_TOURNAMENT_FAILED });

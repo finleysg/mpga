@@ -46,7 +46,7 @@ const LabelAndValue: React.FC<ILabelAndValueProps> = (props) => {
             case ValueType.Text:
                 return <span>{value || defaultValue || "n/a"}</span>;
             case ValueType.ExternalLink:
-                return <a href={value}>{value}</a>
+                return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
             case ValueType.Markdown:
                 return <MarkdownDiv text={value} />
             case ValueType.Date:

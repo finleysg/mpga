@@ -122,23 +122,23 @@ export const ContentReducer: Reducer<IContentState, KnownActions> =
     switch (action.type) {
         case ContentActionTypes.APPEND_POLICY: {
             const policies = state.policies;
-            const policySet = policies?.get(action.payload)
-            policySet?.push(new Policy({
+            const policySet = policies?.get(action.payload) || [];
+            policySet.push(new Policy({
                 id: 0,
                 policyType: action.payload,
                 title: "",
                 description: "",
             }));
-            policies.set(action.payload, policySet!)
+            policies.set(action.payload, policySet)
             return {...state, policies: policies }
         }
         case ContentActionTypes.CANCEL_NEW_POLICY: {
             const policies = state.policies;
-            const policySet = policies?.get(action.payload)
-            const idx = policySet?.findIndex(p => p.id === 0);
+            const policySet = policies?.get(action.payload) || [];
+            const idx = policySet.findIndex(p => p.id === 0);
             if (idx && idx >= 0) {
-                policySet?.splice(idx, 1);
-                policies.set(action.payload, policySet!)
+                policySet.splice(idx, 1);
+                policies.set(action.payload, policySet)
                 return {...state, policies: policies};
             }
             return {...state, }

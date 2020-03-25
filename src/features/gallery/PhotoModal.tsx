@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MpgaPhoto } from '../../models/Documents';
-import Badge from 'react-bootstrap/Badge';
 import styled from 'styled-components';
 
 const PhotoImg = styled.img`

@@ -14,7 +14,7 @@ export interface IDocumentTag {
 
 export interface IPhotoTag {
   id: number;
-  photo: number;
+  document: number;
   tag: ITag;
 }
 

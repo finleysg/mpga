@@ -21,7 +21,7 @@ export interface ITournamentHistoryTableProps {
 }
 
 const TournamentHistoryTable: React.FC<ITournamentHistoryTableProps> = (props) => {
-    const { year, location, winners } = props.group;
+    const { tournament, year, location, winners } = props.group;
     const dispatch = useDispatch();
     const session = useSelector((state: IApplicationState) => state.session);
 
@@ -45,9 +45,9 @@ const TournamentHistoryTable: React.FC<ITournamentHistoryTableProps> = (props) =
                     {winners.map((winner: TournamentWinner) => <TournamentWinnerRow key={winner.id} winner={winner} />)}
                 </tbody>
             </Table>
-            {session.user.isFullEditor && <Button variant="outline-secondary" 
-                size="sm"
-                onClick={() => dispatch(TournamentWinnerActions.AddNew(year, location))}>
+            {session.user.isFullEditor && <Button variant="link" 
+                className="text-warning"
+                onClick={() => dispatch(TournamentWinnerActions.AddNew(tournament, year, location))}>
                 Add Winner
             </Button>}
         </div>

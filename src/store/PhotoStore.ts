@@ -4,6 +4,7 @@ import { PhotoActionTypes } from "./PhotoActions";
 
 export interface IPhotoState {
     data: MpgaPhoto[];
+    randomPhoto?: MpgaPhoto;
     isBusy: boolean;
     hasError: boolean;
 }
@@ -35,6 +36,19 @@ export interface IPhotosFailed extends Action {
     type: PhotoActionTypes.GET_PHOTOS_FAILED;
 }
 
+export interface IRandomPhotoRequested extends Action {
+    type: PhotoActionTypes.GET_RANDOM_PHOTO_REQUESTED;
+}
+
+export interface IRandomPhotoSucceeded extends Action {
+    type: PhotoActionTypes.GET_RANDOM_PHOTO_SUCCEEDED;
+    payload: MpgaPhoto;
+}
+
+export interface IRandomPhotoFailed extends Action {
+    type: PhotoActionTypes.GET_RANDOM_PHOTO_FAILED;
+}
+
 export interface IPhotoSaveRequested extends Action {
     type: PhotoActionTypes.SAVE_PHOTO_REQUESTED;
 }
@@ -52,6 +66,9 @@ type KnownActions = IPhotoAppend
     | IPhotosRequested 
     | IPhotosSucceeded 
     | IPhotosFailed
+    | IRandomPhotoRequested
+    | IRandomPhotoSucceeded
+    | IRandomPhotoFailed
     | IPhotoSaveRequested
     | IPhotoSaveSucceeded
     | IPhotoSaveFailed;
@@ -85,6 +102,15 @@ export const PhotosReducer: Reducer<IPhotoState, KnownActions> =
             return {...state, data: action.payload, isBusy: false};
         }
         case PhotoActionTypes.GET_PHOTOS_FAILED: {
+            return {...state, isBusy: false, hasError: true};
+        }
+        case PhotoActionTypes.GET_RANDOM_PHOTO_REQUESTED: {
+            return {...state, isBusy: true, hasError: false};
+        }
+        case PhotoActionTypes.GET_RANDOM_PHOTO_SUCCEEDED: {
+            return {...state, randomPhoto: action.payload, isBusy: false};
+        }
+        case PhotoActionTypes.GET_RANDOM_PHOTO_FAILED: {
             return {...state, isBusy: false, hasError: true};
         }
         case PhotoActionTypes.SAVE_PHOTO_REQUESTED: {

@@ -9,12 +9,13 @@ const TournamentLoader: React.FC = () => {
     let { name } = useParams();
     const state = useSelector((state: IApplicationState) => state.tournament);
     const dispatch = useDispatch();
+    const systemName = state?.currentTournament.systemName;
 
     useEffect(() => {
-        if (name && state?.currentTournament.systemName !== name) {
+        if (name && systemName !== name) {
             dispatch(TournamentActions.LoadTournament(name));
         }
-    }, [dispatch, name]);
+    }, [dispatch, name, systemName]);
 
     return <></>;
 }

@@ -6,7 +6,7 @@ import { PageCodes, PolicyCodes } from '../constants';
 import AnnouncementList from '../features/announcements/AnnouncementList';
 import PageContentDetail from '../features/content/PageContentDetail';
 import PolicyList from '../features/content/PolicyList';
-import EventCalendar from '../features/events/EventCalendar';
+import EventCalendar from '../features/events/calendar/EventCalendar';
 
 const HomePage: React.FC = () => {
     return (

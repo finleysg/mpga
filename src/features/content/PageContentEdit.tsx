@@ -55,7 +55,7 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="policy.Description">
                             <Form.Label>PageContent text</Form.Label>
-                            <Form.Control as="textarea" rows="8" name="content"
+                            <Form.Control as="textarea" rows="12" name="content"
                                 placeholder="Page content text"
                                 value={values.content}
                                 isValid={touched.content && !errors.content}
