@@ -1,3 +1,4 @@
+import * as AppStore from "./AppStore";
 import * as AnnouncementStore from "./AnnouncementStore";
 import * as DocumentStore from "./DocumentStore";
 import * as EventStore from "./EventStore";
@@ -9,9 +10,12 @@ import * as ContentStore from "./ContentStore";
 import * as UserStore from "./UserStore";
 import * as MemberClubsStore from "./MemberClubStore";
 import * as PhotoStore from "./PhotoStore";
+import * as CommitteeStore from "./CommitteeStore";
+import * as AwardStore from "./AwardStore";
 
 // The top-level state object
 export interface IApplicationState {
+    app: AppStore.IAppState,
 	layout: LayoutStore.ILayoutState,
 	notifications: NotificationStore.INotificationState,
 	announcements: AnnouncementStore.IAnnouncementState,
@@ -22,13 +26,16 @@ export interface IApplicationState {
 	content: ContentStore.IContentState,
 	session: UserStore.IUserState,
 	memberClubs: MemberClubsStore.IMemberClubState,
-	photos: PhotoStore.IPhotoState,
+    photos: PhotoStore.IPhotoState,
+    committee: CommitteeStore.ICommitteeState,
+    awards: AwardStore.IAwardState,
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
+    app: AppStore.AppReducer,
 	layout: LayoutStore.reducer,
 	notifications: NotificationStore.NotificationReducer,
 	announcements: AnnouncementStore.AnnouncementsReducer,
@@ -39,7 +46,9 @@ export const reducers = {
 	content: ContentStore.ContentReducer,
 	session: UserStore.UsersReducer,
 	memberClubs: MemberClubsStore.MemberClubsReducer,
-	photos: PhotoStore.PhotosReducer,
+    photos: PhotoStore.PhotosReducer,
+    committee: CommitteeStore.CommitteeReducer,
+    awards: AwardStore.AwardReducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

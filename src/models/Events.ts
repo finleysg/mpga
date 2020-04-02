@@ -4,9 +4,9 @@ import { Policy } from "./Policies";
 import { Contact, GolfCourse } from "./Clubs";
 
 export class AwardWinner extends Model {
-    year: number | undefined;
-    winner: string | undefined;
-    notes: string | undefined;
+    year: number = 0;
+    winner: string = "";
+    notes: string = "";
 
     constructor(obj: any) {
         super();
@@ -18,16 +18,18 @@ export class AwardWinner extends Model {
 }
 
 export class Award extends Model {
-    name: string | undefined;
-    description: string | undefined;
-    winners: AwardWinner[] | undefined;
+    name: string = "";
+    description: string = "";
+    winners: AwardWinner[] = [];
     winnerList: any;
 
     constructor(obj: any) {
         super();
         if (obj) {
             const award = super.fromJson(obj);
-            award.winners = obj["winners"].map((o: any) => new AwardWinner(o));
+            if (obj["winners"]) {
+                award.winners = obj["winners"].map((o: any) => new AwardWinner(o));                
+            }
             Object.assign(this, award);
         }
     }

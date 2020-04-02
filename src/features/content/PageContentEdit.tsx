@@ -23,10 +23,10 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
+                    actions.setSubmitting(false);
                     const newModel = new PageContent(values);
                     newModel.id = pageContent.id;
                     props.Save(newModel);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={pageContent}
             >

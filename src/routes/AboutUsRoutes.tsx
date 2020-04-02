@@ -2,6 +2,8 @@ import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { ConnectedLayout } from '../layout/Layout';
 import AboutUsPage from '../pages/AboutUsPage';
+import CommitteePage from '../pages/CommitteePage';
+import AwardsPage from '../pages/AwardsPage';
 
 export const AboutUsRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -12,19 +14,10 @@ export const AboutUsRoutes: React.FC = () => {
                     <AboutUsPage />
                 </Route>
                 <Route path={`${path}/committee`}>
-                    <p>Executive Committee</p>
+                    <CommitteePage />
                 </Route>
                 <Route path={`${path}/awards`}>
-                    <p>Awards</p>
-                </Route>
-                <Route path={`${path}/awards/:name`}>
-                    <p>award name here</p>
-                </Route>
-                <Route path={`${path}/past-presidents`}>
-                    <p>Past Presidents</p>
-                </Route>
-                <Route path={`${path}/history`}>
-                    <p>History</p>
+                    <AwardsPage />
                 </Route>
             </ConnectedLayout>
         </Switch>

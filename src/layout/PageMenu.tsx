@@ -141,14 +141,8 @@ const PageMenu: React.FC<IPageMenuProps> = props => {
                         <NavLink to={`${url}/committee`} className="nav-link" activeClassName="active">
                             Executive Committee
                         </NavLink>
-                        <NavLink to={`${url}/past-presidents`} className="nav-link" activeClassName="active">
-                            Past Presidents
-                        </NavLink>
                         <NavLink to={`${url}/awards`} className="nav-link" activeClassName="active">
                             Awards
-                        </NavLink>
-                        <NavLink to={`${url}/history`} className="nav-link" activeClassName="active">
-                            History
                         </NavLink>
                     </Nav>
                 );

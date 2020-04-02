@@ -1,9 +1,8 @@
-import constants from '../constants';
-import { Api } from '../http';
-import { MpgaDocument } from '../models/Documents';
-import { EventDetail, Tournament } from '../models/Events';
-import NotificationActions from './NotificationActions';
-import { IApplicationState } from '.';
+import { Api } from "../http";
+import { MpgaDocument } from "../models/Documents";
+import { EventDetail, Tournament } from "../models/Events";
+import { IApplicationState } from "./";
+import NotificationActions from "./NotificationActions";
 
 export interface IDocumentSearch {
     key: string;
@@ -46,9 +45,12 @@ const prepareFormData = (file: File, document: MpgaDocument): FormData => {
 };
 
 const prepareQueryString = (query: IDocumentSearch): string => {
-    const year = query.event?.eventYear || query.year || constants.EventCalendarYear;
+    const year = query.event?.eventYear || query.year || 0;
     const tournamentId = query.event?.tournament?.id || query.tournament?.id || 0;
-    let queryString = `?year=${year}`;
+    let queryString = "?d=1";
+    if (year > 0) {
+        queryString = queryString + `&year=${year}`;
+    }
     if (tournamentId > 0) {
         queryString = queryString + `&tournament=${tournamentId}`;
     }
@@ -86,7 +88,10 @@ const DocumentActions = {
         }
     },
 
-    Save: (key: string, file: File, document: MpgaDocument) => async (dispatch: any, getState: () => IApplicationState) => {
+    Save: (key: string, file: File, document: MpgaDocument) => async (
+        dispatch: any,
+        getState: () => IApplicationState
+    ) => {
         const queries = getState().documents.queries;
         const requery = queries.has(key) && queries.get(key);
         dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_REQUESTED });

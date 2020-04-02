@@ -323,9 +323,10 @@ export class ClubValidationMessage {
 }
 
 export class ExecutiveCommittee extends Model {
-  contact: Contact | undefined;
-  role: string | undefined;
-  homeClub: string | undefined;
+  contact: Contact = new Contact({id: 0});
+  role: string = "";
+  homeClub: number = 0;
+  homeClubName: string = "";
 
   constructor(obj: any) {
     super();
@@ -334,6 +335,35 @@ export class ExecutiveCommittee extends Model {
       ec.contact = new Contact(obj['contact']);
       Object.assign(this, ec);
     }
+  }
+
+  static Create(data: any): ExecutiveCommittee {
+    const member = new ExecutiveCommittee({
+      role: data.role,
+      home_club: data.homeClub,
+    });
+    member.contact = new Contact({
+      first_name: data.firstName,
+      last_name: data.lastName,
+      contact_type: "Men's Club",
+      primary_phone: data.primaryPhone,
+      alternate_phone: data.alternatePhone,
+      email: data.email,
+      address_txt: data.addressTxt,
+      city: data.city,
+      state: data.state,
+      zip: data.zip
+    });
+    return member;
+  }
+
+  toJson(): any {
+      return {
+          id: this.id,
+          role: this.role,
+          home_club: this.homeClub,
+          contact: this.contact.prepJson(),
+      };
   }
 }
 
