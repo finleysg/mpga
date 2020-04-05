@@ -1,7 +1,11 @@
-import React from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { ConnectedLayout } from '../layout/Layout';
-import MatchPlayPage from '../pages/MatchPlayPage';
+import React from "react";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+
+import { ConnectedLayout } from "../layout/Layout";
+import MatchPlayPage from "../pages/MatchPlayPage";
+import MatchPlayResultsPage from "../pages/MatchPlayResultsPage";
+import MatchPlayRulesPage from "../pages/MatchPlayRulesPage";
+import MatchPlayHistoryPage from '../pages/MatchPlayHistoryPage';
 
 export const MatchPlayRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -12,13 +16,13 @@ export const MatchPlayRoutes: React.FC = () => {
                     <MatchPlayPage />
                 </Route>
                 <Route path={`${path}/rules`}>
-                    <p>Rules</p>
-                </Route>
-                <Route path={`${path}/register`}>
-                    <p>Sign up</p>
+                    <MatchPlayRulesPage />
                 </Route>
                 <Route path={`${path}/results`}>
-                    <p>Past Results</p>
+                    <MatchPlayResultsPage />
+                </Route>
+                <Route path={`${path}/history`}>
+                    <MatchPlayHistoryPage />
                 </Route>
             </ConnectedLayout>
         </Switch>

@@ -7,14 +7,14 @@ import constants from "../../constants";
 import { ITournamentWinnerGroup, TournamentWinner } from "../../models/Events";
 import { IApplicationState } from "../../store";
 import TournamentWinnerActions from "../../store/TournamentWinnerActions";
+import MatchPlayHistoryEditModal from "./MatchPlayHistoryEditModal";
+import MatchPlayHistoryGroup from "./MatchPlayHistoryGroup";
 import LoadingContainer from "../../components/LoadingContainer";
 import TournamentHistorySearch from "../tournaments/TournamentHistorySearch";
 import { FaSearch } from "react-icons/fa";
 import { ITournamentHistorySearch } from '../tournaments/TournamentHistorySearch';
-import TournamentWinnerGroup from "./TournamentWinnerGroup";
-import TournamentWinnerEditModal from "./TournamentWinnerEditModal";
 
-const TournamentHistoryTable: React.FC = () => {
+const MatchPlayHistoryTable: React.FC = () => {
     const [doEdit, updateDoEdit] = useState(false);
     const [doSearch, updateDoSearch] = useState(false);
     const [search, updateSearch] = useState({});
@@ -34,12 +34,12 @@ const TournamentHistoryTable: React.FC = () => {
     };
 
     const createNewWinner = () => {
-        dispatch(TournamentWinnerActions.AddNew(tournamentState.currentTournament, constants.EventCalendarYear));
+        dispatch(TournamentWinnerActions.AddNew(tournamentState.currentTournament, constants.MatchPlayYear));
         updateDoEdit(true);
     };
 
     const newlyAddedWinner = (): TournamentWinner => {
-        const group = winnerState.groups.filter((g) => g.year === constants.EventCalendarYear)[0];
+        const group = winnerState.groups.filter((g) => g.year === constants.MatchPlayYear)[0];
         if (group) {
             const winner = group.winners.find((w) => w.id === 0) || new TournamentWinner({ id: 0 });
             return winner;
@@ -55,7 +55,7 @@ const TournamentHistoryTable: React.FC = () => {
     return (
         <React.Fragment>
             <h3 className="text-primary mb-2">
-                {tournamentState.currentTournament.name} History
+                Match Play History
                 <FaSearch size={20} color="teal" className="ml-2 clickable" onClick={() => updateDoSearch(!doSearch)} />
             </h3>
             <LoadingContainer hasData={winnerState.groups !== undefined}>
@@ -64,7 +64,7 @@ const TournamentHistoryTable: React.FC = () => {
                         <h5 className="text-secondary">Search</h5>
                         <TournamentHistorySearch
                             divisionLabel="Group"
-                            hideLocation={false}
+                            hideLocation={true}
                             search={search}
                             OnSearch={(search) => searchWinners(search)}
                         />
@@ -72,16 +72,16 @@ const TournamentHistoryTable: React.FC = () => {
                 )}
                 {session.user.isFullEditor && (
                     <Button variant="link" className="text-warning" onClick={() => createNewWinner()}>
-                        Add New Champion
+                        Add New Result
                     </Button>
                 )}
                 <Table>
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>Location</th>
-                            <th>Division/Flight</th>
+                            <th>Group</th>
                             <th>Champion</th>
+                            <th>Runner Up</th>
                             <th>Score</th>
                             <th>Notes</th>
                             {session.user.isFullEditor && <th>Edit</th>}
@@ -89,11 +89,11 @@ const TournamentHistoryTable: React.FC = () => {
                     </thead>
                     <tbody>
                         {winnerState.filteredGroups.map((group: ITournamentWinnerGroup, idx: number) => {
-                            return <TournamentWinnerGroup key={idx} group={group} />;
+                            return <MatchPlayHistoryGroup key={idx} group={group} />;
                         })}
                     </tbody>
                 </Table>
-                <TournamentWinnerEditModal
+                <MatchPlayHistoryEditModal
                     show={doEdit}
                     winner={newlyAddedWinner()}
                     Save={saveTournament}
@@ -104,4 +104,4 @@ const TournamentHistoryTable: React.FC = () => {
     );
 };
 
-export default TournamentHistoryTable;
+export default MatchPlayHistoryTable;

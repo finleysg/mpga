@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Tournament } from '../../models/Events';
-import { IApplicationState } from '../../store';
-import TournamentActions from '../../store/TournamentActions';
-import TournamentDetail from './TournamentDetail';
-import Loading from '../../components/Loading';
+import { Tournament } from "../../models/Events";
+import { IApplicationState } from "../../store";
+import TournamentActions from "../../store/TournamentActions";
+import TournamentDetail from "./TournamentDetail";
+import LoadingContainer from "../../components/LoadingContainer";
 
 const TournamentList: React.FC = () => {
     const dispatch = useDispatch();
@@ -16,13 +16,12 @@ const TournamentList: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <div>
-            {state.isBusy ?
-            <Loading /> :
-            state.tournaments.map((t: Tournament) => 
-                <TournamentDetail tournament={t} />)}
-        </div>
+        <LoadingContainer hasData={true}>
+            {state.tournaments.map((t: Tournament) => (
+                <TournamentDetail tournament={t} />
+            ))}
+        </LoadingContainer>
     );
-}
+};
 
 export default TournamentList;

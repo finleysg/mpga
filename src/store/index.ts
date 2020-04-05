@@ -12,6 +12,7 @@ import * as MemberClubsStore from "./MemberClubStore";
 import * as PhotoStore from "./PhotoStore";
 import * as CommitteeStore from "./CommitteeStore";
 import * as AwardStore from "./AwardStore";
+import * as MatchPlayStore from "./MatchPlayStore";
 
 // The top-level state object
 export interface IApplicationState {
@@ -29,6 +30,7 @@ export interface IApplicationState {
     photos: PhotoStore.IPhotoState,
     committee: CommitteeStore.ICommitteeState,
     awards: AwardStore.IAwardState,
+    matchPlay: MatchPlayStore.IMatchPlayState,
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -49,6 +51,7 @@ export const reducers = {
     photos: PhotoStore.PhotosReducer,
     committee: CommitteeStore.CommitteeReducer,
     awards: AwardStore.AwardReducer,
+    matchPlay: MatchPlayStore.MatchPlaysReducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

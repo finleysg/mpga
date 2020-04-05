@@ -3,19 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { IApplicationState } from '../../store';
 import TournamentActions from '../../store/TournamentActions';
-import { useParams } from 'react-router-dom';
 
-const TournamentLoader: React.FC = () => {
-    let { name } = useParams();
+export interface ITournamentLoaderProps {
+    name: string;
+}
+
+const TournamentLoader: React.FC<ITournamentLoaderProps> = (props) => {
     const state = useSelector((state: IApplicationState) => state.tournament);
     const dispatch = useDispatch();
     const systemName = state?.currentTournament.systemName;
 
     useEffect(() => {
-        if (name && systemName !== name) {
-            dispatch(TournamentActions.LoadTournament(name));
+        if (props.name && systemName !== props.name) {
+            dispatch(TournamentActions.LoadTournament(props.name));
         }
-    }, [dispatch, name, systemName]);
+    }, [dispatch, props.name, systemName]);
 
     return <></>;
 }

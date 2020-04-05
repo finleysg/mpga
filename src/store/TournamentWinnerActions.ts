@@ -1,31 +1,23 @@
 import constants from "../constants";
 import { Api } from "../http";
 import { ITournamentWinnerGroup, Tournament, TournamentWinner } from "../models/Events";
-import { IApplicationState } from "./";
 import NotificationActions from "./NotificationActions";
+import AppActions from "./AppActions";
+import { ITournamentHistorySearch } from '../features/tournaments/TournamentHistorySearch';
 
 export enum TournamentWinnerActionTypes {
-    GET_TOURNAMENT_WINNERS_REQUESTED = "GET_TOURNAMENT_WINNERS_REQUESTED",
     GET_TOURNAMENT_WINNERS_SUCCEEDED = "GET_TOURNAMENT_WINNERS_SUCCEEDED",
-    GET_TOURNAMENT_WINNERS_FAILED = "GET_TOURNAMENT_WINNERS_FAILED",
-    SAVE_TOURNAMENT_WINNER_REQUESTED = "SAVE_TOURNAMENT_WINNER_REQUESTED",
-    SAVE_TOURNAMENT_WINNER_SUCCEEDED = "SAVE_TOURNAMENT_WINNER_SUCCEEDED",
-    SAVE_TOURNAMENT_WINNER_FAILED = "SAVE_TOURNAMENT_WINNER_FAILED",
     APPEND_NEW_TOURNAMENT_WINNER = "APPEND_NEW_TOURNAMENT_WINNER",
     CANCEL_NEW_TOURNAMENT_WINNER = "CANCEL_NEW_TOURNAMENT_WINNER",
-    DELETE_TOURNAMENT_WINNER_REQUESTED = "DELETE_TOURNAMENT_WINNER_REQUESTED",
-    DELETE_TOURNAMENT_WINNER_SUCCEEDED = "DELETE_TOURNAMENT_WINNER_SUCCEEDED",
-    DELETE_TOURNAMENT_WINNER_FAILED = "DELETE_TOURNAMENT_WINNER_FAILED",
+    SEARCH_TOURNAMENT_WINNERS = "SEARCH_TOURNAMENT_WINNERS",
 }
 
 const tournamentWinnerUrl = constants.ApiUrl + "/tournament-winners/";
 
 const TournamentWinnerActions = {
-    LoadTournamentWinners: (systemName: string) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_REQUESTED });
+    LoadTournamentWinners: (tournament: Tournament) => async (dispatch: any) => {
         try {
-            const tournament = getState().tournament.currentTournament;
-            const result = await Api.get(`${tournamentWinnerUrl}?name=${systemName}`);
+            const result = await Api.get(`${tournamentWinnerUrl}?name=${tournament.systemName}`);
             const data = result.data.map((json: any) => new TournamentWinner(json));
             const grouped = data.reduce((acc: ITournamentWinnerGroup[], item: TournamentWinner) => {
                 const group = acc.find(g => g.year === item.year);
@@ -43,44 +35,26 @@ const TournamentWinnerActions = {
             }, []);
             dispatch({
                 type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED,
-                payload: {
-                    winners: grouped,
-                },
+                payload: grouped,
             });
         } catch (error) {
-            dispatch({ type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_FAILED });
             dispatch(NotificationActions.ToastError(error));
         }
     },
-    SaveTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_REQUESTED });
+    SaveTournamentWinner: (tournament: Tournament, winner: TournamentWinner) => async (dispatch: any) => {
+        dispatch(AppActions.Busy());
         try {
-            const tournament = getState().tournament.currentTournament;
             const payload = winner.prepJson();
-            payload.tournament = tournament.id;
-            if (winner.id === -1) {
+            if ((winner.id || 0) === 0) {
                 await Api.post(tournamentWinnerUrl, payload);
             } else {
                 await Api.put(`${tournamentWinnerUrl}${winner.id}/`, payload);
             }
-            dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_SUCCEEDED });
-            dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament.systemName));
+            dispatch(AppActions.NotBusy());
+            dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament));
             dispatch(NotificationActions.ToastSuccess("Tournament winner has been saved."));
         } catch (error) {
-            dispatch({ type: TournamentWinnerActionTypes.SAVE_TOURNAMENT_WINNER_FAILED });
-            dispatch(NotificationActions.ToastError(error));
-        }
-    },
-    DeleteTournamentWinner: (winner: TournamentWinner) => async (dispatch: any, getState: () => IApplicationState) => {
-        dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_REQUESTED });
-        try {
-            const tournament = getState().tournament.currentTournament;
-            await Api.delete(`${tournamentWinnerUrl}${winner.id}/`);
-            dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_SUCCEEDED });
-            dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament.systemName));
-            dispatch(NotificationActions.ToastSuccess(`${winner.winner} has been deleted.`));
-        } catch (error) {
-            dispatch({ type: TournamentWinnerActionTypes.DELETE_TOURNAMENT_WINNER_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -92,6 +66,12 @@ const TournamentWinnerActions = {
     },
     CancelNew: () => (dispatch: any) => {
         dispatch({ type: TournamentWinnerActionTypes.CANCEL_NEW_TOURNAMENT_WINNER });
+    },
+    SearchWinners: (search: ITournamentHistorySearch) => (dispatch: any) => {
+        dispatch({
+            type: TournamentWinnerActionTypes.SEARCH_TOURNAMENT_WINNERS,
+            payload: search,
+        });
     },
 };
 

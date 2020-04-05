@@ -125,11 +125,11 @@ const PageMenu: React.FC<IPageMenuProps> = props => {
                         <NavLink to={`${url}/rules`} className="nav-link" activeClassName="active">
                             Rules
                         </NavLink>
-                        <NavLink to={`${url}/register`} className="nav-link" activeClassName="active">
-                            Sign Up
-                        </NavLink>
                         <NavLink to={`${url}/results`} className="nav-link" activeClassName="active">
-                            Past Results
+                            Schedule and Results
+                        </NavLink>
+                        <NavLink to={`${url}/history`} className="nav-link" activeClassName="active">
+                            History
                         </NavLink>
                     </Nav>
                 );

@@ -9,13 +9,13 @@ const MemberClubsPage: React.FC = () => {
     return (
         <Container fluid={true}>
             <LargeLeftSmallRight
-                Column1={
+                LeftColumn={
                     <div>
                         <PageContentDetail pageCode={PageCodes.MemberClubs} />
                         <MemberClubList />
                     </div>
                 }
-                Column2={"Interested in joining the MPGA?"}
+                RightColumn={"Interested in joining the MPGA?"}
             />
         </Container>
     );

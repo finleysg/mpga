@@ -1,7 +1,7 @@
-import moment from 'moment';
 import { Model } from './Model';
 import { IContactData } from '../features/contacts/ContactApi';
 import { IClubContactData } from '../features/members/ClubContactEdit';
+import moment from 'moment';
 
 export class Address {
   addressTxt: string | undefined;
@@ -170,12 +170,11 @@ export class Membership extends Model {
 
 export class Team extends Model {
   localId: string = Math.floor(Math.random() * 1000).toString();
-  year: number | undefined;
-  club: Club | undefined;
-  groupName: string | undefined;
-  isSenior: boolean | undefined;
+  year: number = 0;
+  club: Club = new Club({});
+  groupName: string = "";
+  isSenior: boolean = false;
   notes: string | undefined;
-  deleted: boolean | undefined;
 
   constructor(obj: any) {
     super();
@@ -189,14 +188,6 @@ export class Team extends Model {
       }
       Object.assign(this, team);
     }
-  }
-
-  static divisions(): string[] {
-    return ['12 Man', '16 Man A', '16 Man B', '20 Man'];
-  }
-
-  static seniorDivisions(): string[] {
-    return ['8 Man A', '8 Man B'];
   }
 
   prepJson(): any {
@@ -382,16 +373,16 @@ export class Affiliate extends Model {
 }
 
 export class MatchResult extends Model {
-  groupName: string | undefined;
-  matchDate: moment.Moment | undefined;
-  homeTeam: number | undefined;
-  awayTeam: number | undefined;
-  homeTeamName: string | undefined;
-  awayTeamName: string | undefined;
-  homeTeamScore: number | undefined;
-  awayTeamScore: number | undefined;
+  groupName: string = "";
+  matchDate: any;
+  homeTeam: number = 0;
+  awayTeam: number = 0;
+  homeTeamName: string = "";
+  awayTeamName: string = "";
+  homeTeamScore: number = 0;
+  awayTeamScore: number = 0;
   enteredBy: string | undefined;
-  forfeit: boolean | undefined;
+  forfeit: boolean = false;
   notes: string | undefined;
 
   constructor(obj: any) {
@@ -402,10 +393,10 @@ export class MatchResult extends Model {
     }
   }
 
-  prepJson(): any {
+  toJson(): any {
     return {
       'group_name': this.groupName,
-      'match_date': this.matchDate!.format('YYYY-MM-DD'),
+      'match_date': moment(this.matchDate).format("YYYY-MM-DD"),
       'home_team': this.homeTeam,
       'away_team': this.awayTeam,
       'home_team_score': this.homeTeamScore,
@@ -416,13 +407,13 @@ export class MatchResult extends Model {
     };
   }
 
-  // get winner(): string {
-  //   let winner = '';
-  //   if (+this.homeTeamScore > +this.awayTeamScore) {
-  //     winner = this.homeTeamName;
-  //   } else if (+this.awayTeamScore > +this.homeTeamScore) {
-  //     winner = this.awayTeamName;
-  //   }
-  //   return winner;
-  // }
+  get winner(): string {
+    let winner = '';
+    if (+this.homeTeamScore > +this.awayTeamScore) {
+      winner = this.homeTeamName;
+    } else if (+this.awayTeamScore > +this.homeTeamScore) {
+      winner = this.awayTeamName;
+    }
+    return winner;
+  }
 }

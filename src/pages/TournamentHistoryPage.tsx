@@ -3,7 +3,8 @@ import Container from 'react-bootstrap/Container';
 import { useParams } from 'react-router-dom';
 
 import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
-import TournamentHistoryList from '../features/tournaments/TournamentHistoryList';
+import TournamentLoader from '../features/tournaments/TournamentLoader';
+import TournamentHistoryTable from '../features/tournaments/TournamentHistoryTable';
 
 const TournamentHistoryPage: React.FC = () => {
     let { name } = useParams();
@@ -11,13 +12,13 @@ const TournamentHistoryPage: React.FC = () => {
     return (
         <Container fluid={true}>
             <LargeLeftSmallRight
-                Column1={
-                    <div>
-                        <h3 className="text-primary mb-2">Past Champions</h3>
-                        {name && <TournamentHistoryList tournamentName={name} />}
-                    </div>
+                LeftColumn={
+                    <React.Fragment>
+                        <TournamentLoader name={name || ""} />
+                        <TournamentHistoryTable />
+                    </React.Fragment>
                 }
-                Column2={"Lists"}
+                RightColumn={"Lists"}
             />
         </Container>
     );

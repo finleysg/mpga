@@ -14,7 +14,7 @@ const TournamentView: React.FunctionComponent<ITournamentViewProps> = (props) =>
         <div>
             <h4 className="text-secondary mb-3">{tournament.name}</h4>
             <MarkdownDiv text={tournament.description} />
-            <NavLink to={`/tournaments/t/${tournament.systemName}/history`} className="nav-link" activeClassName="active">{tournament.name} Past Winners</NavLink>
+            <NavLink to={`/tournaments/history/${tournament.systemName}`} className="nav-link" activeClassName="active">{tournament.name} Past Winners</NavLink>
         </div>
     );
 };
