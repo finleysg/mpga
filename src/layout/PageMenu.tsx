@@ -16,7 +16,7 @@ export interface IPageMenuProps {
     segments: string[];
 }
 
-const PageMenu: React.FC<IPageMenuProps> = props => {
+const PageMenu: React.FC<IPageMenuProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
     let { url } = useRouteMatch();
@@ -58,7 +58,11 @@ const PageMenu: React.FC<IPageMenuProps> = props => {
                     </Nav>
                 );
             case "tournaments":
-                if (segments.indexOf("detail") === 1) {
+                if (
+                    segments.indexOf("detail") === 1 ||
+                    segments.indexOf("contact") === 1 ||
+                    segments.indexOf("history") === 1 
+                ) {
                     const tournamentName = segments[2];
                     return (
                         <Nav>
@@ -69,13 +73,13 @@ const PageMenu: React.FC<IPageMenuProps> = props => {
                                 History
                             </NavLink>
                             <NavLink
-                                to={`${url}/gallery/${tournamentName}`}
+                                to={`${url}/gallery/${tournamentName}/${constants.EventCalendarYear}`}
                                 className="nav-link"
                                 activeClassName="active">
                                 Gallery
                             </NavLink>
                             <NavLink
-                                to={`${url}/contact/${tournamentName}`}
+                                to={`${url}/contact/${tournamentName}/${constants.EventCalendarYear}`}
                                 className="nav-link"
                                 activeClassName="active">
                                 Contact
@@ -91,7 +95,7 @@ const PageMenu: React.FC<IPageMenuProps> = props => {
                     return (
                         <Nav>
                             <NavDropdown title="Select Season" id="collasible-nav-dropdown">
-                                {years.map(year => {
+                                {years.map((year) => {
                                     return (
                                         <NavDropdown.Item key="year">
                                             <NavLink to={`${url}/gallery/${tournamentName}/${year}`}>{year}</NavLink>

@@ -8,6 +8,8 @@ import CodeOfConductPage from "../pages/CodeOfConductPage";
 import TournamentGalleryPage from '../pages/TournamentGalleryPage';
 import PaceOfPlayPage from '../pages/PaceOfPlayPage';
 import EventDetailPage from '../pages/EventDetailPage';
+import EventContactPage from '../pages/EventContactPage';
+import TournamentBidPage from '../pages/TournamentBidPage';
 
 export const TournamentRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -38,11 +40,11 @@ export const TournamentRoutes: React.FC = () => {
                 <Route exact path={`${path}/gallery/:name/:year`}>
                     <TournamentGalleryPage />
                 </Route>
-                <Route exact path={`${path}/contact/:name`}>
-                    <p>tournament contact</p>
+                <Route exact path={`${path}/contact/:name/:year`}>
+                    <EventContactPage />
                 </Route>
-                <Route exact path={`${path}/bid/:name`}>
-                    <p>Bid</p>
+                <Route exact path={`${path}/bid`}>
+                    <TournamentBidPage />
                 </Route>
             </ConnectedLayout>
         </Switch>
