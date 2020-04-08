@@ -11,6 +11,7 @@ import { AboutUsRoutes } from './AboutUsRoutes';
 import { MatchPlayRoutes } from './MatchPlayRoutes';
 import { MemberClubRoutes } from './MemberClubRoutes';
 import { TournamentRoutes } from './TournamentRoutes';
+import { AdminRoutes } from "./AdminRoutes";
 
 export const AppRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -43,6 +44,9 @@ export const AppRoutes: React.FC = () => {
                 <ConnectedLayout>
                     <ContactUsPage />
                 </ConnectedLayout>
+            </Route>
+            <Route path="/admin">
+                <AdminRoutes />
             </Route>
             <Route path="/login">
                 <ConnectedLayout>

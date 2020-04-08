@@ -15,18 +15,12 @@ export interface IEventLinkEditProps {
 }
 
 const schema = yup.object({
-    title: yup
-        .string()
-        .max(60)
-        .required(),
-    url: yup
-        .string()
-        .max(240)
-        .url()
-        .required(),
+    title: yup.string().max(60).required(),
+    linkType: yup.string().required(),
+    url: yup.string().max(240).url().required(),
 });
 
-const EventLinkEdit: React.FC<IEventLinkEditProps> = props => {
+const EventLinkEdit: React.FC<IEventLinkEditProps> = (props) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const eventLink = props.eventLink;
 
@@ -44,7 +38,7 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = props => {
         const newModel = new EventLink({
             id: props.eventLink.id,
             event: props.eventLink.event,
-            link_type: props.eventLink.linkType,
+            link_type: values.linkType,
             title: values.title,
             url: values.url,
         });
@@ -72,6 +66,23 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Display name for this link.</Form.Text>
+                        </Form.Group>
+                        <Form.Group controlId="doc.LinkType">
+                            <Form.Label>Link type</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="linkType"
+                                value={values.linkType}
+                                isValid={touched.linkType && !errors.linkType}
+                                isInvalid={!!errors.linkType}
+                                onChange={handleChange}
+                                onBlur={handleBlur}>
+                                <option value=""></option>
+                                <option value="Media">Media</option>
+                                <option value="Registration">Registration</option>
+                                <option value="Results">Results</option>
+                                <option value="Tee Times">Tee Times</option>
+                            </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="eventLink.url">
                             <Form.Label className="full-width">Url</Form.Label>

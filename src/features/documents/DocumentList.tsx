@@ -24,8 +24,8 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
     const canAdd = documents?.findIndex(d => d.id === 0) || -1 < 0;
 
     const saveDocument = useCallback(
-        (file: File, document: MpgaDocument) => {
-            dispatch(DocumentActions.Save(query.key, file, document))
+        (document: MpgaDocument, file?: File) => {
+            dispatch(DocumentActions.Save(query.key, document, file))
         },
         [dispatch, query]
     )

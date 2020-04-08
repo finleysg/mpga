@@ -1,24 +1,27 @@
-import React, { useCallback } from 'react';
-import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import Loading from '../../../components/Loading';
-import { EventLink } from '../../../models/Events';
-import { IApplicationState } from '../../../store';
-import EventActions from '../../../store/EventActions';
-import EventLinkLinkDetail from './EventLinkDetail';
-import { ILinkRenderProps } from './EventLinkView';
+import { EventLink } from "../../../models/Events";
+import { IApplicationState } from "../../../store";
+import EventActions from "../../../store/EventActions";
+import EventLinkLinkDetail from "./EventLinkDetail";
+import { ILinkRenderProps, LinkViewType } from "./EventLinkView";
 
 export interface IEventLinkProps {
     linkType: string;
-    render: ILinkRenderProps;
+    title: string;
 }
 
-const EventLinkList: React.FC<IEventLinkProps> = props => {
-    const state = useSelector((state: IApplicationState) => state.events);
-    const session = useSelector((state: IApplicationState) => state.session);
+const render = {
+    viewType: LinkViewType.Link,
+    external: true,
+    variant: "secondary",
+} as ILinkRenderProps;
+
+const EventLinkList: React.FC<IEventLinkProps> = (props) => {
+    const eventState = useSelector((state: IApplicationState) => state.events);
     const dispatch = useDispatch();
-    const canAdd = state.currentEvent?.links?.findIndex(l => l.id === 0) || -1 < 0; // no pending add
+    const links = eventState.currentEvent.links?.filter((l) => l.linkType === props.linkType);
 
     const deleteEventLink = useCallback((eventLink: EventLink) => dispatch(EventActions.DeleteEventLink(eventLink)), [
         dispatch,
@@ -28,37 +31,29 @@ const EventLinkList: React.FC<IEventLinkProps> = props => {
         dispatch,
     ]);
 
+    const renderLink = (link: EventLink) => {
+        return (
+            <EventLinkLinkDetail
+                key={link.id}
+                eventLink={link}
+                render={render}
+                edit={link.id === 0}
+                Cancel={() => dispatch(EventActions.CancelNewEventLink())}
+                Delete={deleteEventLink}
+                Save={saveEventLink}
+            />
+        );
+    };
+
     return (
-        <div>
-            {!state.currentEvent ? (
-                <Loading />
-            ) : (
-                state.currentEvent.links
-                    ?.filter(l => l.linkType === props.linkType)
-                    ?.map((link: EventLink) => {
-                        return (
-                            <EventLinkLinkDetail
-                                key={link.id}
-                                eventLink={link}
-                                render={props.render}
-                                edit={link.id === 0}
-                                Cancel={() => dispatch(EventActions.CancelNewEventLink())}
-                                Delete={deleteEventLink}
-                                Save={saveEventLink}
-                            />
-                        );
-                    })
+        <React.Fragment>
+            {links && links.length > 0 && (
+                <React.Fragment>
+                    <h5 className="text-primary mt-1">{props.title}</h5>
+                    {links?.map((link: EventLink) => renderLink(link))}
+                </React.Fragment>
             )}
-            {session.user.isFullEditor && (
-                <Button
-                    variant="link"
-                    className="text-warning"
-                    disabled={!canAdd}
-                    onClick={() => dispatch(EventActions.AddNewEventLink(props.linkType))}>
-                    New Link
-                </Button>
-            )}
-        </div>
+        </React.Fragment>
     );
 };
 

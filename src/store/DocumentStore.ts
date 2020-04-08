@@ -77,7 +77,7 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const documentMap = state.documents;
             const documents = documentMap?.get(query.key) || [];
             const year = query.event?.eventYear || query.year;
-            const tournamentId = query.event?.tournament?.id || query.tournament?.id;
+            const tournamentId = query.event?.tournament?.id || query.tournamentId;
             const documentType = query.documentTypes && query.documentTypes[0];  // constrained to one type
             documents.push(
                 new MpgaDocument({

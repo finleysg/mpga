@@ -15,7 +15,7 @@ const getColor = (props: any) => {
     return '#eeeeee';
 }
 
-const Container = styled.div`
+const FileDropContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -30,6 +30,17 @@ const Container = styled.div`
     outline: none;
     transition: border .24s ease-in-out;
 `;
+FileDropContainer.displayName = "FileDropContainer";
+
+const FileList = styled.aside`
+    > ul {
+        list-style-type: none;
+        > li {
+            color: #purple;
+        }
+    }
+`;
+FileList.displayName = "FileList";
 
 const defaultFileTypes: string = ".md,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/markdown,text/csv,text/plain";
 
@@ -64,13 +75,13 @@ const FilePicker: React.FC<IFilePickerProps> = (props) => {
 
     return (
         <section className="container">
-            <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
+            <FileDropContainer {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
                 <input {...getInputProps()} />
                 <p>Drop file here, or click to select</p>
-            </Container>
-            <aside>
+            </FileDropContainer>
+            <FileList>
                 <ul>{files}</ul>
-            </aside>
+            </FileList>
         </section>
     );
 }

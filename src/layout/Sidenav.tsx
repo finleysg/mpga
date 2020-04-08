@@ -22,6 +22,9 @@ const Sidenav: React.FC<ISidenavProps> = (props) => {
                 <NavLink to="/clubs" className="nav-link" activeClassName="active">Member Clubs</NavLink>
                 <NavLink to="/about" className="nav-link" activeClassName="active">About Us</NavLink>
                 <NavLink to="/contact" className="nav-link" activeClassName="active">Contact Us</NavLink>
+                <NavLink to="/admin/library" className="nav-link" activeClassName="active">Document Library</NavLink>
+                <NavLink to="/admin/reports" className="nav-link" activeClassName="active">Reports</NavLink>
+                <NavLink to="/admin/wiki" className="nav-link" activeClassName="active">Wiki</NavLink>
             </div>
         </div>
     );

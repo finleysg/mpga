@@ -5,25 +5,17 @@ import { useParams } from "react-router-dom";
 
 import ThreeColumnsLargeCenter from "../components/layouts/ThreeColumnsLargeCenter";
 import Loading from "../components/Loading";
-import DocumentLoader from "../features/documents/DocumentLoader";
 import EventDetailLoader from "../features/events/EventDetailLoader";
 import EventDetailView from "../features/events/EventDetailView";
-import EventResults from "../features/events/EventResults";
-import EventTeeTimes from "../features/events/EventTeeTimes";
-import EventRegistration from "../features/events/registration/EventRegistration";
 import { IApplicationState } from "../store";
-import { IDocumentSearch } from "../store/DocumentActions";
 import EventWinnerList from "../features/events/winners/EventWinnerList";
 import EventGalleryDetail from "../features/events/photos/EventGalleryDetail";
+import { EventInformationLinks } from "../features/events/EventInformationLinks";
 
 const EventDetailPage: React.FC = () => {
     const { name, year } = useParams();
     const events = useSelector((state: IApplicationState) => state.events);
-    const queryKey = `${year}-${name}-event-detail`;
-    const query: IDocumentSearch = {
-        key: queryKey,
-        event: events.currentEvent,
-    };
+
     const doRender = (): boolean => {
         return (
             events.currentEvent?.tournament?.systemName !== undefined &&
@@ -37,15 +29,8 @@ const EventDetailPage: React.FC = () => {
             {!doRender() && <Loading />}
             {doRender() && (
                 <React.Fragment>
-                    <DocumentLoader query={query} />
                     <ThreeColumnsLargeCenter
-                        Column1={
-                            <React.Fragment>
-                                <EventRegistration query={{ ...query, documentTypes: ["Registration"] }} />
-                                <EventTeeTimes query={{ ...query, documentTypes: ["Tee Times"] }} />
-                                <EventResults query={{ ...query, documentTypes: ["Results"] }} />
-                            </React.Fragment>
-                        }
+                        Column1={<EventInformationLinks name={name!} year={+year!} />}
                         Column2={<EventDetailView />}
                         Column3={
                             <React.Fragment>

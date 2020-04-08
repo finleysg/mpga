@@ -10,7 +10,7 @@ import DocumentView, { IDocumentViewProps } from './DocumentView';
 export interface IDocumentDetail extends IDocumentViewProps {
     edit: boolean;
     Cancel: () => void;
-    Save: (file: File, document: MpgaDocument) => void;
+    Save: (document: MpgaDocument, file?: File) => void;
     Delete: (document: MpgaDocument) => void;
 }
 

@@ -1,13 +1,13 @@
 import { Api } from "../http";
 import { MpgaDocument } from "../models/Documents";
-import { EventDetail, Tournament } from "../models/Events";
+import { EventDetail } from "../models/Events";
 import { IApplicationState } from "./";
 import NotificationActions from "./NotificationActions";
 
 export interface IDocumentSearch {
     key: string;
     event?: EventDetail;
-    tournament?: Tournament;
+    tournamentId?: number;
     year?: number;
     documentTypes?: string[];
     tags?: string[];
@@ -26,7 +26,7 @@ export enum DocumentActionTypes {
 
 const url = "/documents/";
 
-const prepareFormData = (file: File, document: MpgaDocument): FormData => {
+const prepareFormData = (document: MpgaDocument, file?: File): FormData => {
     const form = new FormData();
     if (document.id) {
         form.append("id", document.id.toString());
@@ -35,18 +35,20 @@ const prepareFormData = (file: File, document: MpgaDocument): FormData => {
         form.append("tournament", document.tournament.toString());
     }
     if (document.tags) {
-        form.append("tags", document.tags.map(t => t.name).join("|"));
+        form.append("tags", document.tags.map((t) => t.name).join("|"));
     }
     form.append("document_type", document.documentType);
     form.append("year", document.year.toString());
     form.append("title", document.title);
-    form.append("file", file, file.name);
+    if (file) {
+        form.append("file", file, file.name);
+    }
     return form;
 };
 
 const prepareQueryString = (query: IDocumentSearch): string => {
     const year = query.event?.eventYear || query.year || 0;
-    const tournamentId = query.event?.tournament?.id || query.tournament?.id || 0;
+    const tournamentId = query.event?.tournament?.id || query.tournamentId || 0;
     let queryString = "?d=1";
     if (year > 0) {
         queryString = queryString + `&year=${year}`;
@@ -55,10 +57,10 @@ const prepareQueryString = (query: IDocumentSearch): string => {
         queryString = queryString + `&tournament=${tournamentId}`;
     }
     if (query.documentTypes) {
-        queryString = queryString + query.documentTypes.map(t => `&type=${t}`);
+        queryString = queryString + query.documentTypes.map((t) => `&type=${t}`);
     }
     if (query.tags) {
-        queryString = queryString + query.tags.map(t => `&tag=${t}`);
+        queryString = queryString + `&tags=${query.tags}`;
     }
     return queryString;
 };
@@ -88,7 +90,7 @@ const DocumentActions = {
         }
     },
 
-    Save: (key: string, file: File, document: MpgaDocument) => async (
+    Save: (key: string, document: MpgaDocument, file?: File) => async (
         dispatch: any,
         getState: () => IApplicationState
     ) => {
@@ -96,11 +98,11 @@ const DocumentActions = {
         const requery = queries.has(key) && queries.get(key);
         dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_REQUESTED });
         try {
-            const payload = prepareFormData(file, document);
+            const payload = prepareFormData(document, file);
             if (!document.id) {
                 await Api.post(url, payload);
             } else {
-                await Api.put(`${url}${document.id}/`, payload);
+                await Api.patch(`${url}${document.id}/`, payload);
             }
             dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED });
             if (requery) {
