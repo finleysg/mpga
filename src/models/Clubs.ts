@@ -60,16 +60,16 @@ export class Contact extends Model {
   constructor(obj: any) {
     super();
     const contact = {
-      firstName: obj?.first_name || obj?.firstName,
-      lastName: obj?.last_name || obj?.lastName,
-      primaryPhone: obj?.primary_phone || obj?.primaryPhone,
-      alternatePhone: obj?.alternate_phone || obj?.alternatePhone,
-      email: obj?.email || obj?.email,
-      addressTxt: obj?.address_txt || obj?.addressTxt,
-      city: obj?.city || obj?.city,
-      state: obj?.state || obj?.state,
-      zip: obj?.zip || obj?.zip,
-      notes: obj?.notes || obj?.notes,
+      firstName: obj?.first_name || "",
+      lastName: obj?.last_name || "",
+      primaryPhone: obj?.primary_phone,
+      alternatePhone: obj?.alternate_phone,
+      email: obj?.email || "",
+      addressTxt: obj?.address_txt,
+      city: obj?.city,
+      state: obj?.state,
+      zip: obj?.zip,
+      notes: obj?.notes,
     };
     Object.assign(this, contact);
   }
@@ -232,6 +232,7 @@ export class ClubContact extends Model {
   club: number | undefined;
   contact: Contact | undefined;
   isPrimary = false;
+  sendEmail = false;
   useForMailings = false;
   deleted = false;
   dirty = false;
@@ -253,6 +254,7 @@ export class ClubContact extends Model {
   static Create(clubId: number, data: IClubContactData): ClubContact {
     const clubContact = new ClubContact({
       is_primary: data.isPrimary,
+      send_email: data.sendEmail,
       use_for_mailings: data.useForMailings,
       notes: data.notes,
     });

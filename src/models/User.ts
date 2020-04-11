@@ -57,12 +57,22 @@ export class User {
     }
 }
 
-export class PasswordReset {
+export class PasswordResetRequest {
     uid: string = "";
     token: string = "";
     password1: string = "";
     password2: string = "";
 
+    constructor(uid: string, token: string, password1: string, password2: string) {
+        const reset = {
+            uid: uid,
+            token: token,
+            password1: password1,
+            password2: password2,
+        }
+        Object.assign(this, reset);
+    }
+    
     get isValid(): boolean {
         return this.uid !== "" && this.token !== "" && this.password1 !== "" && this.password1 === this.password2;
     }

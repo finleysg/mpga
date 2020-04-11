@@ -22,6 +22,7 @@ export interface IClubContactData {
     zip?: string;
     notes?: string;
     isPrimary: boolean;
+    sendEmail: boolean;
     useForMailings: boolean;
     roles?: IRole[];
 }
@@ -77,6 +78,7 @@ const translateClubContact = (cc: ClubContact): IClubContactData => {
         zip: contact.zip,
         notes: contact.notes,
         isPrimary: cc.isPrimary,
+        sendEmail: cc.sendEmail,
         useForMailings: cc.useForMailings,
         roles: cc.roles?.map((r: ClubContactRole) => {
             return {id: r.id!, role: r.role!};

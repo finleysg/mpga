@@ -5,13 +5,13 @@ import { Route, Switch } from 'react-router-dom';
 import { ConnectedLayout } from '../layout/Layout';
 import ContactUsPage from '../pages/ContactUsPage';
 import ConnectedHomePage from '../pages/HomePage';
-import LoginPage from '../pages/LoginPage';
 import UserActions from '../store/UserActions';
 import { AboutUsRoutes } from './AboutUsRoutes';
 import { MatchPlayRoutes } from './MatchPlayRoutes';
 import { MemberClubRoutes } from './MemberClubRoutes';
 import { TournamentRoutes } from './TournamentRoutes';
 import { AdminRoutes } from "./AdminRoutes";
+import { SessionRoutes } from "./SessionRoutes";
 
 export const AppRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -48,10 +48,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/admin">
                 <AdminRoutes />
             </Route>
-            <Route path="/login">
-                <ConnectedLayout>
-                    <LoginPage />
-                </ConnectedLayout>
+            <Route path="/account">
+                <SessionRoutes />
             </Route>
         </Switch>
     );

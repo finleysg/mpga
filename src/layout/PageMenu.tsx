@@ -2,14 +2,12 @@ import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import NavItem from "react-bootstrap/NavItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router";
 import { NavLink } from "react-router-dom";
 
 import constants from "../constants";
 import { IApplicationState } from "../store";
-import UserActions from "../store/UserActions";
 
 export interface IPageMenuProps {
     subMenu: string;
@@ -18,8 +16,18 @@ export interface IPageMenuProps {
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
-    const dispatch = useDispatch();
-    let { url } = useRouteMatch();
+    const { url } = useRouteMatch();
+
+    const renderAccountLink = () => {
+        if (session.user.isAuthenticated) {
+            return (
+                <NavLink to="/account" className="nav-link" activeClassName="active">
+                    My Account ({session.user.name})
+                </NavLink>
+            );
+        }
+        return null;
+    };
 
     const selectMenu = () => {
         const { subMenu, segments } = props;
@@ -41,27 +49,13 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                                 USGA
                             </NavDropdown.Item>
                         </NavDropdown>
-                        {session.user.isAuthenticated ? (
-                            <>
-                                <NavLink to="/profile" className="nav-link" activeClassName="active">
-                                    {session.user.name}
-                                </NavLink>
-                                <NavItem onClick={() => dispatch(UserActions.Logout())} className="nav-link clickable">
-                                    Logout
-                                </NavItem>
-                            </>
-                        ) : (
-                            <NavLink to="/login" className="nav-link" activeClassName="active">
-                                Club Login
-                            </NavLink>
-                        )}
                     </Nav>
                 );
             case "tournaments":
                 if (
                     segments.indexOf("detail") === 1 ||
                     segments.indexOf("contact") === 1 ||
-                    segments.indexOf("history") === 1 
+                    segments.indexOf("history") === 1
                 ) {
                     const tournamentName = segments[2];
                     return (
@@ -148,6 +142,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                         <NavLink to={`${url}/awards`} className="nav-link" activeClassName="active">
                             Awards
                         </NavLink>
+                        
                     </Nav>
                 );
             default:
@@ -157,7 +152,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
 
     return (
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-            <Nav id="topnav">{selectMenu()}</Nav>
+            <Nav id="topnav">{selectMenu()}{renderAccountLink()}</Nav>
         </Navbar.Collapse>
     );
 };
