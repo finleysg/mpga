@@ -29,14 +29,14 @@ const Login: React.FC = () => {
 
     return (
         <div>
-            {session.isBusy && <Loading />}
+            {session.flags.isBusy && <Loading />}
             <Card>
                 <Card.Header>
                     <Card.Title>Log in to MPGA.net</Card.Title>
                 </Card.Header>
                 <Card.Body>
                     <LoginForm credentials={init} OnLogin={(creds) => login(creds)} />
-                    {session.hasError && <p className="text-danger">{session.errorMessage}</p>}
+                    {session.flags.hasError && <p className="text-danger">{session.flags.errorMessage}</p>}
                 </Card.Body>
                 <Card.Footer>
                     <Button variant="outline-primary" onClick={() => navigator.navigate("/account/forgot")}>

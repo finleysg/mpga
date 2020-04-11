@@ -6,21 +6,16 @@ import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { IApplicationState } from "../../store";
-import { Contact, IClub } from "../../models/Clubs";
 import { IRegisterData } from "../../store/UserActions";
 
 export interface IRegisterFormProps {
-    clubs: IClub[];
-    contact?: Contact;
     OnRegister: (registration: IRegisterData) => void;
 }
 
 const schema = yup.object({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    email: yup.string().email().required(),
-    homeClub: yup.number().required(),
-    notes: yup.string().nullable(),
+    firstName: yup.string().required("Please enter a first name"),
+    lastName: yup.string().required("Please enter a last name"),
+    email: yup.string().email().required("A valid email is required"),
     password: yup.string().required("Password is required"),
     confirmPassword: yup
         .string()
@@ -30,29 +25,38 @@ const schema = yup.object({
 
 const RegisterForm: React.FC<IRegisterFormProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
-    const { contact, clubs } = props;
-    const account = {
-        firstName: contact?.firstName || "",
-        lastName: contact?.lastName || "",
-        email: contact?.email || "",
-        notes: contact?.notes || "",
-    } as IRegisterData;
 
     return (
         <Formik
             validationSchema={schema}
+            validateOnBlur={false}
+            validateOnChange={false}
             onSubmit={(values) => {
                 props.OnRegister(values);
             }}
-            initialValues={account}>
-            {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isValid }) => (
+            initialValues={{} as IRegisterData}>
+            {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group controlId="firstName">
-                        <Form.Label>First name</Form.Label>
+                    <Form.Group controlId="email">
+                        {/* <Form.Label>Email</Form.Label> */}
                         <Form.Control
-                            placeholder="First name"
+                            placeholder="Email"
+                            name="email"
+                            type="email"
+                            value={values.email || ""}
+                            isValid={touched.email && !errors.email}
+                            isInvalid={!!errors.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="firstName">
+                        {/* <Form.Label>First Name</Form.Label> */}
+                        <Form.Control
+                            placeholder="First Name"
                             name="firstName"
-                            value={values.firstName}
+                            value={values.firstName || ""}
                             isValid={touched.firstName && !errors.firstName}
                             isInvalid={!!errors.firstName}
                             onChange={handleChange}
@@ -61,11 +65,11 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props) => {
                         <Form.Control.Feedback type="invalid">{errors.firstName}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="lastName">
-                        <Form.Label>Last name</Form.Label>
+                        {/* <Form.Label>Last Name</Form.Label> */}
                         <Form.Control
-                            placeholder="Last name"
+                            placeholder="Last Name"
                             name="lastName"
-                            value={values.lastName}
+                            value={values.lastName || ""}
                             isValid={touched.lastName && !errors.lastName}
                             isInvalid={!!errors.lastName}
                             onChange={handleChange}
@@ -73,63 +77,13 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props) => {
                         />
                         <Form.Control.Feedback type="invalid">{errors.lastName}</Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Group controlId="email">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            placeholder="Email"
-                            name="email"
-                            value={values.email}
-                            isValid={touched.email && !errors.email}
-                            isInvalid={!!errors.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group controlId="ec.homeClub">
-                        <Form.Label>MPGA member club</Form.Label>
-                        <Form.Control
-                            as="select"
-                            name="homeClub"
-                            value={values.homeClub?.toString()}
-                            isValid={touched.homeClub && !errors.homeClub}
-                            isInvalid={!!errors.homeClub}
-                            onChange={handleChange}
-                            onBlur={handleBlur}>
-                            <option value={undefined}>--Select a Home Club--</option>
-                            <option value={0}>Not in the List</option>
-                            {clubs.map((c) => {
-                                return (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </option>
-                                );
-                            })}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">{errors.homeClub}</Form.Control.Feedback>
-                    </Form.Group>
-                    {values.homeClub === 0 && (
-                        <Form.Group controlId="notes">
-                            <Form.Control
-                                as="textarea"
-                                rows="2"
-                                name="notes"
-                                value={values.notes}
-                                isValid={touched.notes && !errors.notes}
-                                isInvalid={!!errors.notes}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Where do you play your golf?</Form.Text>
-                        </Form.Group>
-                    )}
                     <Form.Group controlId="password">
-                        <Form.Label>New Password</Form.Label>
+                        {/* <Form.Label>Password</Form.Label> */}
                         <Form.Control
+                            placeholder="Password"
                             name="password"
                             type="password"
-                            value={values.password}
+                            value={values.password || ""}
                             isValid={touched.password && !errors.password}
                             isInvalid={!!errors.password}
                             onChange={handleChange}
@@ -138,11 +92,12 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props) => {
                         <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="confirmPassword">
-                        <Form.Label>Confirm New Password</Form.Label>
+                        {/* <Form.Label>Confirm Password</Form.Label> */}
                         <Form.Control
+                            placeholder="Confirm your password"
                             name="confirmPassword"
                             type="password"
-                            value={values.confirmPassword}
+                            value={values.confirmPassword || ""}
                             isValid={touched.confirmPassword && !errors.confirmPassword}
                             isInvalid={!!errors.confirmPassword}
                             onChange={handleChange}
@@ -155,7 +110,7 @@ const RegisterForm: React.FC<IRegisterFormProps> = (props) => {
                         type="submit"
                         size="sm"
                         className="mt-2"
-                        disabled={session.isBusy || !isValid}>
+                        disabled={session.flags.isBusy}>
                         Register
                     </Button>
                 </Form>

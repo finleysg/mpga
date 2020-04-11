@@ -30,7 +30,7 @@ const NotificationActions = {
         toast("Success", message, NotificationType.Success)(dispatch);
     },
     ToastError: (error: any) => (dispatch: any) => {
-        toast("Error", error.message || "An error occurred", NotificationType.Error)(dispatch);
+        toast("Error", error.message || error || "An error occurred", NotificationType.Error)(dispatch);
     },
     RemoveToast: (id: number) => (dispatch: any) => {
         dispatch({

@@ -3,6 +3,7 @@ import { Api, Auth } from "../http";
 import { PasswordResetRequest, User } from "../models/User";
 import NotificationActions from "./NotificationActions";
 import { Contact } from "../models/Clubs";
+import { IApplicationState } from "./index";
 
 const userActionError = "Something went horribly wrong. We apologize for the error.";
 
@@ -10,8 +11,6 @@ export interface IRegisterData {
     firstName: string;
     lastName: string;
     email: string;
-    homeClub?: number;
-    notes?: string;
     password?: string;
     confirmPassword?: string;
 }
@@ -37,9 +36,15 @@ export enum UserActionTypes {
     CREATE_USER_REQUESTED = "CREATE_USER_REQUESTED",
     CREATE_USER_SUCCEEDED = "CREATE_USER_SUCCEEDED",
     CREATE_USER_FAILED = "CREATE_USER_FAILED",
+    ACTIVATE_ACCOUNT_REQUESTED = "ACTIVATE_ACCOUNT_REQUESTED",
+    ACTIVATE_ACCOUNT_SUCCEEDED = "ACTIVATE_ACCOUNT_SUCCEEDED",
+    ACTIVATE_ACCOUNT_FAILED = "ACTIVATE_ACCOUNT_FAILED",
     UPDATE_USER_REQUESTED = "UPDATE_USER_REQUESTED",
     UPDATE_USER_SUCCEEDED = "UPDATE_USER_SUCCEEDED",
     UPDATE_USER_FAILED = "UPDATE_USER_FAILED",
+    GET_CONTACT_REQUESTED = "GET_CONTACT_REQUESTED",
+    GET_CONTACT_SUCCEEDED = "GET_CONTACT_SUCCEEDED",
+    GET_CONTACT_FAILED = "GET_CONTACT_FAILED",
     SAVE_CONTACT_REQUESTED = "SAVE_CONTACT_REQUESTED",
     SAVE_CONTACT_SUCCEEDED = "SAVE_CONTACT_SUCCEEDED",
     SAVE_CONTACT_FAILED = "SAVE_CONTACT_FAILED",
@@ -49,7 +54,7 @@ const UserActions = {
     GetUser: () => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.GET_USER_REQUESTED });
         try {
-            const result = await Auth.get("/user/");
+            const result = await Auth.get("/users/me/");
             dispatch({ type: UserActionTypes.GET_USER_SUCCEEDED, payload: new User().fromJson(result.data) });
         } catch (error) {
             dispatch(UserActions.ResetUser());
@@ -59,8 +64,8 @@ const UserActions = {
     Login: (email: string, password: string, remember: boolean) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.LOGIN_REQUESTED });
         try {
-            const result = await Auth.post("/login/", { username: email, email: email, password: password });
-            const token = result.data.key;
+            const result = await Auth.post("/token/login/", { username: email, email: email, password: password });
+            const token = result.data.auth_token;
             if (remember) {
                 localStorage.setItem(constants.BearerTokenName, token);
             } else {
@@ -76,7 +81,7 @@ const UserActions = {
 
     Logout: () => async (dispatch: any) => {
         try {
-            await Auth.post("/logout/", {});
+            await Auth.post("/token/logout/", {});
         } finally {
             dispatch(NotificationActions.ToastMessage("You have been logged out."));
             dispatch(UserActions.ResetUser());
@@ -92,7 +97,7 @@ const UserActions = {
     ResetPassword: (email: string) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.RESET_PASSWORD_REQUESTED });
         try {
-            await Auth.post("/password/reset/", { email: email });
+            await Auth.post("/users/reset_password/", { email: email });
         } finally {
             dispatch({ type: UserActionTypes.RESET_PASSWORD_COMPLETED });
         }
@@ -101,7 +106,7 @@ const UserActions = {
     ConfirmReset: (reset: PasswordResetRequest) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.CONFIRM_PASSWORD_RESET_REQUESTED });
         try {
-            await Auth.post("/password/reset/confirm/", reset.toJson());
+            await Auth.post("/users/reset_password_confirm/", reset.toJson());
             dispatch({ type: UserActionTypes.CONFIRM_PASSWORD_RESET_SUCCEEDED });
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
@@ -112,32 +117,33 @@ const UserActions = {
         }
     },
 
-    ChangePassword: (password1: string, password2: string) => async (dispatch: any) => {
+    ChangePassword: (currentPassword: string, password1: string, password2: string) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.CHANGE_PASSWORD_REQUESTED });
         try {
-            await Auth.post("/password/change/", {
-                new_password1: password1,
-                new_password2: password2,
+            await Auth.post("/users/set_password/", {
+                current_password: currentPassword,
+                new_password: password1,
+                re_new_password: password2,
             });
             dispatch({ type: UserActionTypes.CHANGE_PASSWORD_SUCCEEDED });
+            dispatch(NotificationActions.ToastSuccess("Your password has been changed."));
         } catch (error) {
+            dispatch(NotificationActions.ToastError(`${error}: Invalid password!`));
             dispatch({ type: UserActionTypes.CHANGE_PASSWORD_FAILED, payload: userActionError });
         }
     },
 
-    CreateAccount: (registration: IRegisterData, contact?: Contact) => async (dispatch: any) => {
+    CreateAccount: (registration: IRegisterData) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.CREATE_USER_REQUESTED, payload: registration });
         const accountRequest = {
             email: registration.email,
-            username: registration.email,
-            password1: registration.password,
-            password2: registration.confirmPassword,
+            first_name: registration.firstName,
+            last_name: registration.lastName,
+            password: registration.password,
+            re_password: registration.confirmPassword,
         };
         try {
-            await Auth.post("/registration/", accountRequest);
-            if (contact) {
-                dispatch(UserActions.SaveContact(contact));
-            }
+            await Auth.post("/users/", accountRequest);
             dispatch({ type: UserActionTypes.CREATE_USER_SUCCEEDED });
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
@@ -149,33 +155,49 @@ const UserActions = {
         }
     },
 
+    ActivateAccount: (uid: string, token: string) => async (dispatch: any) => {
+        dispatch({ type: UserActionTypes.ACTIVATE_ACCOUNT_REQUESTED });
+        try {
+            await Auth.post("/users/activation/", {uid: uid, token: token});
+            dispatch({ type: UserActionTypes.ACTIVATE_ACCOUNT_SUCCEEDED });
+        } catch (error) {
+            dispatch(NotificationActions.ToastError(error));
+            dispatch({ type: UserActionTypes.ACTIVATE_ACCOUNT_FAILED, payload: userActionError });
+        }
+    },
+
     UpdateAccount: (partial: any) => async (dispatch: any) => {
         dispatch({ type: UserActionTypes.UPDATE_USER_REQUESTED });
         try {
-            await Auth.patch("/user/", partial);
+            await Auth.patch("/users/me/", partial);
             dispatch({ type: UserActionTypes.UPDATE_USER_SUCCEEDED });
             dispatch(UserActions.GetUser());
+            dispatch(NotificationActions.ToastSuccess("Your account has been updated."));
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
             dispatch({ type: UserActionTypes.UPDATE_USER_FAILED, payload: userActionError });
         }
     },
 
-    SaveContact: (contact: Contact) => async (dispatch: any) => {
+    LoadContact: (email: string) => async (dispatch: any) => {
+        dispatch({ type: UserActionTypes.GET_CONTACT_REQUESTED });
+        try {
+            const result = await Api.get(`/contacts/?email=${email}`);
+            dispatch({ type: UserActionTypes.GET_CONTACT_SUCCEEDED, payload: new Contact(result.data[0]) });
+        } catch (error) {
+            dispatch({ type: UserActionTypes.GET_CONTACT_FAILED, payload: userActionError });
+            dispatch(NotificationActions.ToastError(error));
+        }
+    },
+
+    UpdateContact: (id: number, partial: any) => async (dispatch: any, getState: () => IApplicationState) => {
         dispatch({ type: UserActionTypes.SAVE_CONTACT_REQUESTED });
         try {
-            const payload = contact.prepJson();
-            let toastAction = contact.id ? "updated" : "created";
-            const result = !contact.id
-                ? await Api.post("/contacts/", payload)
-                : await Api.put(`/contacts/${contact.id}/`, payload);
-
-            dispatch({ type: UserActionTypes.SAVE_CONTACT_SUCCEEDED, payload: new Contact(result.data) });
-            dispatch(
-                NotificationActions.ToastSuccess(
-                    `Account for ${contact.firstName + " " + contact.lastName} has been ${toastAction}.`
-                )
-            );
+            await Api.patch(`/contacts/${id}/`, partial);
+            const user = getState().session.user;
+            dispatch(UserActions.LoadContact(user.email));
+            dispatch({ type: UserActionTypes.SAVE_CONTACT_SUCCEEDED });
+            dispatch(NotificationActions.ToastSuccess("Your account has been updated."));
         } catch (error) {
             dispatch({ type: UserActionTypes.SAVE_CONTACT_FAILED, payload: userActionError });
             dispatch(NotificationActions.ToastError(error));

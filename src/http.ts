@@ -21,12 +21,20 @@ Api.interceptors.request.use((config: AxiosRequestConfig) => {
 });
 
 Auth.interceptors.request.use((config: AxiosRequestConfig) => {
-    if (config.url === "/user/") {
-        const token = getTokenFromStorage();
+    const token = getTokenFromStorage();
+    if (token) {
         config.headers["Authorization"] = "Token " + token;
     }
     return config;
 });
+
+// Auth.interceptors.request.use((config: AxiosRequestConfig) => {
+//     if (config.url === "/users/me/" || config.url === "/token/logout/") {
+//         const token = getTokenFromStorage();
+//         config.headers["Authorization"] = "Token " + token;
+//     }
+//     return config;
+// });
 
 const getTokenFromStorage = (): string | null => {
     let token = localStorage.getItem(constants.BearerTokenName);

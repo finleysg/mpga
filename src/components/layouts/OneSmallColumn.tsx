@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 const OneSmallColumn: React.FC<any> = (props) => {
     return (
         <Row>
-            <Col md={{ span: 4, offset: 4 }}>{props.children}</Col>
+            <Col md={{ span: 8, offset: 2 }} lg={{ span: 4, offset: 4 }}>{props.children}</Col>
         </Row>
     );
 };

@@ -7,34 +7,33 @@ import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { IApplicationState } from "../../store";
 
-export interface IForgotPasswordFormProps {
+export interface IChangeEmailFormProps {
     email?: string;
-    OnRequestReset: (email: string) => void;
+    OnChange: (email: string) => void;
 }
 
 const schema = yup.object({
     email: yup.string().email().required(),
 });
 
-const ForgotPasswordForm: React.FC<IForgotPasswordFormProps> = (props) => {
+const ChangeEmailForm: React.FC<IChangeEmailFormProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
 
     return (
         <Formik
             validationSchema={schema}
             onSubmit={(values) => {
-                props.OnRequestReset(values.email);
+                props.OnChange(values.email);
             }}
             initialValues={{ email: props.email || "" }}>
             {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isValid }) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="email">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>New Email</Form.Label>
                         <Form.Control
-                            placeholder="email"
+                            placeholder="New Email"
                             name="email"
                             type="email"
-                            readOnly={session.flags.pendingPasswordReset}
                             value={values.email}
                             isValid={touched.email && !errors.email}
                             isInvalid={!!errors.email}
@@ -48,8 +47,8 @@ const ForgotPasswordForm: React.FC<IForgotPasswordFormProps> = (props) => {
                         type="submit"
                         size="sm"
                         className="mt-2"
-                        disabled={session.flags.isBusy || !isValid || session.flags.pendingPasswordReset}>
-                        Send Password Request
+                        disabled={session.flags.isBusy || !isValid}>
+                        Change Email
                     </Button>
                 </Form>
             )}
@@ -57,4 +56,4 @@ const ForgotPasswordForm: React.FC<IForgotPasswordFormProps> = (props) => {
     );
 };
 
-export default ForgotPasswordForm;
+export default ChangeEmailForm;

@@ -1,60 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loading from "../../components/Loading";
-import { Contact } from "../../models/Clubs";
 import { IApplicationState } from "../../store";
-import MemberClubActions from "../../store/MemberClubActions";
 import UserActions, { IRegisterData } from "../../store/UserActions";
-import { IContactData } from "../contacts/ContactApi";
-import ContactSearch from "../contacts/ContactSearch";
 import RegisterForm from "./RegisterForm";
 import useNavigation from "../../routes/Navigation";
 
 const Register: React.FC = () => {
     const navigator = useNavigation();
     const dispatch = useDispatch();
-    const [selectedContact, setSelectedContact] = useState<Contact | undefined>(undefined);
     const session = useSelector((state: IApplicationState) => state.session);
-    const memberState = useSelector((state: IApplicationState) => state.memberClubs);
-
-    useEffect(() => {
-        if (!memberState.clubs || memberState.clubs.length === 0) {
-            dispatch(MemberClubActions.LoadMemberClubs());
-        }
-    }, [dispatch, memberState.clubs]);
 
     const register = (registrationData: IRegisterData) => {
-        dispatch(UserActions.CreateAccount(registrationData, selectedContact));
-    };
-
-    const selectContact = (contact: IContactData) => {
-        setSelectedContact(new Contact(contact));
+        dispatch(UserActions.CreateAccount(registrationData));
     };
 
     return (
         <div>
-            {session.isBusy && <Loading />}
+            {session.flags.isBusy && <Loading />}
             <Card>
                 <Card.Header>
                     <Card.Title>Sign Up for an Account</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    {!selectedContact && <ContactSearch allowNew={true} OnSelect={selectContact} />}
-                    {selectedContact && (
-                        <RegisterForm
-                            contact={selectedContact}
-                            clubs={memberState.clubs}
-                            OnRegister={(registration) => register(registration)}
-                        />
+                    <p className="text-info">
+                        It is possible that we already have an account for you in our system. This is because we
+                        automatically create accounts for officers or contacts for our member clubs. If that is the
+                        case, you will get a message below when you try to create your account.
+                    </p>
+                    <RegisterForm OnRegister={(registration) => register(registration)} />
+                    {session.flags.hasError && <p className="text-danger mt-3">{session.flags.errorMessage}</p>}
+                    {session.flags.accountExists && (
+                        <p className="text-danger mt-3">
+                            Please create a password for your account by clicking the Reset Password button below.
+                        </p>
                     )}
-                    {session.hasAccountError && <p className="text-danger mt-3">{session.errorMessage}</p>}
-                    {session.accountExists && (
-                        <p className="text-info mt-3">
-                            This could be because you are an officer or contact for one of our member clubs. You can
-                            create a password for your account by clicking the Reset Password button below.
+                    {session.flags.accountCreated && (
+                        <p className="text-success mt-3">
+                            Your account has been created, but not yet activated. We have sent an email to your
+                            email address above for confirmation. If you do not receive that email, please confirm
+                            that your email client is not blocking mpga.net as junk or spam.
                         </p>
                     )}
                 </Card.Body>
@@ -62,7 +50,7 @@ const Register: React.FC = () => {
                     <Button variant="outline-primary" onClick={() => navigator.navigate("/account/login")}>
                         Login
                     </Button>
-                    {session.accountExists && (
+                    {session.flags.accountExists && (
                         <Button
                             variant="outline-primary"
                             className="ml-2"

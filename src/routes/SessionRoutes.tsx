@@ -7,6 +7,8 @@ import Login from "../features/session/Login";
 import Register from "../features/session/Register";
 import { ConnectedLayout } from "../layout/Layout";
 import PasswordReset from "../features/session/PasswordReset";
+import AccountActivation from "../features/session/AccountActivation";
+import AccountDetail from "../features/account/AccountDetail";
 
 export const SessionRoutes: React.FC = () => {
     let { path } = useRouteMatch();
@@ -14,7 +16,9 @@ export const SessionRoutes: React.FC = () => {
         <Switch>
             <ConnectedLayout>
                 <Route exact path={path}>
-                    <p>Account Page</p>
+                    <OneSmallColumn>
+                        <AccountDetail />
+                    </OneSmallColumn>
                 </Route>
                 <Route path={`${path}/login`}>
                     <OneSmallColumn>
@@ -34,6 +38,11 @@ export const SessionRoutes: React.FC = () => {
                 <Route path={`${path}/reset-password/:uid/:token`}>
                     <OneSmallColumn>
                         <PasswordReset />
+                    </OneSmallColumn>
+                </Route>
+                <Route path={`${path}/activate/:uid/:token`}>
+                    <OneSmallColumn>
+                        <AccountActivation />
                     </OneSmallColumn>
                 </Route>
             </ConnectedLayout>

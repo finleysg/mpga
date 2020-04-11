@@ -30,22 +30,22 @@ const PasswordReset: React.FC = () => {
 
     return (
         <div>
-            {session.isBusy && <Loading />}
+            {session.flags.isBusy && <Loading />}
             <Card>
                 <Card.Header>
                     <Card.Title>Create or Reset Your Password</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    {!session.passwordResetConfirmed && <p>Enter and confirm your new password.</p>}
-                    {session.passwordResetConfirmed && (
+                    {!session.flags.passwordResetConfirmed && <p>Enter and confirm your new password.</p>}
+                    {session.flags.passwordResetConfirmed && (
                         <p className="text-success">
                             Your password has been changed. Log in now with your new password.
                         </p>
                     )}
                     <PasswordResetForm OnReset={(creds) => resetPassword(creds)} />
-                    {session.hasError && <p className="text-danger mt-3">{session.errorMessage}</p>}
+                    {session.flags.hasError && <p className="text-danger mt-3">{session.flags.errorMessage}</p>}
                 </Card.Body>
-                {session.passwordResetConfirmed && (
+                {session.flags.passwordResetConfirmed && (
                     <Card.Footer>
                         <Button variant="outline-primary" onClick={() => navigator.navigate("/account/login")}>
                             Login

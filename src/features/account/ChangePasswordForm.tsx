@@ -7,55 +7,70 @@ import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { IApplicationState } from "../../store";
 
-export interface IPasswordReset {
-    password: string;
+export interface IPasswordChange {
+    currentPassword: string;
+    newPassword: string;
     confirmPassword: string;
 }
 
-export interface IPasswordResetFormProps {
-    OnReset: (credentials: IPasswordReset) => void;
+export interface IPasswordChangeFormProps {
+    OnChange: (credentials: IPasswordChange) => void;
 }
 
 const schema = yup.object({
-    password: yup.string().required("Password is required"),
+    currentPassword: yup.string().required("Your current password is required"),
+    newPassword: yup.string().required("A new password is required"),
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref("password"), null], "Passwords must match")
+        .oneOf([yup.ref("newPassword"), null], "Passwords must match")
         .required("Password confirmation is required"),
 });
 
-const PasswordResetForm: React.FC<IPasswordResetFormProps> = (props) => {
+const ChangePasswordForm: React.FC<IPasswordChangeFormProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
 
     return (
         <Formik
             validationSchema={schema}
+            validateOnBlur={false}
+            validateOnChange={false}
             onSubmit={(values) => {
-                props.OnReset(values);
+                props.OnChange(values);
             }}
-            initialValues={{} as IPasswordReset}>
-            {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isValid }) => (
+            initialValues={{} as IPasswordChange}>
+            {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group controlId="password">
-                        <Form.Label>New Password</Form.Label>
+                    <Form.Group controlId="currentPassword">
+                        <Form.Label>Current Password</Form.Label>
                         <Form.Control
-                            name="password"
+                            name="currentPassword"
                             type="password"
-                            readOnly={session.flags.passwordResetConfirmed}
-                            value={values.password || ""}
-                            isValid={touched.password && !errors.password}
-                            isInvalid={!!errors.password}
+                            value={values.currentPassword || ""}
+                            isValid={touched.currentPassword && !errors.currentPassword}
+                            isInvalid={!!errors.currentPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
-                        <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.currentPassword}</Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="newPassword">
+                        <Form.Label>New Password</Form.Label>
+                        <Form.Control
+                            name="newPassword"
+                            type="password"
+                            value={values.newPassword || ""}
+                            isValid={touched.newPassword && !errors.newPassword}
+                            isInvalid={!!errors.newPassword}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.newPassword}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="confirmPassword">
                         <Form.Label>Confirm New Password</Form.Label>
                         <Form.Control
                             name="confirmPassword"
                             type="password"
-                            readOnly={session.flags.passwordResetConfirmed}
                             value={values.confirmPassword || ""}
                             isValid={touched.confirmPassword && !errors.confirmPassword}
                             isInvalid={!!errors.confirmPassword}
@@ -69,7 +84,7 @@ const PasswordResetForm: React.FC<IPasswordResetFormProps> = (props) => {
                         type="submit"
                         size="sm"
                         className="mt-2"
-                        disabled={session.flags.isBusy || !isValid || session.flags.passwordResetConfirmed}>
+                        disabled={session.flags.isBusy}>
                         Change Password
                     </Button>
                 </Form>
@@ -78,4 +93,4 @@ const PasswordResetForm: React.FC<IPasswordResetFormProps> = (props) => {
     );
 };
 
-export default PasswordResetForm;
+export default ChangePasswordForm;

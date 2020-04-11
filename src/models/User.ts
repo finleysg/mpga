@@ -85,8 +85,8 @@ export class PasswordResetRequest {
         return {
             "uid": this.uid,
             "token": this.token,
-            "new_password1": this.password1,
-            "new_password2": this.password2
+            "new_password": this.password1,
+            "re_new_password": this.password2
         };
     }
 }

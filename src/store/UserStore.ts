@@ -4,27 +4,38 @@ import { User } from "../models/User";
 import { UserActionTypes, IRegisterData } from "./UserActions";
 import { Contact } from "../models/Clubs";
 
-export interface IUserState {
-    user: User;
-    contact?: Contact;
+export interface IUserStateFlags {
     isBusy: boolean;
     hasError: boolean;
-    hasAccountError: boolean;
     errorMessage?: string;
     pendingPasswordReset: boolean;
     passwordResetConfirmed: boolean;
     accountExists: boolean;
+    accountActivated: boolean;
+    accountCreated: boolean;
+}
+
+export const defaultStateFlags: IUserStateFlags = {
+    errorMessage: "",
+    isBusy: false,
+    hasError: false,
+    pendingPasswordReset: false,
+    passwordResetConfirmed: false,
+    accountExists: false,
+    accountActivated: false,
+    accountCreated: false,
+};
+
+export interface IUserState {
+    user: User;
+    contact?: Contact;
     accountRequest?: IRegisterData;
+    flags: IUserStateFlags;
 }
 
 export const defaultState: IUserState = {
     user: User.Guest(),
-    isBusy: false,
-    hasError: false,
-    hasAccountError: false,
-    pendingPasswordReset: false,
-    passwordResetConfirmed: false,
-    accountExists: false,
+    flags: defaultStateFlags,
 };
 
 export interface IUserGetRequested extends Action {
@@ -69,13 +80,26 @@ export interface ICreateUserFailed extends Action {
     payload: string;
 }
 
+export interface IGetContactRequested extends Action {
+    type: UserActionTypes.GET_CONTACT_REQUESTED;
+}
+
+export interface IGetContactSucceeded extends Action {
+    type: UserActionTypes.GET_CONTACT_SUCCEEDED;
+    payload: Contact;
+}
+
+export interface IGetContactFailed extends Action {
+    type: UserActionTypes.GET_CONTACT_FAILED;
+    payload: string;
+}
+
 export interface ISaveContactRequested extends Action {
     type: UserActionTypes.SAVE_CONTACT_REQUESTED;
 }
 
 export interface ISaveContactSucceeded extends Action {
     type: UserActionTypes.SAVE_CONTACT_SUCCEEDED;
-    payload: Contact;
 }
 
 export interface ISaveContactFailed extends Action {
@@ -104,6 +128,19 @@ export interface IConfirmPasswordResetFailed extends Action {
     payload: string;
 }
 
+export interface IActivateAccountRequested extends Action {
+    type: UserActionTypes.ACTIVATE_ACCOUNT_REQUESTED;
+}
+
+export interface IActivateAccountSucceeded extends Action {
+    type: UserActionTypes.ACTIVATE_ACCOUNT_SUCCEEDED;
+}
+
+export interface IActivateAccountFailed extends Action {
+    type: UserActionTypes.ACTIVATE_ACCOUNT_FAILED;
+    payload: string;
+}
+
 export interface IResetUser extends Action {
     type: UserActionTypes.RESET_USER;
 }
@@ -118,6 +155,9 @@ type KnownActions =
     | ICreateUserRequested
     | ICreateUserSucceeded
     | ICreateUserFailed
+    | IGetContactRequested
+    | IGetContactSucceeded
+    | IGetContactFailed
     | ISaveContactRequested
     | ISaveContactSucceeded
     | ISaveContactFailed
@@ -126,6 +166,9 @@ type KnownActions =
     | IConfirmPasswordResetRequested
     | IConfirmPasswordResetSucceeded
     | IConfirmPasswordResetFailed
+    | IActivateAccountRequested
+    | IActivateAccountSucceeded
+    | IActivateAccountFailed
     | IResetUser;
 
 export const UsersReducer: Reducer<IUserState, KnownActions> = (
@@ -138,75 +181,88 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
 
     switch (action.type) {
         case UserActionTypes.GET_USER_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false, errorMessage: undefined };
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
         }
         case UserActionTypes.GET_USER_SUCCEEDED: {
-            return { ...state, user: action.payload, isBusy: false };
+            return { ...state, user: action.payload, flags: defaultStateFlags };
         }
         case UserActionTypes.GET_USER_FAILED: {
-            return { ...state, isBusy: false, hasError: true };
+            return { ...state, flags: { ...defaultStateFlags, hasError: true } };
         }
         case UserActionTypes.LOGIN_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false, errorMessage: undefined };
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
         }
         case UserActionTypes.LOGIN_SUCCEEDED: {
-            return { ...state, isBusy: false };
+            return { ...state, flags: defaultStateFlags };
         }
         case UserActionTypes.LOGIN_FAILED: {
-            return { ...state, isBusy: false, hasError: true, errorMessage: action.payload };
+            return { ...state, flags: { ...defaultStateFlags, hasError: true, errorMessage: action.payload } };
         }
         case UserActionTypes.CREATE_USER_REQUESTED: {
-            return {
-                ...state,
-                isBusy: true,
-                hasAccountError: false,
-                errorMessage: undefined,
-                accountExists: false,
-                accountRequest: action.payload,
-            };
+            return { ...state, accountRequest: action.payload, flags: { ...defaultStateFlags, isBusy: true } };
         }
         case UserActionTypes.CREATE_USER_SUCCEEDED: {
-            return { ...state, isBusy: false };
+            return { ...state, flags: { ...defaultStateFlags, accountCreated: true } };
         }
         case UserActionTypes.CREATE_USER_FAILED: {
             let exists = false;
             if (action.payload === "A user is already registered with this e-mail address.") {
                 exists = true;
             }
-            return { ...state, isBusy: false, hasAccountError: true, errorMessage: action.payload, accountExists: exists };
-        }
-        case UserActionTypes.SAVE_CONTACT_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false, errorMessage: undefined };
-        }
-        case UserActionTypes.SAVE_CONTACT_SUCCEEDED: {
-            return { ...state, isBusy: false, contact: action.payload };
-        }
-        case UserActionTypes.SAVE_CONTACT_FAILED: {
-            return { ...state, isBusy: false, hasError: true, errorMessage: action.payload };
-        }
-        case UserActionTypes.RESET_PASSWORD_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false, errorMessage: undefined, pendingPasswordReset: false };
-        }
-        case UserActionTypes.RESET_PASSWORD_COMPLETED: {
-            return { ...state, isBusy: false, hasError: false, errorMessage: undefined, pendingPasswordReset: true };
-        }
-        case UserActionTypes.CONFIRM_PASSWORD_RESET_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false, errorMessage: undefined, passwordResetConfirmed: false };
-        }
-        case UserActionTypes.CONFIRM_PASSWORD_RESET_SUCCEEDED: {
-            return { ...state, isBusy: false, hasError: false, errorMessage: undefined, passwordResetConfirmed: true };
-        }
-        case UserActionTypes.CONFIRM_PASSWORD_RESET_FAILED: {
             return {
                 ...state,
-                isBusy: false,
-                hasError: true,
-                errorMessage: action.payload,
-                passwordResetConfirmed: false,
+                flags: {
+                    ...defaultStateFlags,
+                    accountExists: exists,
+                    hasError: true,
+                    errorMessage: action.payload,
+                },
             };
         }
+        case UserActionTypes.GET_CONTACT_REQUESTED: {
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
+        }
+        case UserActionTypes.GET_CONTACT_SUCCEEDED: {
+            return { ...state, contact: action.payload, flags: defaultStateFlags };
+        }
+        case UserActionTypes.GET_CONTACT_FAILED: {
+            return { ...state, flags: { ...defaultStateFlags, hasError: true, errorMessage: action.payload } };
+        }
+        case UserActionTypes.SAVE_CONTACT_REQUESTED: {
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
+        }
+        case UserActionTypes.SAVE_CONTACT_SUCCEEDED: {
+            return { ...state, flags: defaultStateFlags };
+        }
+        case UserActionTypes.SAVE_CONTACT_FAILED: {
+            return { ...state, flags: { ...defaultStateFlags, hasError: true, errorMessage: action.payload } };
+        }
+        case UserActionTypes.RESET_PASSWORD_REQUESTED: {
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
+        }
+        case UserActionTypes.RESET_PASSWORD_COMPLETED: {
+            return { ...state, flags: { ...defaultStateFlags, pendingPasswordReset: true } };
+        }
+        case UserActionTypes.CONFIRM_PASSWORD_RESET_REQUESTED: {
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
+        }
+        case UserActionTypes.CONFIRM_PASSWORD_RESET_SUCCEEDED: {
+            return { ...state, flags: { ...defaultStateFlags, passwordResetConfirmed: true } };
+        }
+        case UserActionTypes.CONFIRM_PASSWORD_RESET_FAILED: {
+            return { ...state, flags: { ...defaultStateFlags, hasError: true, errorMessage: action.payload } };
+        }
+        case UserActionTypes.ACTIVATE_ACCOUNT_REQUESTED: {
+            return { ...state, flags: { ...defaultStateFlags, isBusy: true } };
+        }
+        case UserActionTypes.ACTIVATE_ACCOUNT_SUCCEEDED: {
+            return { ...state, flags: { ...defaultStateFlags, accountActivated: true } };
+        }
+        case UserActionTypes.ACTIVATE_ACCOUNT_FAILED: {
+            return { ...state, flags: { ...defaultStateFlags, hasError: true, errorMessage: action.payload } };
+        }
         case UserActionTypes.RESET_USER: {
-            return { ...state, user: User.Guest(), isBusy: false };
+            return { ...state, user: User.Guest(), flags: defaultStateFlags };
         }
         default:
             return state;

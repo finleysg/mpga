@@ -20,7 +20,7 @@ const ForgotPassword: React.FC = () => {
 
     return (
         <div>
-            {session.isBusy && <Loading />}
+            {session.flags.isBusy && <Loading />}
             <Card>
                 <Card.Header>
                     <Card.Title>Request a Password Reset</Card.Title>
@@ -30,8 +30,8 @@ const ForgotPassword: React.FC = () => {
                         email={session.accountRequest?.email || ""}
                         OnRequestReset={(email) => requestReset(email)}
                     />
-                    {session.hasError && <p className="text-danger">{session.errorMessage}</p>}
-                    {session.pendingPasswordReset && (
+                    {session.flags.hasError && <p className="text-danger">{session.flags.errorMessage}</p>}
+                    {session.flags.pendingPasswordReset && (
                         <p className="text-success mt-3">
                             An email has been sent to the address you entered above. If you don't receive a reset link
                             within a few minutes, check to ensure that your email client is not flagging email from
