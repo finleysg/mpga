@@ -1,16 +1,20 @@
-import { createBrowserHistory } from 'history';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { routerMiddleware, routerReducer } from 'react-router-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
+import { createBrowserHistory } from "history";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import { routerMiddleware, routerReducer } from "react-router-redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
 
-import { AppRoutes } from './routes/AppRoutes';
-import * as serviceWorker from './serviceWorker';
-import { IApplicationState, reducers } from './store';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+import constants from "./constants";
+import { AppRoutes } from "./routes/AppRoutes";
+import * as serviceWorker from "./serviceWorker";
+import { IApplicationState, reducers } from "./store";
 
 function buildRootReducer(reducers: any) {
     return combineReducers<IApplicationState>(Object.assign({}, reducers, { routing: routerReducer }));
@@ -31,12 +35,16 @@ const store = createStore(
     )
 );
 
+const stripePromise = loadStripe(constants.StripePublicKey);
+
 function renderApp() {
     ReactDOM.render(
         <Provider store={store}>
-            <Router>
-                <AppRoutes />
-            </Router>
+            <Elements stripe={stripePromise}>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </Elements>
         </Provider>,
         document.getElementById("root")
     );

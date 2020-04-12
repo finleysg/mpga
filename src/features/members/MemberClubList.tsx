@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { IApplicationState } from '../../store';
-import MemberClubActions from '../../store/MemberClubActions';
-import Table from 'react-bootstrap/Table';
-import { IClub } from '../../models/Clubs';
-import MemberClubRow from './MemberClubRow';
+import React, { useEffect } from "react";
+import Table from "react-bootstrap/Table";
+import { useDispatch, useSelector } from "react-redux";
+
+import constants from "../../constants";
+import { IClub } from "../../models/Clubs";
+import { IApplicationState } from "../../store";
+import MemberClubActions from "../../store/MemberClubActions";
+import MemberClubRow from "./MemberClubRow";
 
 const MemberClubList: React.FC = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const MemberClubList: React.FC = () => {
             <Table striped size="sm">
                 <thead>
                     <tr>
-                        <th>2020 Member</th>
+                        <th>{constants.MemberClubYear} Member</th>
                         <th>Club</th>
                         <th>Website</th>
                         <th>Location</th>
@@ -30,11 +32,13 @@ const MemberClubList: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {state.clubs.map((club: IClub) => <MemberClubRow key={club.id} club={club} />)}
+                    {state.clubs.map((club: IClub) => (
+                        <MemberClubRow key={club.id} club={club} />
+                    ))}
                 </tbody>
             </Table>
         </div>
     );
-}
+};
 
 export default MemberClubList;

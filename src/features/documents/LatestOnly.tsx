@@ -15,7 +15,7 @@ const LatestOnly: React.FC<ILatestOnlyProps> = props => {
     const documentState = useSelector((state: IApplicationState) => state.documents);
     const documentRender: IDocumentRenderProps = {
         viewType: DocumentViewType.Button,
-        variant: "outline-secondary",
+        variant: "primary",
         external: true,
     };
 

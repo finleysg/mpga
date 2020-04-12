@@ -1,9 +1,11 @@
-import React from 'react';
-import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
-import Container from 'react-bootstrap/Container';
-import MemberClubList from '../features/members/MemberClubList';
-import PageContentDetail from '../features/content/PageContentDetail';
-import { PageCodes } from '../constants';
+import React from "react";
+import Container from "react-bootstrap/Container";
+
+import LargeLeftSmallRight from "../components/layouts/LargeLeftSmallRight";
+import { PageCodes } from "../constants";
+import PageContentDetail from "../features/content/PageContentDetail";
+import MemberClubList from "../features/members/MemberClubList";
+import RegistrationOverview from "../features/members/RegistrationOverview";
 
 const MemberClubsPage: React.FC = () => {
     return (
@@ -15,10 +17,10 @@ const MemberClubsPage: React.FC = () => {
                         <MemberClubList />
                     </div>
                 }
-                RightColumn={"Interested in joining the MPGA?"}
+                RightColumn={<RegistrationOverview />}
             />
         </Container>
     );
-}
+};
 
 export default MemberClubsPage;

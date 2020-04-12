@@ -1,33 +1,64 @@
-import React, { useCallback } from 'react';
-import MemberClubActions from '../../store/MemberClubActions';
-import { useSelector, useDispatch } from 'react-redux';
-import { IApplicationState } from '../../store';
-import { Club } from '../../models/Clubs';
-import MemberClubView from './MemberClubView';
-import EditableDiv from '../../components/EditableDiv';
-import MemberClubEdit from './MemberClubEdit';
-import Loading from '../../components/Loading';
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import EditableDiv from "../../components/EditableDiv";
+import LoadingContainer from "../../components/LoadingContainer";
+import constants from "../../constants";
+import { Club } from "../../models/Clubs";
+import { IApplicationState } from "../../store";
+import MemberClubActions from "../../store/MemberClubActions";
+import ClubDuesPayment from "../payments/ClubDuesPayment";
+import MemberClubEdit from "./MemberClubEdit";
+import MemberClubView from "./MemberClubView";
+import Button from "react-bootstrap/Button";
 
 const MemberClubDetail: React.FC = () => {
-    const state = useSelector((state: IApplicationState) => state.memberClubs);
+    const [makePayment, setMakePayment] = useState(false);
+    const clubState = useSelector((state: IApplicationState) => state.memberClubs);
     const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
 
-    const saveClub = useCallback(
-        (club: Club) => dispatch(MemberClubActions.SaveMemberClub(club)),
-        [dispatch]
-    )
+    const saveClub = useCallback((club: Club) => dispatch(MemberClubActions.SaveMemberClub(club)), [dispatch]);
+
+    const renderDuesPayment = () => {
+        if ((clubState.mostRecentMembership?.year || 0) < constants.MemberClubYear) {
+            if (makePayment) {
+                return (
+                    <ClubDuesPayment
+                        club={clubState.selectedClub}
+                        amountDue={constants.MembershipDues}
+                        title={`Pay ${constants.MemberClubYear} Dues Online`}
+                        Cancel={() => setMakePayment(false)}
+                    />
+                );
+            } else {
+                return (
+                    <Button
+                        variant="outline-secondary"
+                        type="submit"
+                        size="lg"
+                        className="mt-3"
+                        onClick={() => setMakePayment(true)}>
+                        Pay Dues Now
+                    </Button>
+                );
+            }
+        }
+    };
 
     return (
-        <>
-            {state.isBusy ?
-            <Loading /> :
-            <EditableDiv initEdit={false} canEdit={session.user.isFullEditor}
-                viewComponent={<MemberClubView club={state.selectedClub} membership={state.mostRecentMembership} />}
-                editComponent={<MemberClubEdit club={state.selectedClub} Save={saveClub} />}>
-            </EditableDiv>}
-        </>
+        <LoadingContainer hasData={clubState.selectedClub !== undefined}>
+            <EditableDiv
+                initEdit={false}
+                canEdit={session.user.isFullEditor}
+                viewComponent={
+                    <MemberClubView club={clubState.selectedClub} membership={clubState.mostRecentMembership} />
+                }
+                editComponent={<MemberClubEdit club={clubState.selectedClub} Save={saveClub} />}
+            />
+            {renderDuesPayment()}
+        </LoadingContainer>
     );
-}
+};
 
 export default MemberClubDetail;

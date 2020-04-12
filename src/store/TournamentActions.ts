@@ -4,6 +4,7 @@ import { Tournament } from '../models/Events';
 import NotificationActions from './NotificationActions';
 import TournamentWinnerActions from './TournamentWinnerActions';
 import AppActions from './AppActions';
+import DocumentActions from "./DocumentActions";
 
 export enum TournamentActionTypes {
     GET_TOURNAMENT_SUCCEEDED = "GET_TOURNAMENT_SUCCEEDED",
@@ -22,12 +23,19 @@ const TournamentActions = {
             dispatch(NotificationActions.ToastError(error));
         }
     },
-    LoadTournament: (name: string) => async (dispatch: any) => {
+    LoadTournament: (name: string, loadRelatedDocuments: boolean = false) => async (dispatch: any) => {
         try {
             const result = await Api.get(`${tournamentUrl}?name=${name}`);
             const data = new Tournament(result.data[0]);
             dispatch(TournamentWinnerActions.LoadTournamentWinners(data));
             dispatch({ type: TournamentActionTypes.GET_TOURNAMENT_SUCCEEDED, payload: data });
+            if (loadRelatedDocuments) {
+                dispatch(DocumentActions.Load({
+                    key: `${name}-results`,
+                    documentTypes: ["Results"],
+                    tournamentId: data.id,
+                }));
+            }
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
         }

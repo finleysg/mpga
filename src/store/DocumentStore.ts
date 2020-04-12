@@ -78,7 +78,7 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const documents = documentMap?.get(query.key) || [];
             const year = query.event?.eventYear || query.year;
             const tournamentId = query.event?.tournament?.id || query.tournamentId;
-            const documentType = query.documentTypes && query.documentTypes[0];  // constrained to one type
+            const documentType = query.documentTypes && query.documentTypes[0]; // constrained to one type
             documents.push(
                 new MpgaDocument({
                     id: 0,
@@ -95,7 +95,7 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const key = action.payload.key;
             const documentMap = state.documents;
             const documents = documentMap?.get(key) || [];
-            const idx = documents.findIndex(d => d.id === 0);
+            const idx = documents.findIndex((d) => d.id === 0);
             if (idx && idx >= 0) {
                 documents.splice(idx, 1);
                 documentMap.set(key, documents);
@@ -112,7 +112,12 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
         case DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED: {
             const key = action.payload.key;
             const documentMap = state.documents;
-            documentMap.set(key, action.payload.documents);
+            const sorted = action.payload.documents.sort((d1, d2) => {
+                // const a = new Date(d1.lastUpdate!);
+                // const b = new Date(d2.lastUpdate!);
+                return d1.year > d2.year ? -1 : d1.year < d2.year ? 1 : 0;
+            });
+            documentMap.set(key, sorted);
             return { ...state, documents: documentMap, isBusy: false };
         }
         case DocumentActionTypes.GET_DOCUMENTS_FAILED: {

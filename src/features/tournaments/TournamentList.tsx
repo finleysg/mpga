@@ -9,18 +9,18 @@ import TournamentDetail from "./TournamentDetail";
 
 const TournamentList: React.FC = () => {
     const dispatch = useDispatch();
-    const state = useSelector((state: IApplicationState) => state.tournament);
+    const tournamentState = useSelector((state: IApplicationState) => state.tournament);
 
     useEffect(() => {
         dispatch(TournamentActions.LoadTournaments());
     }, [dispatch]);
 
     return (
-        <LoadingContainer hasData={true}>
-            {state.tournaments
+        <LoadingContainer hasData={tournamentState.currentTournament !== undefined}>
+            {tournamentState.tournaments
                 .filter((t) => t.systemName !== "match-play")
                 .map((t: Tournament) => (
-                    <TournamentDetail tournament={t} />
+                    <TournamentDetail key={t.id} tournament={t} />
                 ))}
         </LoadingContainer>
     );

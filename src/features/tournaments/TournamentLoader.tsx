@@ -6,6 +6,7 @@ import TournamentActions from '../../store/TournamentActions';
 
 export interface ITournamentLoaderProps {
     name: string;
+    resultDocuments?: boolean;
 }
 
 const TournamentLoader: React.FC<ITournamentLoaderProps> = (props) => {
@@ -15,9 +16,9 @@ const TournamentLoader: React.FC<ITournamentLoaderProps> = (props) => {
 
     useEffect(() => {
         if (props.name && systemName !== props.name) {
-            dispatch(TournamentActions.LoadTournament(props.name));
+            dispatch(TournamentActions.LoadTournament(props.name, props.resultDocuments!));
         }
-    }, [dispatch, props.name, systemName]);
+    }, [dispatch, props.name, props.resultDocuments, systemName]);
 
     return <></>;
 }

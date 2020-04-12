@@ -21,6 +21,8 @@ export class PageCodes {
     public static MatchPlay: string = "M";
     public static MemberClubs: string = "C";
     public static ClubEditing: string = "E";
+    public static ClubRegistration: string = "R";
+    public static IndividualRegistration: string = "I";
     public static CodeOfConduct: string = "CC";
     public static OurMission: string = "OM";
     public static ExecutiveCommittee: string = "EC";
@@ -38,7 +40,7 @@ export default class Constants {
 	public static MatchPlayYear: number = Number(getStringFromConfig("REACT_APP_MATCH_PLAY_YEAR"));
 	public static MemberClubYear: number = Number(getStringFromConfig("REACT_APP_MEMBER_CLUB_YEAR"));
 	public static MembershipDues: number = Number(getStringFromConfig("REACT_APP_MEMBERSHIP_DUES"));
-	public static StripePublicKey: number = Number(getStringFromConfig("REACT_APP_STRIPE_PUBLIC_KEY"));
+	public static StripePublicKey: string = getStringFromConfig("REACT_APP_STRIPE_PUBLIC_KEY");
 
 	public static BearerTokenName: string = "mpga-token";
 	public static CrsfCookieName: string = "crsftoken";

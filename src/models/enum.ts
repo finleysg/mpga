@@ -17,6 +17,8 @@ export enum PageType {
     M = <any>"Match Play",
     C = <any>"Member Clubs",
     E = <any>"Club Editing",
+    R = <any>"Club Registration",
+    I = <any>"Individual Registration",
     CC = <any>"Code of Conduct",
     OM = <any>"Our Mission",
     EC = <any>"Executive Committee",

@@ -1,27 +1,21 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import { useParams } from 'react-router-dom';
+import React from "react";
+import Container from "react-bootstrap/Container";
+import { useParams } from "react-router-dom";
 
-import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
-import TournamentLoader from '../features/tournaments/TournamentLoader';
-import TournamentHistoryTable from '../features/tournaments/TournamentHistoryTable';
+import NineThree from "../components/layouts/NineThree";
+import TournamentHistoryTable from "../features/tournaments/TournamentHistoryTable";
+import TournamentLoader from "../features/tournaments/TournamentLoader";
+import TournamentResultList from "../features/tournaments/TournamentResultList";
 
 const TournamentHistoryPage: React.FC = () => {
-    let { name } = useParams();
+    const { name } = useParams();
 
     return (
         <Container fluid={true}>
-            <LargeLeftSmallRight
-                LeftColumn={
-                    <React.Fragment>
-                        <TournamentLoader name={name || ""} />
-                        <TournamentHistoryTable />
-                    </React.Fragment>
-                }
-                RightColumn={"Lists"}
-            />
+            <TournamentLoader name={name || ""} resultDocuments={true} />
+            <NineThree LeftColumn={<TournamentHistoryTable />} RightColumn={<TournamentResultList />} />
         </Container>
     );
-}
+};
 
-export default TournamentHistoryPage
+export default TournamentHistoryPage;
