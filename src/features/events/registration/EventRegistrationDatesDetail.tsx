@@ -6,13 +6,14 @@ import Loading from "../../../components/Loading";
 import { EventDetail } from "../../../models/Events";
 import { IApplicationState } from "../../../store";
 import EventActions from "../../../store/EventActions";
+import usePermissions from "../../../utilities/Permissions";
 import EventRegistrationDatesEdit from "./EventRegistrationDatesEdit";
 import EventRegisrationDatesView from "./EventRegistrationDatesView";
 
 const EventRegistrationDatesDetail: React.FC = () => {
     const state = useSelector((state: IApplicationState) => state.events);
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
     const saveEventDetail = useCallback((eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)), [
         dispatch,
@@ -25,7 +26,7 @@ const EventRegistrationDatesDetail: React.FC = () => {
             ) : (
                 <EditableDiv
                     initEdit={false}
-                    canEdit={session.user.isFullEditor}
+                    canEdit={permissions.canManageEvent()}
                     viewComponent={<EventRegisrationDatesView eventDetail={state.currentEvent} />}
                     editComponent={
                         <EventRegistrationDatesEdit eventDetail={state.currentEvent} Save={saveEventDetail} />

@@ -1,23 +1,22 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from "react";
 
-import EditableDiv from '../../../components/EditableDiv';
-import { IApplicationState } from '../../../store';
-import EventPointsEdit, { IEventPointsEditProps } from './EventPointsEdit';
-import EventPointsView from './EventPointsView';
+import EditableDiv from "../../../components/EditableDiv";
+import usePermissions from "../../../utilities/Permissions";
+import EventPointsEdit, { IEventPointsEditProps } from "./EventPointsEdit";
+import EventPointsView from "./EventPointsView";
 
 export interface IEventPointsDetailProps extends IEventPointsEditProps {
-    edit: boolean,
+    edit: boolean;
 }
 
 const EventPointsDetail: React.FunctionComponent<IEventPointsDetailProps> = (props) => {
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
     const { points, edit, Cancel, Save, Delete } = props;
 
-  return (
+    return (
         <EditableDiv
             initEdit={edit}
-            canEdit={session.user.isFullEditor}
+            canEdit={permissions.canManageEvent()}
             viewComponent={<EventPointsView points={points} />}
             editComponent={<EventPointsEdit points={points} Cancel={Cancel} Save={Save} Delete={Delete} />}
         />

@@ -1,20 +1,20 @@
 import React, { useCallback } from "react";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { Award, AwardWinner } from "../../models/Events";
-import { IApplicationState } from "../../store";
 import AwardActions from "../../store/AwardActions";
+import usePermissions from "../../utilities/Permissions";
 import AwardWinnerDetail from "./AwardWinnerDetail";
 
 export interface IAwardWinnerListProps {
     award: Award;
 }
 
-const AwardWinnerList: React.FC<IAwardWinnerListProps> = props => {
+const AwardWinnerList: React.FC<IAwardWinnerListProps> = (props) => {
     const { award } = props;
     const dispatch = useDispatch();
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
 
     const saveAwardWinner = useCallback(
         (winner: AwardWinner) => {
@@ -25,7 +25,7 @@ const AwardWinnerList: React.FC<IAwardWinnerListProps> = props => {
 
     return (
         <div>
-            {session.user.isFullEditor && (
+            {permissions.canEditAwards() && (
                 <Button
                     variant="link"
                     className="text-warning"

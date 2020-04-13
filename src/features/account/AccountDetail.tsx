@@ -2,19 +2,25 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loading from "../../components/Loading";
+import useNavigation from "../../routes/Navigation";
 import { IApplicationState } from "../../store";
-import AccountEmail from "./AccountEmail";
-import AccountPassword from "./AccountPassword";
-import AccountName from "./AccountName";
-import HomeClub from "./HomeClub";
-import AccountContact from "./AccountContact";
 import MemberClubActions from "../../store/MemberClubActions";
 import UserActions from "../../store/UserActions";
+import AccountContact from "./AccountContact";
+import AccountEmail from "./AccountEmail";
+import AccountName from "./AccountName";
+import AccountPassword from "./AccountPassword";
+import HomeClub from "./HomeClub";
 
 const AccountDetail: React.FC = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const session = useSelector((state: IApplicationState) => state.session);
     const clubState = useSelector((state: IApplicationState) => state.memberClubs);
+
+    if (!session.user.isAuthenticated) {
+        navigation.navigate("/");
+    }
 
     useEffect(() => {
         dispatch(MemberClubActions.LoadMemberClubs());

@@ -1,24 +1,26 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
 
-import EditableDiv from '../../components/EditableDiv';
-import { IApplicationState } from '../../store';
-import AnnouncementEdit, { IAnnouncementEdit } from './AnnouncementEdit';
-import AnnouncementView from './AnnouncementView';
+import EditableDiv from "../../components/EditableDiv";
+import usePermissions from "../../utilities/Permissions";
+import AnnouncementEdit, { IAnnouncementEdit } from "./AnnouncementEdit";
+import AnnouncementView from "./AnnouncementView";
 
 export interface IAnnouncementDetail extends IAnnouncementEdit {
-    edit: boolean,
-};
+    edit: boolean;
+}
 
 const AnnouncementDetail: React.FC<IAnnouncementDetail> = (props) => {
     const { announcement, edit, Cancel, Save } = props;
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
+
     return (
-        <EditableDiv initEdit={edit} canEdit={session.user.isFullEditor}
+        <EditableDiv
+            initEdit={edit}
+            canEdit={permissions.canEditAnnouncements()}
             viewComponent={<AnnouncementView announcement={announcement} />}
-            editComponent={<AnnouncementEdit announcement={announcement} Cancel={Cancel} Save={Save} />}>
-        </EditableDiv>
+            editComponent={<AnnouncementEdit announcement={announcement} Cancel={Cancel} Save={Save} />}
+        />
     );
-}
+};
 
 export default AnnouncementDetail;

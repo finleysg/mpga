@@ -9,6 +9,7 @@ import { MpgaPhoto } from "../../../models/Documents";
 import { EventDetail } from "../../../models/Events";
 import { IApplicationState } from "../../../store";
 import PhotoActions from "../../../store/PhotoActions";
+import usePermissions from "../../../utilities/Permissions";
 import PhotoUpload from "../../gallery/PhotoUpload";
 import EventGalleryView from "./EventGalleryView";
 
@@ -16,12 +17,12 @@ interface IEventGalleryDetailProps {
     eventDetail: EventDetail;
 }
 
-const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = props => {
+const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = (props) => {
     const { eventDetail } = props;
     const [doUpload, setDoUpload] = useState(false);
     const photoState = useSelector((state: IApplicationState) => state.photos);
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
     useEffect(() => {
         dispatch(PhotoActions.LoadRandomPhoto(eventDetail.tournament!));
@@ -37,7 +38,7 @@ const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = props => {
                 <Loading />
             ) : (
                 <ToggleDiv doEdit={doUpload}>
-                    {session.user.isFullEditor && (
+                    {permissions.canManageEvent() && (
                         <ToggleEditButton
                             isEditting={doUpload}
                             openIcon={<FaCamera size={20} color={"gold"} />}

@@ -1,11 +1,12 @@
-import { Action, Reducer } from 'redux';
+import { Action, Reducer } from "redux";
 
-import { AppActionTypes } from './AppActions';
-import { AppConfig } from '../models/AppConfig';
+import { AppActionTypes } from "./AppActions";
+import { AppConfig } from "../models/AppConfig";
 
 export interface IAppState {
     config: AppConfig;
     isBusy: boolean;
+    editMode: boolean;
 }
 
 export const defaultState: IAppState = {
@@ -14,9 +15,10 @@ export const defaultState: IAppState = {
         matchPlayYear: 0,
         memberClubYear: 0,
         membershipDues: 0,
-        stripePublicKey: "",    
+        stripePublicKey: "",
     },
     isBusy: false,
+    editMode: false,
 };
 
 export interface IAppBusy extends Action {
@@ -37,29 +39,34 @@ export interface IAppConfigsGetFailed extends Action {
     type: AppActionTypes.GET_CONFIG_FAILED;
 }
 
-type KnownActions =  
-    | IAppConfigsGetSucceeded 
-    | IAppBusy
-    | IAppNotBusy;
+export interface IAppToggleEditMode extends Action {
+    type: AppActionTypes.TOGGLE_EDIT_MODE;
+}
 
-export const AppReducer: Reducer<IAppState, KnownActions> =
-    (state: IAppState | undefined, action: KnownActions): IAppState => {
+type KnownActions = IAppConfigsGetSucceeded | IAppBusy | IAppNotBusy | IAppToggleEditMode;
 
+export const AppReducer: Reducer<IAppState, KnownActions> = (
+    state: IAppState | undefined,
+    action: KnownActions
+): IAppState => {
     if (!state) {
-        state = {...defaultState};
+        state = { ...defaultState };
     }
 
     switch (action.type) {
         case AppActionTypes.IS_BUSY: {
-            return {...state, isBusy: true};
+            return { ...state, isBusy: true };
         }
         case AppActionTypes.IS_NOT_BUSY: {
-            return {...state, isBusy: false};
+            return { ...state, isBusy: false };
         }
         case AppActionTypes.GET_CONFIG_SUCCEEDED: {
-            return {...state, config: action.payload as AppConfig};
+            return { ...state, config: action.payload as AppConfig };
+        }
+        case AppActionTypes.TOGGLE_EDIT_MODE: {
+            return { ...state, editMode: !state.editMode };
         }
         default:
             return state;
     }
-}
+};

@@ -7,6 +7,7 @@ import { ExecutiveCommittee } from "../../models/Clubs";
 import { IApplicationState } from "../../store";
 import CommitteeActions from "../../store/CommitteeActions";
 import MemberClubActions from "../../store/MemberClubActions";
+import usePermissions from "../../utilities/Permissions";
 import { IContactData } from "../contacts/ContactApi";
 import ContactSearch from "../contacts/ContactSearch";
 import CommitteeMemberDetail from "./CommitteeMemberDetail";
@@ -14,10 +15,10 @@ import CommitteeMemberDetail from "./CommitteeMemberDetail";
 const CommitteeList: React.FC = () => {
     const [findContact, setFindContact] = useState(false);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
     const committeeState = useSelector((state: IApplicationState) => state.committee);
     const memberState = useSelector((state: IApplicationState) => state.memberClubs);
-    const session = useSelector((state: IApplicationState) => state.session);
-    const canAdd = committeeState.members.findIndex(ec => ec.id === 0) < 0; // no pending add
+    const canAdd = committeeState.members.findIndex((ec) => ec.id === 0) < 0; // no pending add
 
     useEffect(() => {
         dispatch(CommitteeActions.LoadCommittee());
@@ -49,7 +50,7 @@ const CommitteeList: React.FC = () => {
         <div>
             <div>
                 <h3 className="text-primary">Executive Committee Members</h3>
-                {session.user.isFullEditor && canAdd && (
+                {permissions.canAddCommittee() && canAdd && (
                     <Button variant="link" className="text-warning" onClick={() => setFindContact(true)}>
                         Add New
                     </Button>

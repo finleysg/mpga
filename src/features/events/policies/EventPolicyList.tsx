@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { EventDetail, EventPolicy } from '../../../models/Events';
-import { IApplicationState } from '../../../store';
 import EventActions from '../../../store/EventActions';
 import EventPolicyDetail from './EventPolicyDetail';
+import usePermissions from "../../../utilities/Permissions";
 
 export interface IEventPolicyListProps {
     eventDetail: EventDetail;
@@ -13,8 +13,8 @@ export interface IEventPolicyListProps {
 
 const EventPolicyList: React.FunctionComponent<IEventPolicyListProps> = (props) => {
     const { eventDetail } = props;
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
     const canAdd = eventDetail.policies?.findIndex(p => p.id === 0) || -1 < 0; // no pending add
 
     const removeEventPolicy = useCallback(
@@ -41,7 +41,7 @@ const EventPolicyList: React.FunctionComponent<IEventPolicyListProps> = (props) 
                     />
                 );
             })}
-            {session.user.isFullEditor && (
+            {permissions.canManageEvent() && (
                 <Button
                     variant="link"
                     className="text-warning"

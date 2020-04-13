@@ -1,11 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
 
-import EditableDiv from '../../components/EditableDiv';
-import { MpgaDocument } from '../../models/Documents';
-import { IApplicationState } from '../../store';
-import DocumentEdit from './DocumentEdit';
-import DocumentView, { IDocumentViewProps } from './DocumentView';
+import EditableDiv from "../../components/EditableDiv";
+import { MpgaDocument } from "../../models/Documents";
+import usePermissions from "../../utilities/Permissions";
+import DocumentEdit from "./DocumentEdit";
+import DocumentView, { IDocumentViewProps } from "./DocumentView";
 
 export interface IDocumentDetail extends IDocumentViewProps {
     edit: boolean;
@@ -14,14 +13,14 @@ export interface IDocumentDetail extends IDocumentViewProps {
     Delete: (document: MpgaDocument) => void;
 }
 
-const DocumentDetail: React.FC<IDocumentDetail> = props => {
-    const session = useSelector((state: IApplicationState) => state.session);
+const DocumentDetail: React.FC<IDocumentDetail> = (props) => {
+    const permissions = usePermissions();
     const { document, edit, render, Cancel, Delete, Save } = props;
 
     return (
         <EditableDiv
             initEdit={edit}
-            canEdit={session.user.isFullEditor}
+            canEdit={permissions.canEditDocuments()}
             viewComponent={<DocumentView document={document} render={render} />}
             editComponent={<DocumentEdit document={document} Cancel={Cancel} Delete={Delete} Save={Save} />}
         />

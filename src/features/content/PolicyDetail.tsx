@@ -1,24 +1,26 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
 
-import EditableDiv from '../../components/EditableDiv';
-import { IApplicationState } from '../../store';
-import PolicyEdit, { IPolicyEditProps } from './PolicyEdit';
-import PolicyView from './PolicyView';
+import EditableDiv from "../../components/EditableDiv";
+import PolicyEdit, { IPolicyEditProps } from "./PolicyEdit";
+import PolicyView from "./PolicyView";
+import usePermissions from "../../utilities/Permissions";
 
 export interface IPolicyDetailProps extends IPolicyEditProps {
-    edit: boolean,
-};
+    edit: boolean;
+}
 
 const PolicyDetail: React.FC<IPolicyDetailProps> = (props) => {
     const { policy, edit, Cancel, Delete, Save } = props;
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
+
     return (
-        <EditableDiv initEdit={edit} canEdit={session.user.isFullEditor}
+        <EditableDiv
+            initEdit={edit}
+            canEdit={permissions.canEditPolicies()}
             viewComponent={<PolicyView policy={policy} />}
-            editComponent={<PolicyEdit policy={policy} Cancel={Cancel} Delete={Delete} Save={Save} />}>
-        </EditableDiv>
+            editComponent={<PolicyEdit policy={policy} Cancel={Cancel} Delete={Delete} Save={Save} />}
+        />
     );
-}
+};
 
 export default PolicyDetail;

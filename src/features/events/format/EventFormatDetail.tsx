@@ -1,12 +1,12 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
 
-import EditableDiv from '../../../components/EditableDiv';
-import { EventDetail } from '../../../models/Events';
-import { IApplicationState } from '../../../store';
-import EventActions from '../../../store/EventActions';
-import EventFormatEdit from './EventFormatEdit';
-import EventFormatView from './EventFormatView';
+import EditableDiv from "../../../components/EditableDiv";
+import { EventDetail } from "../../../models/Events";
+import EventActions from "../../../store/EventActions";
+import usePermissions from "../../../utilities/Permissions";
+import EventFormatEdit from "./EventFormatEdit";
+import EventFormatView from "./EventFormatView";
 
 interface IEventDetailProps {
     eventDetail: EventDetail;
@@ -14,19 +14,20 @@ interface IEventDetailProps {
 
 const EventFormatDetail: React.FunctionComponent<IEventDetailProps> = (props) => {
     const { eventDetail } = props;
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
-    const saveFormat = useCallback(
-        (eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)),
-        [dispatch]
-    )
+    const saveFormat = useCallback((eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)), [
+        dispatch,
+    ]);
 
     return (
-        <EditableDiv initEdit={false} canEdit={session.user.isFullEditor}
+        <EditableDiv
+            initEdit={false}
+            canEdit={permissions.canManageEvent()}
             viewComponent={<EventFormatView eventDetail={eventDetail} />}
-            editComponent={<EventFormatEdit eventDetail={eventDetail} Save={saveFormat} />}>
-        </EditableDiv>
+            editComponent={<EventFormatEdit eventDetail={eventDetail} Save={saveFormat} />}
+        />
     );
 };
 

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 
 import EditContainer from "../../components/EditContainer";
 import { ExecutiveCommittee } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
+import usePermissions from "../../utilities/Permissions";
 import CommitteeMemberEdit, { IExecutiveCommitteeEditProps } from "./CommitteeMemberEdit";
 import CommitteeMemberView from "./CommitteeMemberView";
 
@@ -14,7 +13,7 @@ export interface IExecutiveCommitteeDetail extends IExecutiveCommitteeEditProps 
 const CommitteeMemberDetail: React.FC<IExecutiveCommitteeDetail> = props => {
     const { committeeMember, clubs, edit, Cancel, Save, Remove } = props;
     const [doEdit, setDoEdit] = useState(edit);
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
 
     const saveCommitteeMember = (member: ExecutiveCommittee) => {
         setDoEdit(false);
@@ -24,7 +23,7 @@ const CommitteeMemberDetail: React.FC<IExecutiveCommitteeDetail> = props => {
     return (
         <EditContainer
             doEdit={doEdit}
-            canEdit={session.user.isFullEditor}
+            canEdit={permissions.canEditCommittee()}
             ToggleEdit={() => setDoEdit(!doEdit)}
             viewComponent={<CommitteeMemberView committeeMember={committeeMember} />}
             editComponent={

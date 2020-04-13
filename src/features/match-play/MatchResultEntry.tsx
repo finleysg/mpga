@@ -4,15 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 import EditContainer from "../../components/EditContainer";
 import { MatchResult } from "../../models/Clubs";
+import useNavigation from "../../routes/Navigation";
 import { IApplicationState } from "../../store";
 import MatchPlayActions from "../../store/MatchPlayActions";
+import usePermissions from "../../utilities/Permissions";
 import MatchResultEdit from "./MatchResultEdit";
 
 const MatchResultEntry: React.FC = () => {
     const [doEdit, setDoEdit] = useState(false);
     const matchPlayState = useSelector((state: IApplicationState) => state.matchPlay);
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
+    const navigation = useNavigation();
 
     const saveResult = useCallback(
         (result: MatchResult) => {
@@ -24,15 +27,32 @@ const MatchResultEntry: React.FC = () => {
 
     return (
         <React.Fragment>
-            <p>If you don't see a button below to post a result, log in to the website.</p>
             <EditContainer
                 doEdit={doEdit}
-                canEdit={session.user.isFullEditor}
+                canEdit={permissions.canPostMatchResult()}
                 ToggleEdit={() => setDoEdit(!doEdit)}
                 viewComponent={
-                    <Button variant="secondary" size="lg" onClick={() => setDoEdit(true)}>
-                        Post Result
-                    </Button>
+                    <React.Fragment>
+                        {permissions.canPostMatchResult() && (
+                            <Button variant="secondary" size="lg" onClick={() => setDoEdit(true)}>
+                                Post Result
+                            </Button>
+                        )}
+                        {!permissions.canPostMatchResult() && (
+                            <div>
+                                <p>
+                                    To post a match play result, please log in. If you don't have an account, click the
+                                    button below to sign up.
+                                </p>
+                                <Button
+                                    variant="primary"
+                                    className="ml-2"
+                                    onClick={() => navigation.navigate("/account/register")}>
+                                    Create an Account
+                                </Button>
+                            </div>
+                        )}
+                    </React.Fragment>
                 }
                 editComponent={
                     <MatchResultEdit

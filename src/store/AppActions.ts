@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
-import constants from '../constants';
-import { AppConfig } from '../models/AppConfig';
-import NotificationActions from './NotificationActions';
+import constants from "../constants";
+import { AppConfig } from "../models/AppConfig";
+import NotificationActions from "./NotificationActions";
 
 export enum AppActionTypes {
     IS_BUSY = "IS_BUSY",
@@ -10,7 +10,8 @@ export enum AppActionTypes {
     GET_CONFIG_REQUESTED = "GET_CONFIG_REQUESTED",
     GET_CONFIG_SUCCEEDED = "GET_CONFIG_SUCCEEDED",
     GET_CONFIG_FAILED = "GET_CONFIG_FAILED",
-};
+    TOGGLE_EDIT_MODE = "TOGGLE_EDIT_MODE",
+}
 
 const url = constants.ApiUrl + "/settings/";
 
@@ -18,7 +19,7 @@ const AppActions = {
     Busy: () => (dispatch: any) => dispatch({ type: AppActionTypes.IS_BUSY }),
     NotBusy: () => (dispatch: any) => dispatch({ type: AppActionTypes.IS_NOT_BUSY }),
     LoadConfig: () => async (dispatch: any) => {
-        dispatch({ type: AppActionTypes.GET_CONFIG_REQUESTED});
+        dispatch({ type: AppActionTypes.GET_CONFIG_REQUESTED });
         try {
             const result = await axios.get(url);
             const data = result.data.map((json: any) => new AppConfig(json));
@@ -28,6 +29,7 @@ const AppActions = {
             dispatch(NotificationActions.ToastError(error));
         }
     },
-}
+    ToggleEditMode: () => (dispatch: any) => dispatch({ type: AppActionTypes.TOGGLE_EDIT_MODE }),
+};
 
 export default AppActions;

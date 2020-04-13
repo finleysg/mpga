@@ -8,6 +8,7 @@ import { IApplicationState } from '../../store';
 import ContentActions from '../../store/ContentActions';
 import PageContentEdit from './PageContentEdit';
 import PageContentView from './PageContentView';
+import usePermissions from "../../utilities/Permissions";
 
 export interface IPageContentDetailProps {
     pageCode: string;
@@ -16,8 +17,8 @@ export interface IPageContentDetailProps {
 const PageContentDetail: React.FC<IPageContentDetailProps> = (props) => {
     const { pageCode } = props;
     const state = useSelector((state: IApplicationState) => state.content);
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
     const getPage = () => {
         return state.pages.get(pageCode);
@@ -36,7 +37,7 @@ const PageContentDetail: React.FC<IPageContentDetailProps> = (props) => {
         <>
             {state.isBusy ?
             <Loading /> :
-            <EditableDiv initEdit={false} canEdit={session.user.isFullEditor}
+            <EditableDiv initEdit={false} canEdit={permissions.canEditPageContent()}
                 viewComponent={<PageContentView pageContent={getPage() || new PageContent({})} />}
                 editComponent={<PageContentEdit pageContent={getPage() || new PageContent({})} Save={saveContent} />}>
             </EditableDiv>}

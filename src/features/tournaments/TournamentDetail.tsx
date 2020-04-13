@@ -1,31 +1,33 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import EditableDiv from "../../components/EditableDiv";
 import { Tournament } from "../../models/Events";
-import { IApplicationState } from "../../store";
 import TournamentActions from "../../store/TournamentActions";
+import usePermissions from "../../utilities/Permissions";
 import TournamentEdit from "./TournamentEdit";
 import TournamentView, { ITournamentViewProps } from "./TournamentView";
 
 const TournamentDetail: React.FC<ITournamentViewProps> = (props) => {
     const { tournament } = props;
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
     const saveTournament = useCallback(
         (tournament: Tournament) => dispatch(TournamentActions.SaveTournament(tournament)),
         [dispatch]
-    )
+    );
 
     return (
         <React.Fragment>
-            <EditableDiv initEdit={false} canEdit={session.user.isFullEditor}
+            <EditableDiv
+                initEdit={false}
+                canEdit={permissions.canEditPageContent()}
                 viewComponent={<TournamentView tournament={tournament} />}
-                editComponent={<TournamentEdit tournament={tournament} Save={saveTournament} />}>
-            </EditableDiv>
+                editComponent={<TournamentEdit tournament={tournament} Save={saveTournament} />}
+            />
         </React.Fragment>
     );
-}
+};
 
 export default TournamentDetail;

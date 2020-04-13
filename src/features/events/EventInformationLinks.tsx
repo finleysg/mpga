@@ -7,6 +7,7 @@ import { EventLink } from "../../models/Events";
 import { IApplicationState } from "../../store";
 import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 import EventActions from "../../store/EventActions";
+import usePermissions from "../../utilities/Permissions";
 import DocumentEdit from "../documents/DocumentEdit";
 import DocumentLoader from "../documents/DocumentLoader";
 import EventDocumentList from "./EventDocumentList";
@@ -15,16 +16,16 @@ import EventLinkList from "./links/EventLinkList";
 import EventRegistration from "./registration/EventRegistration";
 
 export interface IEventInformationLinksProps {
-    name: string,
-    year: number,
+    name: string;
+    year: number;
 }
 
 export function EventInformationLinks(props: IEventInformationLinksProps) {
     const [addDocument, setAddDocument] = useState(false);
     const [addLink, setAddLink] = useState(false);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
     const eventState = useSelector((eventState: IApplicationState) => eventState.events);
-    const session = useSelector((eventState: IApplicationState) => eventState.session);
     const queryKey = `${props.year}-${props.name}-event-detail`;
     const query: IDocumentSearch = {
         key: queryKey,
@@ -66,7 +67,7 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
     return (
         <React.Fragment>
             <DocumentLoader query={query} />
-            {session.user.isFullEditor && (
+            {permissions.canManageEvent() && (
                 <div>
                     <Button variant="link" className="text-warning" onClick={() => setAddDocument(true)}>
                         Add an Event Document

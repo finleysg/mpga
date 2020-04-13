@@ -16,8 +16,6 @@ export interface ICredentials {
 export interface ILoginForm {
     credentials: ICredentials,
     OnLogin: (credentials: ICredentials) => void,
-    // OnForgotPassword: () => void,
-    // OnRegister: () => void,
 }
 
 const schema = yup.object({
@@ -33,6 +31,8 @@ const LoginForm: React.FC<ILoginForm> = (props) => {
     return (
         <Formik
             validationSchema={schema}
+            validateOnBlur={false}
+            validateOnChange={false}
             onSubmit={(values) => {
                 props.OnLogin(values);
             }}

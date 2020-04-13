@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
+import LoadingContainer from "../../components/LoadingContainer";
 import constants from "../../constants";
 import { ITournamentWinnerGroup, TournamentWinner } from "../../models/Events";
 import { IApplicationState } from "../../store";
 import TournamentWinnerActions from "../../store/TournamentWinnerActions";
+import usePermissions from "../../utilities/Permissions";
+import TournamentHistorySearch, { ITournamentHistorySearch } from "../tournaments/TournamentHistorySearch";
 import MatchPlayHistoryEditModal from "./MatchPlayHistoryEditModal";
 import MatchPlayHistoryGroup from "./MatchPlayHistoryGroup";
-import LoadingContainer from "../../components/LoadingContainer";
-import TournamentHistorySearch from "../tournaments/TournamentHistorySearch";
-import { FaSearch } from "react-icons/fa";
-import { ITournamentHistorySearch } from '../tournaments/TournamentHistorySearch';
 
 const MatchPlayHistoryTable: React.FC = () => {
     const [doEdit, updateDoEdit] = useState(false);
     const [doSearch, updateDoSearch] = useState(false);
     const [search, updateSearch] = useState({});
     const dispatch = useDispatch();
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
     const winnerState = useSelector((state: IApplicationState) => state.winners);
     const tournamentState = useSelector((state: IApplicationState) => state.tournament);
 
@@ -70,7 +70,7 @@ const MatchPlayHistoryTable: React.FC = () => {
                         />
                     </React.Fragment>
                 )}
-                {session.user.isFullEditor && (
+                {permissions.canEditTournamentHistory() && (
                     <Button variant="link" className="text-warning" onClick={() => createNewWinner()}>
                         Add New Result
                     </Button>
@@ -84,7 +84,7 @@ const MatchPlayHistoryTable: React.FC = () => {
                             <th>Runner Up</th>
                             <th>Score</th>
                             <th>Notes</th>
-                            {session.user.isFullEditor && <th>Edit</th>}
+                            {permissions.canEditTournamentHistory() && <th>Edit</th>}
                         </tr>
                     </thead>
                     <tbody>

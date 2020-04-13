@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { useSelector } from "react-redux";
 
 import { MpgaPhoto } from "../../models/Documents";
-import { IApplicationState } from "../../store";
+import usePermissions from "../../utilities/Permissions";
 import PhotoEditModal from "./PhotoEditModal";
 import PhotoModal from "./PhotoModal";
 
@@ -13,11 +12,11 @@ export interface IPhotoView {
     Save: (photo: MpgaPhoto) => void;
 }
 
-const PhotoThumb: React.FC<IPhotoView> = props => {
+const PhotoThumb: React.FC<IPhotoView> = (props) => {
     const { photo, Save } = props;
     const [showImage, setShowImage] = useState(false);
     const [editImage, setEditImage] = useState(false);
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
 
     return (
         <>
@@ -30,7 +29,7 @@ const PhotoThumb: React.FC<IPhotoView> = props => {
                 />
                 <Card.Footer className="text-primary">
                     {photo.caption}
-                    {session.user.isFullEditor && (
+                    {permissions.canEditPhotos() && (
                         <Button variant="link" className="text-warning" onClick={() => setEditImage(true)}>
                             Edit
                         </Button>

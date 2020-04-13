@@ -51,6 +51,11 @@ export interface IUserGetFailed extends Action {
     type: UserActionTypes.GET_USER_FAILED;
 }
 
+export interface IUserGetContactRolesSucceeded extends Action {
+    type: UserActionTypes.GET_CONTACT_ROLES_SUCCEEDED;
+    payload: any;
+}
+
 export interface ILoginRequested extends Action {
     type: UserActionTypes.LOGIN_REQUESTED;
 }
@@ -149,6 +154,7 @@ type KnownActions =
     | IUserGetRequested
     | IUserGetSucceeded
     | IUserGetFailed
+    | IUserGetContactRolesSucceeded
     | ILoginRequested
     | ILoginSucceeded
     | ILoginFailed
@@ -188,6 +194,14 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
         }
         case UserActionTypes.GET_USER_FAILED: {
             return { ...state, flags: { ...defaultStateFlags, hasError: true } };
+        }
+        case UserActionTypes.GET_CONTACT_ROLES_SUCCEEDED: {
+            const updatedUser = state.user;
+            updatedUser.committeeId =
+                action.payload.committee?.length > 0 ? action.payload.committee[0].id : undefined;
+            updatedUser.clubId = 
+                action.payload.club?.length > 0 ? action.payload.club[0].id : undefined;
+            return { ...state, user: updatedUser };
         }
         case UserActionTypes.LOGIN_REQUESTED: {
             return { ...state, flags: { ...defaultStateFlags, isBusy: true } };

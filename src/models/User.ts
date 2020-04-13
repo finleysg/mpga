@@ -1,29 +1,46 @@
 export class User {
-
     id: number = 0;
     username: string = "";
     firstName: string = "";
     lastName: string = "";
     email: string = "";
     isAuthenticated = false;
-    isStaff = false;
+    isAdmin = false;
     isActive = false;
+    committeeId?: number;
+    clubId?: number;
     groups: string[] = [];
 
     static Guest = () => {
         const guest = new User();
         guest.isAuthenticated = false;
-        return guest
+        return guest;
+    };
+
+    get isOfficer(): boolean {
+        return (
+            this.isAuthenticated && this.groups.indexOf("Officer") !== -1
+        );
     }
 
-    get isClubEditor(): boolean {
-        return this.isAuthenticated && this.groups.indexOf("Editor") >= 0;
+    get isHistorian(): boolean {
+        return (
+            this.isAuthenticated && this.groups.indexOf("Historian") !== -1
+        );
     }
 
-    get isFullEditor(): boolean {
-        return this.isAuthenticated && this.isStaff && this.groups.indexOf("Editor") >= 0;
+    get isClubContact(): boolean {
+        return (
+            this.isAuthenticated && this.clubId !== undefined
+        );
     }
-    
+
+    get isCommittee(): boolean {
+        return (
+            this.isAuthenticated && this.committeeId !== undefined
+        );
+    }
+
     get name(): string {
         if (!this.isAuthenticated) {
             return "Guest";
@@ -39,7 +56,7 @@ export class User {
             this.lastName = json.last_name;
             this.email = json.email;
             this.isAuthenticated = json.is_authenticated;
-            this.isStaff = json.is_staff;
+            this.isAdmin = json.is_staff;
             this.isActive = json.is_active;
             this.groups = json.groups && json.groups.map((g: any) => g.name);
         }
@@ -48,11 +65,11 @@ export class User {
 
     prepJson(): any {
         return {
-            "id": this.id,
-            "username": this.username,
-            "first_name": this.firstName,
-            "last_name": this.lastName,
-            "email": this.email,
+            id: this.id,
+            username: this.username,
+            first_name: this.firstName,
+            last_name: this.lastName,
+            email: this.email,
         };
     }
 }
@@ -69,10 +86,10 @@ export class PasswordResetRequest {
             token: token,
             password1: password1,
             password2: password2,
-        }
+        };
         Object.assign(this, reset);
     }
-    
+
     get isValid(): boolean {
         return this.uid !== "" && this.token !== "" && this.password1 !== "" && this.password1 === this.password2;
     }
@@ -83,11 +100,10 @@ export class PasswordResetRequest {
 
     toJson(): any {
         return {
-            "uid": this.uid,
-            "token": this.token,
-            "new_password": this.password1,
-            "re_new_password": this.password2
+            uid: this.uid,
+            token: this.token,
+            new_password: this.password1,
+            re_new_password: this.password2,
         };
     }
 }
-

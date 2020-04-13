@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { TiDocumentText, TiEdit } from "react-icons/ti";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { TournamentWinner, Tournament } from '../../models/Events';
-import { IApplicationState } from "../../store";
+import { Tournament, TournamentWinner } from "../../models/Events";
 import TournamentWinnerActions from "../../store/TournamentWinnerActions";
+import usePermissions from "../../utilities/Permissions";
 import TournamentWinnerEditModal from "./TournamentWinnerEditModal";
 
 export interface ITournamentWinnerRowProps {
@@ -15,9 +15,9 @@ export interface ITournamentWinnerRowProps {
 const TournamentWinnerRow: React.FC<ITournamentWinnerRowProps> = (props) => {
     const { tournament, winner } = props;
     const dispatch = useDispatch();
+    const permissions = usePermissions();
     const [showNote, updateShowNote] = useState(false);
     const [doEdit, updateDoEdit] = useState(false);
-    const session = useSelector((state: IApplicationState) => state.session);
 
     const saveTournament = useCallback(
         (winner: TournamentWinner) => {
@@ -43,7 +43,7 @@ const TournamentWinnerRow: React.FC<ITournamentWinnerRowProps> = (props) => {
                 <td className="clickable" onClick={() => updateShowNote(!showNote)}>
                     {winner.notes && <TiDocumentText size={18} color={"teal"} />}
                 </td>
-                {session.user.isFullEditor && (
+                {permissions.canEditTournamentHistory() && (
                     <td className="clickable" onClick={() => updateDoEdit(!doEdit)}>
                         <TiEdit size={18} color={"gold"} />
                     </td>
@@ -51,7 +51,7 @@ const TournamentWinnerRow: React.FC<ITournamentWinnerRowProps> = (props) => {
             </tr>
             {winner.notes && showNote && !doEdit && (
                 <tr>
-                    <td colSpan={session.user.isFullEditor ? 7 : 6}>{winner.notes}</td>
+                    <td colSpan={permissions.canEditTournamentHistory() ? 7 : 6}>{winner.notes}</td>
                 </tr>
             )}
         </React.Fragment>

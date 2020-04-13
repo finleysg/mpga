@@ -10,7 +10,7 @@ import LatestOnly from "../documents/LatestOnly";
 
 interface IRegistrationOverviewProps {}
 
-const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> = (props) => {
+const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> = () => {
     const navigator = useNavigation();
     const query: IDocumentSearch = {
         key: "dues",

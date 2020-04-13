@@ -1,23 +1,23 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
-import { IApplicationState } from "../../../store";
+
 import EditableDiv from "../../../components/EditableDiv";
+import usePermissions from "../../../utilities/Permissions";
 import EventLinkEdit, { IEventLinkEditProps } from "./EventLinkEdit";
 import EventLinkView, { ILinkRenderProps } from "./EventLinkView";
 
 export interface IEventLinkDetailProps extends IEventLinkEditProps {
-    edit: boolean,
+    edit: boolean;
     render: ILinkRenderProps;
 }
 
 const EventLinkDetail: React.FunctionComponent<IEventLinkDetailProps> = (props) => {
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
     const { eventLink, edit, render, Cancel, Save, Delete } = props;
 
-  return (
+    return (
         <EditableDiv
             initEdit={edit}
-            canEdit={session.user.isFullEditor}
+            canEdit={permissions.canManageEvent()}
             viewComponent={<EventLinkView eventLink={eventLink} render={render} />}
             editComponent={<EventLinkEdit eventLink={eventLink} Cancel={Cancel} Save={Save} Delete={Delete} />}
         />

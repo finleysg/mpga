@@ -19,6 +19,7 @@ export enum UserActionTypes {
     GET_USER_REQUESTED = "GET_USER_REQUESTED",
     GET_USER_SUCCEEDED = "GET_USER_SUCCEEDED",
     GET_USER_FAILED = "GET_USER_FAILED",
+    GET_CONTACT_ROLES_SUCCEEDED = "GET_CONTACT_ROLES_SUCCEEDED",
     LOGIN_REQUESTED = "LOGIN_REQUESTED",
     LOGIN_SUCCEEDED = "LOGIN_SUCCEEDED",
     LOGIN_FAILED = "LOGIN_FAILED",
@@ -55,9 +56,20 @@ const UserActions = {
         dispatch({ type: UserActionTypes.GET_USER_REQUESTED });
         try {
             const result = await Auth.get("/users/me/");
-            dispatch({ type: UserActionTypes.GET_USER_SUCCEEDED, payload: new User().fromJson(result.data) });
+            const user = new User().fromJson(result.data);
+            dispatch({ type: UserActionTypes.GET_USER_SUCCEEDED, payload: user });
+            dispatch(UserActions.GetUserContactRoles(user.email))
         } catch (error) {
             dispatch(UserActions.ResetUser());
+        }
+    },
+
+    GetUserContactRoles: (email: string) => async (dispatch: any) => {
+        try {
+            const result = await Api.get("/contact-roles/?email=" + email );
+            dispatch({ type: UserActionTypes.GET_CONTACT_ROLES_SUCCEEDED, payload: result.data });
+        } catch (error) {
+            // TODO: log error
         }
     },
 

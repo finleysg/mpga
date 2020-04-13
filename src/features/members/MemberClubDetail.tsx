@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 
 import EditableDiv from "../../components/EditableDiv";
@@ -7,15 +8,15 @@ import constants from "../../constants";
 import { Club } from "../../models/Clubs";
 import { IApplicationState } from "../../store";
 import MemberClubActions from "../../store/MemberClubActions";
+import usePermissions from "../../utilities/Permissions";
 import ClubDuesPayment from "../payments/ClubDuesPayment";
 import MemberClubEdit from "./MemberClubEdit";
 import MemberClubView from "./MemberClubView";
-import Button from "react-bootstrap/Button";
 
 const MemberClubDetail: React.FC = () => {
     const [makePayment, setMakePayment] = useState(false);
     const clubState = useSelector((state: IApplicationState) => state.memberClubs);
-    const session = useSelector((state: IApplicationState) => state.session);
+    const permissions = usePermissions();
     const dispatch = useDispatch();
 
     const saveClub = useCallback((club: Club) => dispatch(MemberClubActions.SaveMemberClub(club)), [dispatch]);
@@ -50,7 +51,7 @@ const MemberClubDetail: React.FC = () => {
         <LoadingContainer hasData={clubState.selectedClub !== undefined}>
             <EditableDiv
                 initEdit={false}
-                canEdit={session.user.isFullEditor}
+                canEdit={permissions.canEditClubPage()}
                 viewComponent={
                     <MemberClubView club={clubState.selectedClub} membership={clubState.mostRecentMembership} />
                 }

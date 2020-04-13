@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { IApplicationState } from "../../store";
-import AwardActions from "../../store/AwardActions";
-import AwardEdit from "./AwardEdit";
-import AwardView from "./AwardView";
-import { Award } from "../../models/Events";
 import EditContainer from "../../components/EditContainer";
 import LoadingContainer from "../../components/LoadingContainer";
+import { Award } from "../../models/Events";
+import { IApplicationState } from "../../store";
+import AwardActions from "../../store/AwardActions";
+import usePermissions from "../../utilities/Permissions";
+import AwardEdit from "./AwardEdit";
+import AwardView from "./AwardView";
 
 export interface IAwardDetailProps {
     awardName: string;
@@ -17,8 +18,8 @@ const AwardDetail: React.FC<IAwardDetailProps> = props => {
     const { awardName } = props;
     const [doEdit, setDoEdit] = useState(false);
     const awardState = useSelector((state: IApplicationState) => state.awards);
-    const session = useSelector((state: IApplicationState) => state.session);
     const dispatch = useDispatch();
+    const permissions = usePermissions();
 
     const getAward = (): Award => {
         return awardState.data.get(awardName) || new Award({});
@@ -37,7 +38,7 @@ const AwardDetail: React.FC<IAwardDetailProps> = props => {
         <LoadingContainer hasData={getAward().id !== undefined}>
             <EditContainer
                 doEdit={doEdit}
-                canEdit={session.user.isFullEditor}
+                canEdit={permissions.canEditPageContent()}
                 ToggleEdit={() => setDoEdit(!doEdit)}
                 viewComponent={<AwardView award={getAward()} />}
                 editComponent={<AwardEdit award={getAward()} Save={saveContent} />}

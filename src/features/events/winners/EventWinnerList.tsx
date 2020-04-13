@@ -3,11 +3,12 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
-import { TournamentWinner, EventDetail } from "../../../models/Events";
+import LoadingContainer from "../../../components/LoadingContainer";
+import { EventDetail, TournamentWinner } from "../../../models/Events";
 import { IApplicationState } from "../../../store";
 import TournamentWinnerActions from "../../../store/TournamentWinnerActions";
+import usePermissions from "../../../utilities/Permissions";
 import EventWinnerDetail from "./EventWinnerDetail";
-import LoadingContainer from "../../../components/LoadingContainer";
 
 interface IEventWinnerListProps {
     eventDetail: EventDetail;
@@ -17,8 +18,8 @@ const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) 
     const { eventDetail } = props;
     const { tournament } = eventDetail;
     const dispatch = useDispatch();
+    const permissions = usePermissions();
     const state = useSelector((state: IApplicationState) => state.winners);
-    const session = useSelector((state: IApplicationState) => state.session);
     const mostRecentWinners = state.groups[0];
 
     useEffect(() => {
@@ -26,8 +27,7 @@ const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) 
     }, [dispatch, tournament]);
 
     const saveWinner = useCallback(
-        (winner: TournamentWinner) =>
-            dispatch(TournamentWinnerActions.SaveTournamentWinner(tournament!, winner)),
+        (winner: TournamentWinner) => dispatch(TournamentWinnerActions.SaveTournamentWinner(tournament!, winner)),
         [dispatch, tournament]
     );
 
@@ -47,7 +47,7 @@ const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) 
                 );
             })}
             <p>* Net Score</p>
-            {session.user.isFullEditor && (
+            {permissions.canManageEvent() && (
                 <Button
                     variant="link"
                     className="text-warning"
