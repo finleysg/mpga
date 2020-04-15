@@ -196,11 +196,12 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
             return { ...state, flags: { ...defaultStateFlags, hasError: true } };
         }
         case UserActionTypes.GET_CONTACT_ROLES_SUCCEEDED: {
+            // TODO: improve how this info is coming back from the api
             const updatedUser = state.user;
             updatedUser.committeeId =
                 action.payload.committee?.length > 0 ? action.payload.committee[0].id : undefined;
             updatedUser.clubId = 
-                action.payload.club?.length > 0 ? action.payload.club[0].id : undefined;
+                action.payload.club?.length > 0 ? action.payload.club[0].club__system_name : undefined;
             return { ...state, user: updatedUser };
         }
         case UserActionTypes.LOGIN_REQUESTED: {

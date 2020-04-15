@@ -8,7 +8,7 @@ export class User {
     isAdmin = false;
     isActive = false;
     committeeId?: number;
-    clubId?: number;
+    clubId?: string;
     groups: string[] = [];
 
     static Guest = () => {

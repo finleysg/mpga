@@ -12,7 +12,6 @@ InlineLabel.displayName = "InlineLabel";
 const StackedLabel = styled.p`
     font-weight: 600;
     margin: 4px 0 4px 0;
-    color: purple;
 `
 StackedLabel.displayName = "StackedLabel";
 
@@ -71,7 +70,7 @@ const LabelAndValue: React.FC<ILabelAndValueProps> = (props) => {
                 <InlineLabel>{label}:</InlineLabel>
             }
             {labelStyle === LabelStyle.Stacked &&
-                <StackedLabel>{label}</StackedLabel>
+                <StackedLabel className="text-primary">{label}</StackedLabel>
             }
             {renderValue()}
         </div>

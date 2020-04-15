@@ -69,7 +69,7 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
                                 Markdown supported.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                     </Form>

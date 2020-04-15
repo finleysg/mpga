@@ -16,7 +16,7 @@ const DocumentEditModal: React.FC<IDocumentEditModalProps> = (props) => {
             {document !== undefined && (
                 <Modal show={props.show} onHide={() => Cancel()}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Document Upload / Edit / Replace</Modal.Title>
+                        <Modal.Title className="text-primary">Document Upload / Edit / Replace</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <DocumentEdit

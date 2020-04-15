@@ -23,7 +23,7 @@ const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> 
             <PageContentDetail pageCode={PageCodes.ClubRegistration} />
             <LatestOnly query={query} />
             <PageContentDetail pageCode={PageCodes.IndividualRegistration} />
-            <Button variant="primary" className="ml-2" onClick={() => navigator.navigate("/account/register")}>
+            <Button variant="secondary" size="sm" className="ml-2" onClick={() => navigator.navigate("/account/register")}>
                 Create an Account
             </Button>
         </React.Fragment>

@@ -7,6 +7,7 @@ export interface IAppState {
     config: AppConfig;
     isBusy: boolean;
     editMode: boolean;
+    location?: string;
 }
 
 export const defaultState: IAppState = {
@@ -39,11 +40,16 @@ export interface IAppConfigsGetFailed extends Action {
     type: AppActionTypes.GET_CONFIG_FAILED;
 }
 
+export interface IAppSaveLocation extends Action {
+    type: AppActionTypes.SAVE_LOCATION;
+    payload: string;
+}
+
 export interface IAppToggleEditMode extends Action {
     type: AppActionTypes.TOGGLE_EDIT_MODE;
 }
 
-type KnownActions = IAppConfigsGetSucceeded | IAppBusy | IAppNotBusy | IAppToggleEditMode;
+type KnownActions = IAppConfigsGetSucceeded | IAppBusy | IAppNotBusy | IAppSaveLocation | IAppToggleEditMode;
 
 export const AppReducer: Reducer<IAppState, KnownActions> = (
     state: IAppState | undefined,
@@ -62,6 +68,9 @@ export const AppReducer: Reducer<IAppState, KnownActions> = (
         }
         case AppActionTypes.GET_CONFIG_SUCCEEDED: {
             return { ...state, config: action.payload as AppConfig };
+        }
+        case AppActionTypes.SAVE_LOCATION: {
+            return { ...state, location: action.payload };
         }
         case AppActionTypes.TOGGLE_EDIT_MODE: {
             return { ...state, editMode: !state.editMode };

@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 
 import EditContainer from "../../components/EditContainer";
 import { MatchResult } from "../../models/Clubs";
 import useNavigation from "../../routes/Navigation";
 import { IApplicationState } from "../../store";
+import AppActions from "../../store/AppActions";
 import MatchPlayActions from "../../store/MatchPlayActions";
 import usePermissions from "../../utilities/Permissions";
 import MatchResultEdit from "./MatchResultEdit";
@@ -16,6 +18,7 @@ const MatchResultEntry: React.FC = () => {
     const dispatch = useDispatch();
     const permissions = usePermissions();
     const navigation = useNavigation();
+    const location = useLocation();
 
     const saveResult = useCallback(
         (result: MatchResult) => {
@@ -24,6 +27,11 @@ const MatchResultEntry: React.FC = () => {
         },
         [dispatch]
     );
+
+    const goRegister = () => {
+        dispatch(AppActions.SaveLocation(location.pathname));
+        navigation.navigate("/account/register")
+    };
 
     return (
         <React.Fragment>
@@ -47,7 +55,7 @@ const MatchResultEntry: React.FC = () => {
                                 <Button
                                     variant="primary"
                                     className="ml-2"
-                                    onClick={() => navigation.navigate("/account/register")}>
+                                    onClick={() => goRegister()}>
                                     Create an Account
                                 </Button>
                             </div>

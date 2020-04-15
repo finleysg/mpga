@@ -95,7 +95,6 @@ const DocumentLibraryList: React.FC = () => {
                             <th>Last Updated</th>
                             <th>Tags</th>
                             <th></th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>

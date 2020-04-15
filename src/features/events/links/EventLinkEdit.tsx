@@ -98,7 +98,7 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Url for the link</Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                         {eventLink.id !== 0 && (

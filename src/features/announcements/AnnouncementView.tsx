@@ -10,7 +10,7 @@ const AnnouncementView: React.FC<IAnnouncementView> = (props) => {
     const announcement = props.announcement;
     return (
         <div>
-            <h5>{announcement.title}</h5>
+            <h5 className="text-secondary">{announcement.title}</h5>
             <MarkdownDiv text={announcement.text} />
             {announcement.externalUrl && 
                 <a href={announcement.externalUrl}>{announcement.externalName}</a>}

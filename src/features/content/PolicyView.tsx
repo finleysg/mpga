@@ -11,7 +11,7 @@ const PolicyView: React.FC<IPolicyViewProps> = (props) => {
     const {policy} = props;
     return (
         <div>
-            <h5>{policy.title}</h5>
+            <h5 className="text-secondary">{policy.title}</h5>
             <MarkdownDiv text={policy.description} />
         </div>
     );

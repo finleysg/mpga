@@ -4,7 +4,7 @@ import { ILayoutProps } from '../layout/Layout';
 
 const SidenavToggle: React.FC<ILayoutProps> = (props) => {
     return (
-        <Button variant="primary" id="sidebarCollapse" className={(props.showSidenav ? "" : " active")}
+        <Button variant="secondary" id="sidebarCollapse" className={(props.showSidenav ? "" : " active")}
             onClick={() => props.ToggleSidenav(!props.showSidenav)}>
             <span></span>
             <span></span>

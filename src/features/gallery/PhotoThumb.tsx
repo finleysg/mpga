@@ -6,6 +6,7 @@ import { MpgaPhoto } from "../../models/Documents";
 import usePermissions from "../../utilities/Permissions";
 import PhotoEditModal from "./PhotoEditModal";
 import PhotoModal from "./PhotoModal";
+import { Notes } from "../awards/AwardWinnerView";
 
 export interface IPhotoView {
     photo: MpgaPhoto;
@@ -27,8 +28,8 @@ const PhotoThumb: React.FC<IPhotoView> = (props) => {
                     className="clickable"
                     onClick={() => setShowImage(true)}
                 />
-                <Card.Footer className="text-primary">
-                    {photo.caption}
+                <Card.Footer className="text-secondary">
+                    <Notes>{photo.caption}</Notes>
                     {permissions.canEditPhotos() && (
                         <Button variant="link" className="text-warning" onClick={() => setEditImage(true)}>
                             Edit

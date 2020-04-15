@@ -22,7 +22,7 @@ const EventLocationView: React.FunctionComponent<IEventDetailProps> = (props) =>
             <a target="_blank" rel="noopener noreferrer" href={eventDetail.location?.website}>
                 <CourseLogo src={eventDetail.location?.logoUrl} />
             </a>
-            <h4 className="text-primary">{eventDetail.location?.name}</h4>
+            <h4 className="text-secondary">{eventDetail.location?.name}</h4>
             <h5>{eventDetail.eventDates}</h5>
         </div>
     );

@@ -21,7 +21,7 @@ const PhotoModal: React.FC<IPhotoModalProps> = (props) => {
     return (
         <Modal size="xl" show={props.show} onHide={() => props.onClose()}>
             <Modal.Header closeButton>
-                <Modal.Title>{photo.caption}</Modal.Title>
+                <Modal.Title className="text-primary">{photo.caption}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <PhotoImg src={photo.imageUrl} />

@@ -84,7 +84,7 @@ const PhotoUpload: React.FC<IPhotoUpload> = props => {
                             accept=".gif,.jpg,.png,image/gif,image/jpeg,image/png"
                         />
                         <TagPicker selectedTags={values.tags || []} OnChange={(tags: ITag[]) => (values.tags = tags)} />
-                        <Button variant="primary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
                             Save
                         </Button>
                     </Form>

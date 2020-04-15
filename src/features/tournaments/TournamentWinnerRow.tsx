@@ -6,6 +6,7 @@ import { Tournament, TournamentWinner } from "../../models/Events";
 import TournamentWinnerActions from "../../store/TournamentWinnerActions";
 import usePermissions from "../../utilities/Permissions";
 import TournamentWinnerEditModal from "./TournamentWinnerEditModal";
+import { Notes } from "../awards/AwardWinnerView";
 
 export interface ITournamentWinnerRowProps {
     tournament: Tournament;
@@ -40,18 +41,18 @@ const TournamentWinnerRow: React.FC<ITournamentWinnerRowProps> = (props) => {
                 <td>{winner.flightOrDivision}</td>
                 <td>{winner.winnersFormatted}</td>
                 <td>{winner.scoreFormatted}</td>
-                <td className="clickable" onClick={() => updateShowNote(!showNote)}>
-                    {winner.notes && <TiDocumentText size={18} color={"teal"} />}
+                <td className="clickable text-secondary" onClick={() => updateShowNote(!showNote)}>
+                    {winner.notes && <TiDocumentText size={18} color={"primary"} />}
                 </td>
                 {permissions.canEditTournamentHistory() && (
-                    <td className="clickable" onClick={() => updateDoEdit(!doEdit)}>
-                        <TiEdit size={18} color={"gold"} />
+                    <td className="clickable text-warning" onClick={() => updateDoEdit(!doEdit)}>
+                        <TiEdit size={18} color={"warning"} />
                     </td>
                 )}
             </tr>
             {winner.notes && showNote && !doEdit && (
                 <tr>
-                    <td colSpan={permissions.canEditTournamentHistory() ? 7 : 6}>{winner.notes}</td>
+                    <td colSpan={permissions.canEditTournamentHistory() ? 7 : 6}><Notes>{winner.notes}</Notes></td>
                 </tr>
             )}
         </React.Fragment>

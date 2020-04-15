@@ -114,7 +114,7 @@ const PaymentForm: React.FC<IPaymentFormProps> = (props) => {
                         />
                         {paymentError && <p className="text-danger mt-1">{paymentError.message}</p>}
                     </Form.Group>
-                    <Button variant="primary" type="submit" size="sm" className="mt-2" disabled={!stripe}>
+                    <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={!stripe}>
                         Pay Dues
                     </Button>
                     <Button variant="light" type="reset" size="sm" className="mt-2 ml-2" onClick={() => props.Cancel()}>

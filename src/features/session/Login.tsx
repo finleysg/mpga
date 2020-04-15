@@ -12,6 +12,7 @@ import useNavigation from "../../routes/Navigation";
 const Login: React.FC = () => {
     const dispatch = useDispatch();
     const navigator = useNavigation();
+    const app = useSelector((state: IApplicationState) => state.app);
     const session = useSelector((state: IApplicationState) => state.session);
     const init: ICredentials = {
         email: "",
@@ -19,8 +20,10 @@ const Login: React.FC = () => {
         remember: true,
     };
     
+    // TODO: this is wrong and hurtful. Maybe look at a solution proposed here:
+    // https://stackoverflow.com/questions/47937563/react-navigation-to-navigate-from-redux-action-file
     if (session.user.isAuthenticated) {
-        navigator.navigate("/account");
+        navigator.navigate(app.location || "/account");
     }
     
     const login = (credentials: ICredentials) => {

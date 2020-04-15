@@ -102,7 +102,7 @@ const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
                                 Markdown supported. Tell us about your club.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                     </Form>

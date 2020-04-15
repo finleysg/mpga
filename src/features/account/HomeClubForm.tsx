@@ -49,7 +49,7 @@ const HomeClubForm: React.FC<IHomeClubFormProps> = (props) => {
                             </Form.Control>
                             <Form.Control.Feedback type="invalid">{errors.homeClub}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" className="mt-2">
+                        <Button variant="secondary" type="submit" size="sm" className="mt-2">
                             Update Home Club
                         </Button>
                     </Form>

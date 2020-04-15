@@ -7,7 +7,7 @@ export interface ISubmitButtonProps {
 
 const SubmitButton: React.FC<ISubmitButtonProps> = props => {
     return (
-        <Button variant="primary" type="submit" size="sm" disabled={props.isBusy}>
+        <Button variant="secondary" type="submit" size="sm" disabled={props.isBusy}>
             {props.isBusy ? "Saving..." : "Save"}
         </Button>
     );

@@ -141,7 +141,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                                 {errors.externalName}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Submit
                         </Button>
                         <Button className="ml-1" variant="outline-primary" size="sm">Add Document</Button>

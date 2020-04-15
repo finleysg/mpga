@@ -114,7 +114,7 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = props => {
                             <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                         {policy.id !== 0 && (

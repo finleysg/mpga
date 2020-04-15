@@ -10,6 +10,7 @@ export enum AppActionTypes {
     GET_CONFIG_REQUESTED = "GET_CONFIG_REQUESTED",
     GET_CONFIG_SUCCEEDED = "GET_CONFIG_SUCCEEDED",
     GET_CONFIG_FAILED = "GET_CONFIG_FAILED",
+    SAVE_LOCATION = "SAVE_LOCATION",
     TOGGLE_EDIT_MODE = "TOGGLE_EDIT_MODE",
 }
 
@@ -29,6 +30,7 @@ const AppActions = {
             dispatch(NotificationActions.ToastError(error));
         }
     },
+    SaveLocation: (path: string) => (dispatch: any) => dispatch({ type: AppActionTypes.SAVE_LOCATION, payload: path }),
     ToggleEditMode: () => (dispatch: any) => dispatch({ type: AppActionTypes.TOGGLE_EDIT_MODE }),
 };
 

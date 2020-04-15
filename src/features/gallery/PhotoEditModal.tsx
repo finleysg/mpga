@@ -73,7 +73,7 @@ const PhotoEditModal: React.FC<IPhotoModalProps> = props => {
                                 selectedTags={values.tags || []}
                                 OnChange={(tags: ITag[]) => (values.tags = tags)}
                             />
-                            <Button variant="primary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
+                            <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
                                 Save
                             </Button>
                             <Button className="ml-1 mt-2" variant="light" size="sm" onClick={() => props.onClose()}>

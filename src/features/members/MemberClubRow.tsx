@@ -13,12 +13,12 @@ const MemberClubRow: React.FC<IMemberClubRowProps> = (props) => {
 
     return (
         <tr>
-            <td>{club.isCurrent && <FaStar size={18} color={"purple"} />}</td>
+            <td className="text-secondary">{club.isCurrent && <FaStar size={18} color={"secondary"} />}</td>
             <td><NavLink to={"/clubs/" + club.systemName} className="nav-link">{club.name}</NavLink></td>
-            <td>
+            <td className="text-secondary">
                 {club.website && 
                 <a href={club.website} target="_blank" rel="noopener noreferrer">             
-                    <FaLink size={18} color={"teal"} />
+                    <FaLink size={18} color={"primary"} />
                 </a>}
             </td>
             <td>{club.location}</td>

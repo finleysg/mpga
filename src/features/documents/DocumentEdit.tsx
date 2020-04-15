@@ -147,7 +147,7 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
                         <FilePicker OnSelected={(files: any[]) => (values.file = files[0])} />
                         {/* {props.document?.file && <small className="text-muted">{props.document.file}</small>} */}
                         <TagPicker selectedTags={values.tags || []} OnChange={(tags: ITag[]) => (values.tags = tags)} />
-                        <Button variant="primary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
                             Save
                         </Button>
                         {doc.id !== 0 && (

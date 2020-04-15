@@ -20,7 +20,7 @@ export interface IAddProps {
 const AddButton: React.FC<IAddProps> = (props) => {
     return (
         <AddButtonContainer title="Add New" onClick={() => props.AddRequested()}>
-            <FaPlusCircle size={24} color={"purple"} />
+            <FaPlusCircle size={24} color={"secondary"} />
         </AddButtonContainer>
     );
 }

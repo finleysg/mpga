@@ -172,7 +172,7 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                         {result.id! <= 0 && (

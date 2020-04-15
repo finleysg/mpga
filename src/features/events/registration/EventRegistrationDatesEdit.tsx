@@ -82,7 +82,7 @@ const EventRegistrationDatesEdit: React.FC<IEventRegistrationDatesEditProps> = p
                                 Online registration ends at this date and time.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
                             Save
                         </Button>
                     </Form>

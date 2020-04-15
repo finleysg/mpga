@@ -96,7 +96,7 @@ const TournamentHistorySearch: React.FC<ITournamentHistorySearchProps> = (props)
                             />
                         </Form.Group>
                         <Col>
-                            <Button variant="primary" type="submit" size="sm">
+                            <Button variant="secondary" type="submit" size="sm">
                                 Search
                             </Button>
                             <Button className="ml-2" variant="light" type="reset" size="sm">

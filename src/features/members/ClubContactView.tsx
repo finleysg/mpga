@@ -12,12 +12,12 @@ const ClubContactView: React.FC<IClubContactProps> = (props) => {
     const { clubContact } = props;
     return (
         <div>
-            <h5>{clubContact.contact?.firstName + " " + clubContact.contact?.lastName}
+            <h5 className="text-secondary">{clubContact.contact?.firstName + " " + clubContact.contact?.lastName}
             {clubContact.isPrimary &&
-                <FaStar className="ml-1" size={16} color={"purple"} title="Primary contact" />
+                <FaStar className="ml-1" size={16} color={"secondary"} title="Primary contact" />
             }
             {clubContact.useForMailings &&
-                <FaEnvelope className="ml-1" size={16} color={"purple"} title="Mailing contact" />
+                <FaEnvelope className="ml-1" size={16} color={"secondary"} title="Mailing contact" />
             }
             </h5>
             <LabelAndValue

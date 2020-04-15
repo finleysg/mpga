@@ -21,8 +21,8 @@ const EditableCard: React.FC<IEditable> = (props) => {
             {props.canEdit &&
             <ToggleEditButton title="Edit" onClick={() => setDoEdit(!doEdit)}>
                 {doEdit
-                    ? <TiTimes size={24} color={"teal"} />
-                    : <TiEdit size={24} color={"teal"} />}
+                    ? <TiTimes size={24} color={"primary"} />
+                    : <TiEdit size={24} color={"primary"} />}
             </ToggleEditButton>}
             {doEdit ?
                 props.editComponent :

@@ -138,7 +138,7 @@ const MatchPlayHistoryEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
                                     {errors.notes}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Button variant="primary" type="submit" size="sm" disabled={isSubmitting}>Save</Button>
+                            <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>Save</Button>
                             {/* {winner.id! <= 0 &&
                                 <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>Cancel</Button>
                             } */}

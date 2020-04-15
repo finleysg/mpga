@@ -3,7 +3,13 @@ import { IApplicationState } from "../store";
 
 const usePermissions = () => {
     const app = useSelector((state: IApplicationState) => state.app);
+    const layout = useSelector((state: IApplicationState) => state.layout);
     const session = useSelector((state: IApplicationState) => state.session);
+
+    const isOnlyClubContact = () => {
+        const user = session.user;
+        return user.isClubContact && !user.isCommittee && !user.isAdmin;
+    }
 
     const canPostMatchResult = () => {
         const user = session.user;
@@ -12,8 +18,13 @@ const usePermissions = () => {
 
     const canToggleEditMode = () => {
         const user = session.user;
-        return (user.isCommittee || user.isHistorian || user.isAdmin);
-    }
+        if (isOnlyClubContact()) {
+            // Enable only on the club details page
+            return layout.subMenu === "clubs" && layout.segments.length === 2 && layout.segments[1] === user.clubId;
+        } else {
+            return user.isCommittee || user.isHistorian || user.isAdmin;
+        }
+    };
 
     const canEditAnnouncements = () => {
         const user = session.user;
@@ -32,7 +43,12 @@ const usePermissions = () => {
 
     const canEditClubPage = () => {
         const user = session.user;
-        return app.editMode && (user.isClubContact || user.isOfficer || user.isAdmin);
+        if (app.editMode && isOnlyClubContact()) {
+            // Enable only on the club details page
+            return layout.subMenu === "clubs" && layout.segments.length === 2 && layout.segments[1] === user.clubId;
+        } else {
+            return app.editMode && (user.isClubContact || user.isOfficer || user.isAdmin);
+        }
     };
 
     const canViewWiki = () => {
@@ -43,7 +59,7 @@ const usePermissions = () => {
 
     const canViewDocumentLibrary = () => {
         const user = session.user;
-        return (user.isCommittee || user.isAdmin);
+        return user.isCommittee || user.isAdmin;
     };
 
     const canEditDocuments = () => {

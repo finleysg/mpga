@@ -75,7 +75,7 @@ const LoginForm: React.FC<ILoginForm> = (props) => {
                             label="Remember me on this device"
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit" size="sm" className="mt-2" disabled={session.flags.isBusy}>
+                    <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={session.flags.isBusy}>
                         Login
                     </Button>
                 </Form>

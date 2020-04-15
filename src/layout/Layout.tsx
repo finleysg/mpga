@@ -41,7 +41,7 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
     <div className="wrapper">
       <Sidenav isOpen={props.showSidenav}></Sidenav>
       <div id="content" className={props.showSidenav ? "" : " active"}>
-        <Navbar collapseOnSelect expand="lg" bg="primary" variant="light" sticky="top">
+        <Navbar collapseOnSelect expand="lg" bg="secondary" variant="light" sticky="top">
           <SidenavToggle {...props} />
           <Navbar.Brand className="ml-2 mpga" href="/home">MPGA.net</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />

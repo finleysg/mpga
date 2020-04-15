@@ -4,6 +4,7 @@ import { TiDocumentText } from "react-icons/ti";
 import styled from "styled-components";
 
 import { MatchResult } from "../../models/Clubs";
+import { Notes } from "../awards/AwardWinnerView";
 
 interface ITeamCellProps {
     teamName: string;
@@ -14,7 +15,7 @@ const TeamCell = styled.td<ITeamCellProps>`
         props.teamName === props.winner &&
         `
         font-weight: bold;
-        color: purple;
+        color: #28a745;
     `}
 `;
 TeamCell.displayName = "TeamCell";
@@ -40,13 +41,13 @@ const MatchResultRow: React.FC<IMatchResultRowProps> = props => {
                     {result.awayTeamName}
                 </TeamCell>
                 <td>{result.awayTeamScore}</td>
-                <td className="clickable" onClick={() => setShowNotes(!showNotes)}>
-                    {result.notes && <TiDocumentText size={18} color={"teal"} />}
+                <td className="clickable text-secondary" onClick={() => setShowNotes(!showNotes)}>
+                    {result.notes && <TiDocumentText size={18} color={"primary"} />}
                 </td>
             </tr>
             {result.notes && showNotes && (
                 <tr>
-                    <td colSpan={7}>{result.notes}</td>
+                    <td colSpan={7}><Notes>{result.notes}</Notes></td>
                 </tr>
             )}
         </React.Fragment>

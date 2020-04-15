@@ -64,7 +64,7 @@ export function MatchResultList() {
 
     return (
         <LoadingContainer hasData={matchPlayState.results && matchPlayState.results.length > 0}>
-            <Table>
+            <Table striped size="sm">
                 <thead>
                     <tr>
                         <th>
@@ -85,7 +85,7 @@ export function MatchResultList() {
                                 </MultiSelect>
                             )}
                             Date
-                            <FilterButton onClick={() => setViewFilter(!viewFilter)}>
+                            <FilterButton className="text-secondary" onClick={() => setViewFilter(!viewFilter)}>
                                 <FaFilter size={18} color={"silver"} />
                             </FilterButton>
                         </th>

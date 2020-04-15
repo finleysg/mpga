@@ -56,7 +56,7 @@ const TournamentHistoryTable: React.FC = () => {
         <React.Fragment>
             <h3 className="text-primary mb-2">
                 {tournamentState.currentTournament.name} History
-                <FaSearch size={20} color="teal" className="ml-2 clickable" onClick={() => updateDoSearch(!doSearch)} />
+                <FaSearch size={20} color="primary" className="ml-2 clickable" onClick={() => updateDoSearch(!doSearch)} />
             </h3>
             <LoadingContainer hasData={winnerState.groups !== undefined}>
                 {doSearch && (
@@ -75,7 +75,7 @@ const TournamentHistoryTable: React.FC = () => {
                         Add New Champion
                     </Button>
                 )}
-                <Table>
+                <Table striped size="sm">
                     <thead>
                         <tr>
                             <th>Year</th>

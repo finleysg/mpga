@@ -1,6 +1,6 @@
 import React from "react";
 import Badge from "react-bootstrap/Badge";
-import { FaDownload, FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaRegFileWord, FaRegFileExcel, FaRegFile, FaRegFilePdf } from "react-icons/fa";
 
 import { MpgaDocument } from "../../models/Documents";
 import moment from "moment";
@@ -14,10 +14,41 @@ export interface IDocumentLibraryRowProps {
 const DocumentLibraryRow: React.FC<IDocumentLibraryRowProps> = (props) => {
     const { document } = props;
 
+    const renderExtension = (ext: string) => {
+        switch (ext) {
+            case "doc":
+            case "docx":
+                return (
+                    <a href={document.file} target="_blank" className="text-info" rel="noopener noreferrer">
+                        <FaRegFileWord size={24} />
+                    </a>
+                );
+            case "xls":
+            case "xlsx":
+                return (
+                    <a href={document.file} target="_blank" className="text-success" rel="noopener noreferrer">
+                        <FaRegFileExcel size={24} />
+                    </a>
+                );
+            case "pdf":
+                return (
+                    <a href={document.file} target="_blank" className="text-danger" rel="noopener noreferrer">
+                        <FaRegFilePdf size={24} />
+                    </a>
+                );
+            default:
+                return (
+                    <a href={document.file} target="_blank" rel="noopener noreferrer">
+                        <FaRegFile size={24} />
+                    </a>
+                );
+        }
+    };
+
     return (
         <React.Fragment>
             <tr>
-                <td>{document.extension}</td>
+                <td>{renderExtension(document.extension)}</td>
                 <td>{document.year}</td>
                 <td>{document.title}</td>
                 <td>{document.documentType}</td>
@@ -26,19 +57,14 @@ const DocumentLibraryRow: React.FC<IDocumentLibraryRowProps> = (props) => {
                 <td>
                     {document.tags?.map((t) => {
                         return (
-                            <Badge key={t.id} className="mr-1" variant="info">
+                            <Badge key={t.id} className="mr-1" variant="dark">
                                 {t.name}
                             </Badge>
                         );
                     })}
                 </td>
-                <td>
-                    <a href={document.file} target="_blank" rel="noopener noreferrer">
-                        <FaDownload size={18} color={"teal"} />
-                    </a>
-                </td>
-                <td className="clickable" onClick={() => props.OnEdit(document)}>
-                    <FaPencilAlt size={18} color={"gold"} />
+                <td className="clickable text-warning" onClick={() => props.OnEdit(document)}>
+                    <FaPencilAlt size={18} color={"warning"} />
                 </td>
             </tr>
         </React.Fragment>

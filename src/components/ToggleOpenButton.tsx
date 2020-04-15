@@ -20,8 +20,8 @@ const ToggleOpenButton: React.FC<IToggleOpenProps> = (props) => {
     return (
         <OpenButton title="Open" onClick={() => props.Toggled()}>
             {props.isOpen
-                ? <FaCaretDown size={24} color={"teal"} />
-                : <FaCaretRight size={24} color={"teal"} />}
+                ? <FaCaretDown size={24} color={"primary"} />
+                : <FaCaretRight size={24} color={"primary"} />}
         </OpenButton>
     );
 }

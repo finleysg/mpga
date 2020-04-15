@@ -5,8 +5,11 @@
 @import "~bootstrap/scss/_variables.scss";
 
 $theme-colors: (
-  "primary": $teal,
-  "secondary": $purple
+  "primary": $purple,
+  "secondary": $teal,
+  "warning": $pink,
+  "info": $blue,
+  "dark": $gray-700,
 );
 
 @import '~bootstrap/scss/bootstrap.scss';
@@ -49,6 +52,7 @@ html {
 
 #sidebar a {
     color: $teal;
+    font-size: 1.1em;
 }
 
 #sidebar a.active {

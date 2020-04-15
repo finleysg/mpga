@@ -115,7 +115,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                 <Form.Control.Feedback type="invalid">{errors.message}</Form.Control.Feedback>
                             </Form.Group>
                             <Button
-                                variant="primary"
+                                variant="secondary"
                                 type="submit"
                                 size="sm"
                                 disabled={state.sending || state.sent !== undefined}>

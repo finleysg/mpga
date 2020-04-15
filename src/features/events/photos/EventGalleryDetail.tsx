@@ -41,7 +41,7 @@ const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = (props) => {
                     {permissions.canManageEvent() && (
                         <ToggleEditButton
                             isEditting={doUpload}
-                            openIcon={<FaCamera size={20} color={"gold"} />}
+                            openIcon={<FaCamera size={20} color={"warning"} />}
                             Toggled={() => setDoUpload(!doUpload)}
                         />
                     )}

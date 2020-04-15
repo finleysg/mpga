@@ -39,6 +39,15 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
 
     return (
         <div>
+            {permissions.canEditDocuments() && (
+                <Button
+                    variant="link"
+                    className="text-warning"
+                    disabled={!canAdd}
+                    onClick={() => dispatch(DocumentActions.AddNew(query))}>
+                    Add New
+                </Button>
+            )}
             {state.isBusy ? (
                 <Loading />
             ) : (
@@ -55,15 +64,6 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
                         />
                     );
                 })
-            )}
-            {permissions.canEditDocuments() && (
-                <Button
-                    variant="link"
-                    className="text-warning"
-                    disabled={!canAdd}
-                    onClick={() => dispatch(DocumentActions.AddNew(query))}>
-                    New Document
-                </Button>
             )}
         </div>
     );

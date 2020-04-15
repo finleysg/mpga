@@ -37,12 +37,12 @@ export function TeamList() {
 
     return (
         <LoadingContainer hasData={matchPlayState.teams && matchPlayState.teams.length > 0}>
-            <Table>
+            <Table striped size="sm">
                 <thead>
                     <tr>
                         <th>
-                            <FilterButton onClick={() => setViewFilter(!viewFilter)}>
-                                <FaFilter size={18} color={"purple"} />
+                            <FilterButton className="text-secondary" onClick={() => setViewFilter(!viewFilter)}>
+                                <FaFilter size={18} color={"secondary"} />
                             </FilterButton>
                         </th>
                         <th>
