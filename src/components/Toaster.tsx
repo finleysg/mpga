@@ -8,9 +8,11 @@ import { INotificationContent, NotificationType } from "../store/NotificationSto
 import { TiThumbsUp, TiThumbsDown, TiInfoLarge } from "react-icons/ti";
 
 const ToastContainer = styled.div`
-    position: absolute;
+    position: fixed;
     top: 60px;
     right: 10px;
+    z-index: 999999;
+    min-width: 240px;
 `;
 ToastContainer.displayName = "ToastContainer";
 
@@ -58,7 +60,7 @@ export const Toaster: React.FC = () => {
         {state.data.map((message: INotificationContent) => {
             return <Toast animation={true} key={message.id}
                 onClose={() => dispatch(NotificationActions.RemoveToast(message.id))}
-                show={message.visible} delay={3000} autohide={true}>
+                show={message.visible} delay={5000} autohide={true}>
                     <Toast.Header className={background(message)}>
                         <strong className="mr-auto">{icon(message)} {message.title}</strong>
                     </Toast.Header>

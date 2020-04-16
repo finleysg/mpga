@@ -42,10 +42,10 @@ const Login: React.FC = () => {
                     {session.flags.hasError && <p className="text-danger">{session.flags.errorMessage}</p>}
                 </Card.Body>
                 <Card.Footer>
-                    <Button variant="outline-primary" onClick={() => navigator.navigate("/account/forgot")}>
+                    <Button variant="outline-secondary" onClick={() => navigator.navigate("/account/forgot")}>
                         Forgot Password
                     </Button>
-                    <Button variant="outline-primary" className="ml-2" onClick={() => navigator.navigate("/account/register")}>
+                    <Button variant="outline-secondary" className="ml-2" onClick={() => navigator.navigate("/account/register")}>
                         Register
                     </Button>
                 </Card.Footer>

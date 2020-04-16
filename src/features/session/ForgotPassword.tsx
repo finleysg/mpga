@@ -42,11 +42,11 @@ const ForgotPassword: React.FC = () => {
                     )}
                 </Card.Body>
                 <Card.Footer>
-                    <Button variant="outline-primary" onClick={() => navigator.navigate("/account/login")}>
+                    <Button variant="outline-secondary" onClick={() => navigator.navigate("/account/login")}>
                         Login
                     </Button>
                     <Button
-                        variant="outline-primary"
+                        variant="outline-secondary"
                         className="ml-2"
                         onClick={() => navigator.navigate("/account/register")}>
                         Register

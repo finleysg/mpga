@@ -39,7 +39,7 @@ const AccountActivation: React.FC = () => {
                 </Card.Body>
                 {session.flags.accountActivated && (
                     <Card.Footer>
-                        <Button variant="outline-primary" onClick={() => navigator.navigate("/account/login")}>
+                        <Button variant="outline-secondary" onClick={() => navigator.navigate("/account/login")}>
                             Login
                         </Button>
                     </Card.Footer>

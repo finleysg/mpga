@@ -65,7 +65,7 @@ const PasswordResetForm: React.FC<IPasswordResetFormProps> = (props) => {
                         <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
                     </Form.Group>
                     <Button
-                        variant="primary"
+                        variant="secondary"
                         type="submit"
                         size="sm"
                         className="mt-2"

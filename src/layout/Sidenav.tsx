@@ -41,38 +41,38 @@ const Sidenav: React.FC<ISidenavProps> = (props) => {
             <div className="sidebar-header" onClick={goHome}></div>
             <div className="flex-column nav">
                 <NavLink to="/tournaments" className="nav-link" activeClassName="active">
-                    <MdGolfCourse size={iconSize} color={"primary"} /> Tournaments
+                    <MdGolfCourse size={iconSize} color={"secondary"} /> Tournaments
                 </NavLink>
                 <NavLink to="/match-play" className="nav-link" activeClassName="active">
-                    <MdPeopleOutline size={iconSize} color={"primary"} /> Team Match Play
+                    <MdPeopleOutline size={iconSize} color={"secondary"} /> Team Match Play
                 </NavLink>
                 <NavLink to="/clubs" className="nav-link" activeClassName="active">
-                    <TiGroupOutline size={iconSize} color={"primary"} /> Member Clubs
+                    <TiGroupOutline size={iconSize} color={"secondary"} /> Member Clubs
                 </NavLink>
                 <NavLink to="/about" className="nav-link" activeClassName="active">
-                    <TiInfoLargeOutline size={iconSize} color={"primary"} /> About Us
+                    <TiInfoLargeOutline size={iconSize} color={"secondary"} /> About Us
                 </NavLink>
                 <NavLink to="/contact" className="nav-link" activeClassName="active">
-                    <FaRegComment size={iconSize} color={"primary"} /> Contact Us
+                    <FaRegComment size={iconSize} color={"secondary"} /> Contact Us
                 </NavLink>
                 {permissions.canViewDocumentLibrary() && (
                     <NavLink to="/admin/library" className="nav-link" activeClassName="active">
-                        <FaRegFileWord size={iconSize} color={"primary"} /> Document Library
+                        <FaRegFileWord size={iconSize} color={"secondary"} /> Document Library
                     </NavLink>
                 )}
                 {permissions.canViewReports() && (
                     <NavLink to="/admin/reports" className="nav-link" activeClassName="active">
-                        <FaRegFileExcel size={iconSize} color={"primary"} /> Reports
+                        <FaRegFileExcel size={iconSize} color={"secondary"} /> Reports
                     </NavLink>
                 )}
                 {permissions.canViewWiki() && (
                     <NavLink to="/admin/wiki" className="nav-link" activeClassName="active">
-                        <TiNews size={iconSize} color={"primary"} /> Wiki
+                        <TiNews size={iconSize} color={"secondary"} /> Wiki
                     </NavLink>
                 )}
                 {!session.user.isAuthenticated && (
-                    <NavItem onClick={() => goLogin()} className="text-primary nav-link clickable">
-                        <TiKeyOutline size={iconSize} color={"primary"} />
+                    <NavItem onClick={() => goLogin()} className="text-secondary nav-link clickable">
+                        <TiKeyOutline size={iconSize} color={"secondary"} />
                         Login
                     </NavItem>
                 )}

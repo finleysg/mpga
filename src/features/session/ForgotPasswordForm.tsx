@@ -44,7 +44,7 @@ const ForgotPasswordForm: React.FC<IForgotPasswordFormProps> = (props) => {
                         <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                     </Form.Group>
                     <Button
-                        variant="primary"
+                        variant="secondary"
                         type="submit"
                         size="sm"
                         className="mt-2"
