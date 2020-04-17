@@ -13,7 +13,7 @@ const MemberClubRow: React.FC<IMemberClubRowProps> = (props) => {
 
     return (
         <tr>
-            <td className="text-secondary">{club.isCurrent && <FaStar size={18} color={"secondary"} />}</td>
+            <td className="text-secondary">{club.isCurrent && <FaStar size={18} color={"secondary"} title="Current member" />}</td>
             <td><NavLink to={"/clubs/" + club.systemName} className="nav-link">{club.name}</NavLink></td>
             <td className="text-secondary">
                 {club.website && 
@@ -23,7 +23,7 @@ const MemberClubRow: React.FC<IMemberClubRowProps> = (props) => {
             </td>
             <td>{club.location}</td>
             <td>{club.size ? club.size : "Unknown"}</td>
-            <td>{club.president || ""}</td>
+            {/* <td>{club.president || ""}</td> */}
         </tr>
     );
 }

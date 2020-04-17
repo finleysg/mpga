@@ -10,8 +10,8 @@ export interface ITwoColumns {
 const TwoEvenColumns: React.FC<ITwoColumns> = (props) => {
     return (
         <Row>
-            <Col md={true}>{props.LeftColumn}</Col>
-            <Col md={true}>{props.RightColumn}</Col>
+            <Col lg={true}>{props.LeftColumn}</Col>
+            <Col lg={true}>{props.RightColumn}</Col>
         </Row>
     );
 };

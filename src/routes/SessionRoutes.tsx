@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import OneSmallColumn from "../components/layouts/OneSmallColumn";
+import SessionLayout from "../components/layouts/SessionLayout";
 import ForgotPassword from "../features/session/ForgotPassword";
 import Login from "../features/session/Login";
 import Register from "../features/session/Register";
@@ -16,34 +16,34 @@ export const SessionRoutes: React.FC = () => {
         <Switch>
             <ConnectedLayout>
                 <Route exact path={path}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <AccountDetail />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
                 <Route path={`${path}/login`}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <Login />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
                 <Route path={`${path}/forgot`}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <ForgotPassword />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
                 <Route path={`${path}/register`}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <Register />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
                 <Route path={`${path}/reset-password/:uid/:token`}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <PasswordReset />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
                 <Route path={`${path}/activate/:uid/:token`}>
-                    <OneSmallColumn>
+                    <SessionLayout>
                         <AccountActivation />
-                    </OneSmallColumn>
+                    </SessionLayout>
                 </Route>
             </ConnectedLayout>
         </Switch>

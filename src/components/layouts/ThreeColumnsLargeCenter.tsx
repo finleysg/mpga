@@ -11,9 +11,9 @@ export interface IThreeColumns {
 const ThreeColumnsLargeCenter: React.FC<IThreeColumns> = (props) => {
     return (
         <Row>
-            <Col md={3}>{props.Column1}</Col>
-            <Col md={6}>{props.Column2}</Col>
-            <Col md={3}>{props.Column3}</Col>
+            <Col md={12} lg={3}>{props.Column1}</Col>
+            <Col md={6} lg={6}>{props.Column2}</Col>
+            <Col md={6} lg={3}>{props.Column3}</Col>
         </Row>
     );
 }

@@ -11,9 +11,9 @@ export interface IThreeColumns {
 const ThreeEvenColumns: React.FC<IThreeColumns> = (props) => {
     return (
         <Row>
-            <Col md={true}>{props.Column1}</Col>
-            <Col md={true}>{props.Column2}</Col>
-            <Col md={true}>{props.Column3}</Col>
+            <Col lg={true}>{props.Column1}</Col>
+            <Col lg={true}>{props.Column2}</Col>
+            <Col lg={true}>{props.Column3}</Col>
         </Row>
     );
 }

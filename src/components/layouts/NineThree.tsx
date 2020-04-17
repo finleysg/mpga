@@ -6,8 +6,8 @@ import { ITwoColumns } from './TwoEvenColumns';
 const NineThree: React.FC<ITwoColumns> = (props) => {
     return (
         <Row>
-            <Col md={9}>{props.LeftColumn}</Col>
-            <Col md={3}>{props.RightColumn}</Col>
+            <Col sm={6} lg={9}>{props.LeftColumn}</Col>
+            <Col sm={6} lg={3}>{props.RightColumn}</Col>
         </Row>
     );
 }

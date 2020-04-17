@@ -53,7 +53,7 @@ const MatchResultEntry: React.FC = () => {
                                     button below to sign up.
                                 </p>
                                 <Button
-                                    variant="primary"
+                                    variant="secondary"
                                     className="ml-2"
                                     onClick={() => goRegister()}>
                                     Create an Account

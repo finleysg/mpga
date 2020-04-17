@@ -23,12 +23,12 @@ const MemberClubList: React.FC = () => {
             <Table striped size="sm">
                 <thead>
                     <tr>
-                        <th>{constants.MemberClubYear} Member</th>
+                        <th>{constants.MemberClubYear}</th>
                         <th>Club</th>
                         <th>Website</th>
                         <th>Location</th>
                         <th>Size</th>
-                        <th>President</th>
+                        {/* <th>President</th> */}
                     </tr>
                 </thead>
                 <tbody>

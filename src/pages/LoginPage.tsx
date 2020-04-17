@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import OneSmallColumn from '../components/layouts/OneSmallColumn';
-import Login from '../features/session/Login';
+import SessionLayout from "../components/layouts/SessionLayout";
+import Login from "../features/session/Login";
 
 const LoginPage: React.FC = () => {
     return (
-        <OneSmallColumn>
+        <SessionLayout>
             <Login />
-        </OneSmallColumn>
+        </SessionLayout>
     );
-}
+};
 
 export default LoginPage;
