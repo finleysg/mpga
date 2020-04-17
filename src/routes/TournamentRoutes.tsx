@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { ConnectedLayout } from '../layout/Layout';
+import ConnectedLayout from '../layout/Layout';
 import TournamentsPage from '../pages/TournamentsPage';
 import TournamentHistoryPage from '../pages/TournamentHistoryPage';
 import HardCardPage from "../pages/HardCardPage";

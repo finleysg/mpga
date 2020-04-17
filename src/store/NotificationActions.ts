@@ -1,4 +1,5 @@
 import { NotificationType } from "./NotificationStore";
+import UserActions from "./UserActions";
 
 export enum NotificationActionTypes {
     APPEND_NOTIFICATION = "APPEND_NOTIFICATION",
@@ -30,7 +31,12 @@ const NotificationActions = {
         toast("Success", message, NotificationType.Success)(dispatch);
     },
     ToastError: (error: any) => (dispatch: any) => {
-        toast("Error", error.message || error || "An error occurred", NotificationType.Error)(dispatch);
+        const message: string = error.message || error || "error";
+        if (message.endsWith("401")) {
+            dispatch(UserActions.ResetUser());
+        } else if (message !== "error") {
+            toast("Error", error.message || error || "An error occurred", NotificationType.Error)(dispatch);
+        }
     },
     RemoveToast: (id: number) => (dispatch: any) => {
         dispatch({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { ConnectedLayout } from '../layout/Layout';
+import ConnectedLayout from '../layout/Layout';
 import DocumentLibraryPage from "../pages/DocumentLibraryPage";
 
 export const AdminRoutes: React.FC = () => {

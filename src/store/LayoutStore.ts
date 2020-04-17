@@ -1,18 +1,9 @@
 import { Action, Reducer } from "redux";
 import { LayoutActionTypes } from "./LayoutActions";
 
-export interface ISidenavToggled extends Action {
-    type: LayoutActionTypes.SIDENAV_TOGGLED;
-    payload: boolean;
-}
-
-export interface IRouteChanged extends Action {
-    type: LayoutActionTypes.ROUTE_CHANGED;
-    payload: string;
-}
-
 export interface ILayoutState {
     sideNavOpen: boolean;
+    viewPortWidth?: number;
     subMenu: string;
     segments: string[];
 }
@@ -23,25 +14,50 @@ export const defaultState: ILayoutState = {
     segments: [],
 };
 
-type KnownActions = ISidenavToggled | IRouteChanged;
+export interface ISidenavClose extends Action {
+    type: LayoutActionTypes.SIDENAV_CLOSE;
+}
 
-export const reducer: Reducer<ILayoutState, KnownActions> =
-    (state: ILayoutState | undefined, action: KnownActions): ILayoutState => {
+export interface ISidenavToggled extends Action {
+    type: LayoutActionTypes.SIDENAV_TOGGLED;
+}
 
+export interface IRouteChanged extends Action {
+    type: LayoutActionTypes.ROUTE_CHANGED;
+    payload: string;
+}
+
+export interface IViewportChanged extends Action {
+    type: LayoutActionTypes.VIEWPORT_CHANGED;
+    payload: any;
+}
+
+type KnownActions = ISidenavClose | ISidenavToggled | IRouteChanged | IViewportChanged;
+
+export const reducer: Reducer<ILayoutState, KnownActions> = (
+    state: ILayoutState | undefined,
+    action: KnownActions
+): ILayoutState => {
     if (!state) {
-        state = {...defaultState};
+        state = { ...defaultState };
     }
 
     switch (action.type) {
+        case LayoutActionTypes.SIDENAV_CLOSE: {
+            return { ...state, sideNavOpen: false };
+        }
         case LayoutActionTypes.SIDENAV_TOGGLED: {
-            return {...state, sideNavOpen: action.payload};
+            return { ...state, sideNavOpen: !state.sideNavOpen };
         }
         case LayoutActionTypes.ROUTE_CHANGED: {
             var segments = action.payload.split("/");
             var submenu = segments[1].length > 0 ? segments[1] : "home";
-            return {...state, subMenu: submenu, segments: segments.slice(1)};
+            return { ...state, subMenu: submenu, segments: segments.slice(1) };
+        }
+        case LayoutActionTypes.VIEWPORT_CHANGED: {
+            return { ...state, viewPortWidth: action.payload.width };
         }
         default:
             return state;
     }
-}
+};

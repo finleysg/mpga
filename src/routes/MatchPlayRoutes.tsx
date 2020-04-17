@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import { ConnectedLayout } from "../layout/Layout";
+import ConnectedLayout from '../layout/Layout';
 import MatchPlayPage from "../pages/MatchPlayPage";
 import MatchPlayResultsPage from "../pages/MatchPlayResultsPage";
 import MatchPlayRulesPage from "../pages/MatchPlayRulesPage";

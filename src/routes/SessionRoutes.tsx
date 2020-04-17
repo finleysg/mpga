@@ -5,7 +5,7 @@ import SessionLayout from "../components/layouts/SessionLayout";
 import ForgotPassword from "../features/session/ForgotPassword";
 import Login from "../features/session/Login";
 import Register from "../features/session/Register";
-import { ConnectedLayout } from "../layout/Layout";
+import ConnectedLayout from "../layout/Layout";
 import PasswordReset from "../features/session/PasswordReset";
 import AccountActivation from "../features/session/AccountActivation";
 import AccountDetail from "../features/account/AccountDetail";

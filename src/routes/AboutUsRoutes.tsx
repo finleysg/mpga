@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { ConnectedLayout } from '../layout/Layout';
+import ConnectedLayout from '../layout/Layout';
 import AboutUsPage from '../pages/AboutUsPage';
 import CommitteePage from '../pages/CommitteePage';
 import AwardsPage from '../pages/AwardsPage';

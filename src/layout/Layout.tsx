@@ -1,63 +1,54 @@
-import React, { useEffect } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Sidenav from "./Sidenav";
-import SidenavToggle from "./SidenavToggle";
-import { connect } from "react-redux";
-import { IApplicationState } from "../store";
-import { LayoutActions } from "../store/LayoutActions";
-import { useLocation } from "react-router";
-import PageMenu from "./PageMenu";
-import ErrorBoundary from "../components/ErrorBoundary";
-import { Toaster } from "../components/Toaster";
 import "./layout.scss";
 
-export interface ILayoutProps {
-  showSidenav: boolean;
-  subMenu: string;
-  segments: string[];
-  ToggleSidenav: (showSidenav: boolean) => void;
-  RouteChange: (path: string) => void;
-}
+import React, { useEffect } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import { useSelector, useDispatch } from "react-redux";
+import useResizeAware from "react-resize-aware";
+import { useLocation } from "react-router";
 
-const mapStateToProps = (state: IApplicationState) => ({
-  showSidenav: state.layout.sideNavOpen,
-  subMenu: state.layout.subMenu,
-  segments: state.layout.segments,
-});
+import ErrorBoundary from "../components/ErrorBoundary";
+import { Toaster } from "../components/Toaster";
+import { IApplicationState } from "../store";
+import { LayoutActions } from "../store/LayoutActions";
+import PageMenu from "./PageMenu";
+import Sidenav from "./Sidenav";
+import SidenavToggle from "./SidenavToggle";
 
-export const Layout: React.FC<ILayoutProps> = (props) => {
+const ConnectedLayout: React.FC<any> = (props) => {
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const [resizeListener, sizes] = useResizeAware();
+    const layoutState = useSelector((state: IApplicationState) => state.layout);
 
-  let location = useLocation();
+    useEffect(() => {
+        dispatch(LayoutActions.ViewPortChange(sizes));
+    }, [dispatch, sizes]);
 
-  useEffect(
-    () => {
-      props.RouteChange(location.pathname);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location]
-  );
+    useEffect(() => {
+        dispatch(LayoutActions.RouteChange(location.pathname));
+        dispatch(LayoutActions.EvaluateSidenav());
+    }, [dispatch, location.pathname]);
 
-  return (
-    <div className="wrapper">
-      <Sidenav isOpen={props.showSidenav}></Sidenav>
-      <div id="content" className={props.showSidenav ? "" : " active"}>
-        <Navbar collapseOnSelect expand="lg" bg="secondary" variant="light" sticky="top">
-          <SidenavToggle {...props} />
-          <Navbar.Brand className="ml-2 mpga" href="/home">MPGA.net</Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          {props.subMenu &&
-            <PageMenu subMenu={props.subMenu} segments={props.segments} />
-          }
-        </Navbar>
-        <div id="page">
-          <Toaster />
-          <ErrorBoundary>
-            {props.children}
-          </ErrorBoundary>
+    return (
+        <div className="wrapper">
+            <Sidenav isOpen={layoutState.sideNavOpen}></Sidenav>
+            <div id="content" className={layoutState.sideNavOpen ? "" : " active"}>
+                <Navbar collapseOnSelect expand="lg" bg="secondary" variant="light" sticky="top">
+                    <SidenavToggle />
+                    <Navbar.Brand className="ml-2 mpga" href="/home">
+                        MPGA
+                    </Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    {layoutState.subMenu && <PageMenu subMenu={layoutState.subMenu} segments={layoutState.segments} />}
+                </Navbar>
+                <div id="page">
+                    {resizeListener}
+                    <Toaster />
+                    <ErrorBoundary>{props.children}</ErrorBoundary>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
-export const ConnectedLayout = connect(mapStateToProps, { ...LayoutActions })(Layout);
+export default ConnectedLayout;

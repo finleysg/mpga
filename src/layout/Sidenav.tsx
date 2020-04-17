@@ -10,6 +10,7 @@ import { IApplicationState } from "../store";
 import AppActions from "../store/AppActions";
 import UserActions from "../store/UserActions";
 import usePermissions from "../utilities/Permissions";
+import { LayoutActions } from "../store/LayoutActions";
 
 interface ISidenavProps {
     isOpen: boolean;
@@ -35,6 +36,16 @@ const Sidenav: React.FC<ISidenavProps> = (props) => {
         dispatch(AppActions.SaveLocation(location.pathname));
         history.push("/account/login");
     };
+
+    const changeEditMode = () => {
+        dispatch(AppActions.ToggleEditMode());
+        dispatch(LayoutActions.EvaluateSidenav());
+    }
+
+    const logout = () => {
+        dispatch(UserActions.Logout());
+        goHome();
+    }
 
     return (
         <div id="sidebar" className={props.isOpen ? "" : " active"}>
@@ -78,20 +89,20 @@ const Sidenav: React.FC<ISidenavProps> = (props) => {
                 )}
                 {permissions.canToggleEditMode() && !app.editMode && (
                     <NavItem
-                        onClick={() => dispatch(AppActions.ToggleEditMode())}
+                        onClick={() => changeEditMode()}
                         className="text-warning nav-link clickable">
                         <TiEdit size={iconSize} color={"warning"} /> Turn on Edit Mode
                     </NavItem>
                 )}
                 {permissions.canToggleEditMode() && app.editMode && (
                     <NavItem
-                        onClick={() => dispatch(AppActions.ToggleEditMode())}
+                        onClick={() => changeEditMode()}
                         className="text-warning nav-link clickable">
                         <TiEdit size={iconSize} color={"warning"} /> Turn off Edit Mode
                     </NavItem>
                 )}
                 {session.user.isAuthenticated && (
-                    <NavItem onClick={() => dispatch(UserActions.Logout())} className="text-muted nav-link clickable">
+                    <NavItem onClick={() => logout()} className="text-muted nav-link clickable">
                         <TiPowerOutline size={iconSize} color={"muted"} /> Logout
                     </NavItem>
                 )}

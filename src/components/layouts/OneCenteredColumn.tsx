@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 const OneCenteredColumn: React.FC<any> = (props) => {
     return (
         <Row>
-            <Col sm={12} md={{ span: 10, offset: 1 }}>{props.children}</Col>
+            <Col md={12} lg={{ span: 10, offset: 1 }}>{props.children}</Col>
         </Row>
     );
 };

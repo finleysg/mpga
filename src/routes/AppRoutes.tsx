@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
-import { ConnectedLayout } from '../layout/Layout';
+import ConnectedLayout from '../layout/Layout';
 import ContactUsPage from '../pages/ContactUsPage';
 import ConnectedHomePage from '../pages/HomePage';
 import UserActions from '../store/UserActions';
