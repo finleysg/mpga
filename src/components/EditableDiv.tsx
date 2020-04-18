@@ -5,7 +5,7 @@ import ToggleEditButton from "./ToggleEditButton";
 
 export const ToggleDiv = styled<IEditState | any>("div")`
     border-width: ${props => (props.doEdit ? "1px" : "0")};
-    border-color: teal;
+    border-color: silver;
     border-style: solid;
     padding: ${props => (props.doEdit ? "10px" : "0")};
     margin-bottom: 10px;

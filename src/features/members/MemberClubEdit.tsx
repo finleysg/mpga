@@ -5,6 +5,8 @@ import Form from 'react-bootstrap/Form';
 import * as yup from 'yup';
 
 import { Club } from '../../models/Clubs';
+import { useSelector } from 'react-redux';
+import { IApplicationState } from '../../store';
 
 export interface IMemberClubEditProps {
     club: Club,
@@ -19,6 +21,7 @@ const schema = yup.object({
 });
 
 const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
+    const clubState = useSelector((state: IApplicationState) => state.memberClubs);
     const club = props.club;
 
     return (
@@ -29,7 +32,6 @@ const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
                     const newModel = new Club(values);
                     newModel.id = props.club.id;
                     props.Save(newModel);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={club}
             >
@@ -40,7 +42,6 @@ const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
                     values,
                     touched,
                     errors,
-                    isSubmitting,
                 }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="club.Name">
@@ -102,7 +103,7 @@ const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
                                 Markdown supported. Tell us about your club.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={clubState.isBusy}>
                             Save
                         </Button>
                     </Form>

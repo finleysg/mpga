@@ -9,6 +9,8 @@ import {ClubContact, ClubContactRole, Contact} from '../../models/Clubs';
 import Confirm from '../../components/Confirm';
 import RolePicker from "../roles/RolePicker";
 import {IRole} from "../roles/Role";
+import { useSelector } from 'react-redux';
+import { IApplicationState } from '../../store';
 
 export interface IClubContactData {
     firstName: string;
@@ -87,6 +89,7 @@ const translateClubContact = (cc: ClubContact): IClubContactData => {
 };
 
 const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
+    const clubState = useSelector((state: IApplicationState) => state.memberClubs);
     const cc = translateClubContact(props.clubContact);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAddress, setShowAddress] = useState(cc.useForMailings);
@@ -106,7 +109,6 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
                     props.Save(props.clubContact.id || 0, values);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={cc}
             >
@@ -117,7 +119,6 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                     values,
                     touched,
                     errors,
-                    isSubmitting,
                 }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="cc.firstName">
@@ -261,7 +262,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </>}
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
+                        <Button variant="secondary" type="submit" size="sm" disabled={clubState.isBusy}>
                             Save
                         </Button>
                         {props.clubContact.id === 0 &&

@@ -8,12 +8,20 @@ import { IApplicationState } from "../../store";
 import AnnouncementActions from "../../store/AnnouncementActions";
 import usePermissions from "../../utilities/Permissions";
 import AnnouncementDetail from "./AnnouncementDetail";
+import { IDocumentSearch } from "../../store/DocumentActions";
+import Constants from "../../constants";
+import DocumentActions from "../../store/DocumentActions";
 
 const AnnouncementList: React.FC = () => {
     const dispatch = useDispatch();
     const permissions = usePermissions();
     const state = useSelector((state: IApplicationState) => state.announcements);
+    const documentState = useSelector((state: IApplicationState) => state.documents);
     const canAdd = state.data.findIndex((a) => a.id === 0) < 0; // no pending add
+    const query = {
+        key: "current-documents",
+        year: Constants.EventCalendarYear,
+    } as IDocumentSearch;
 
     // Info on why we memoize the callback passed to a child component
     // https://react-redux.js.org/next/api/hooks#usedispatch
@@ -24,7 +32,8 @@ const AnnouncementList: React.FC = () => {
 
     useEffect(() => {
         dispatch(AnnouncementActions.Load());
-    }, [dispatch]);
+        dispatch(DocumentActions.Load(query));
+    }, []);
 
     return (
         <div>
@@ -45,6 +54,7 @@ const AnnouncementList: React.FC = () => {
                             key={announcement.id}
                             announcement={announcement}
                             edit={announcement.id === 0}
+                            currentDocuments={documentState.documents.get(query.key) || []}
                             Cancel={() => dispatch(AnnouncementActions.CancelNew())}
                             Save={saveAnnouncement}
                         />

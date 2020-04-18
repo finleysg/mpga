@@ -24,7 +24,7 @@ const ToggleEditButton: React.FC<IToggleEditProps> = (props) => {
     return (
         <EditButton
             title={props.isEditting ? "Close" : "Edit"}
-            className={props.isEditting ? "text-primary" : "text-warning"}
+            className={props.isEditting ? "text-secondary" : "text-warning"}
             onClick={() => props.Toggled()}>
             {props.isEditting ? <TiTimes size={20} color={"primary"} /> : open}
         </EditButton>

@@ -32,4 +32,17 @@ export class Announcement extends Model {
         announcement.document = new MpgaDocument(obj["document"]);
         Object.assign(this, announcement);
     }
+
+    toJson = (): any => {
+        return {
+            title: this.title,
+            text: this.text,
+            starts: this.starts,
+            expires: this.expires,
+            external_url: this.externalUrl,
+            external_name: this.externalName,
+            document: this.document?.id,
+            event: this.event,
+        };
+    }
 }

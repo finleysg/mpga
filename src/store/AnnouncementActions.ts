@@ -39,12 +39,7 @@ const AnnouncementActions = {
     Save: (announcement: Announcement) => async (dispatch: any) => {
         dispatch({ type: AnnouncementActionTypes.SAVE_ANNOUNCEMENT_REQUESTED});
         try {
-            const payload = announcement.prepJson();
-            if (announcement.document && announcement.document.id) {
-                payload.document = announcement.document.prepJson();
-            } else {
-                payload.document = null;
-            }
+            const payload = announcement.toJson();
             if (!announcement.id) {
                 await Api.post(url, payload);
             } else {
