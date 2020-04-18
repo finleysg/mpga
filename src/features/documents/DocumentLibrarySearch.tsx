@@ -59,10 +59,11 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
             {({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                     <Form.Row>
-                        <Form.Group as={Col} controlId="year">
+                        <Col sm={1}>
                             <Form.Control
                                 name="year"
                                 placeholder="Year"
+                                width="80px"
                                 type="number"
                                 value={values.year?.toString() || ""}
                                 isValid={touched.year && !errors.year}
@@ -71,8 +72,8 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 onBlur={handleBlur}
                             />
                             <Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="division">
+                        </Col>
+                        <Col sm={3}>
                             <MultiSelect
                                 clearText="Clear"
                                 closeText="Apply"
@@ -92,8 +93,8 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 <option value="Standing Orders">Standing Orders</option>
                                 <option value="Tee Times">Tee Times</option>
                             </MultiSelect>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="tournamentId">
+                        </Col>
+                        <Col sm={3}>
                             <Form.Control
                                 as="select"
                                 name="tournamentId"
@@ -107,8 +108,8 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                     return <option key={tournament.id} value={tournament.id}>{tournament.name}</option>;
                                 })}
                             </Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="tags">
+                        </Col>
+                        <Col sm={3}>
                             <Form.Control
                                 name="tags"
                                 placeholder="Tags (comma separated)"
@@ -118,8 +119,8 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                        </Form.Group>
-                        <Col>
+                        </Col>
+                        <Col sm={2}>
                             <Button variant="secondary" type="submit" size="sm">
                                 Search
                             </Button>

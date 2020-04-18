@@ -17,6 +17,12 @@ const FilterButton = styled.a`
 `;
 FilterButton.displayName = "FilterButton";
 
+const GroupColumn = styled.th`
+    min-width: 120px;
+    max-width: 150px;
+`;
+GroupColumn.displayName = "GroupColumn";
+
 export function TeamList() {
     const dispatch = useDispatch();
     const [viewFilter, setViewFilter] = useState(false);
@@ -45,7 +51,7 @@ export function TeamList() {
                                 <FaFilter size={18} color={"secondary"} />
                             </FilterButton>
                         </th>
-                        <th>
+                        <GroupColumn>
                             {viewFilter && (
                                 <MultiSelect
                                     clearText="Clear"
@@ -63,7 +69,7 @@ export function TeamList() {
                                 </MultiSelect>
                             )}
                             Group
-                        </th>
+                        </GroupColumn>
                         <th>Club</th>
                         <th>Captain(s)</th>
                     </tr>

@@ -28,7 +28,6 @@ const MatchPlayResultsPage: React.FC = () => {
             }
             RightColumn={
                 <React.Fragment>
-                    <h3 className="text-primary">2020 Match Results</h3>
                     <MatchResultList />
                 </React.Fragment>
             }
