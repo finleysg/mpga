@@ -1,6 +1,6 @@
 import * as React from "react";
 import { EventDetail } from "../../../models/Events";
-import MarkdownDiv from "../../../components/MarkdownDiv";
+import ReactMarkdown from "react-markdown";
 
 interface IEventDetailProps {
     eventDetail: EventDetail;
@@ -11,7 +11,7 @@ const EventFormatView: React.FunctionComponent<IEventDetailProps> = props => {
     return (
         <React.Fragment>
             <h5 className="text-primary">Format</h5>
-            <MarkdownDiv text={eventDetail.description} />
+            <ReactMarkdown source={eventDetail.description} escapeHtml={true} />
         </React.Fragment>
     );
 };

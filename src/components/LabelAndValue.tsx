@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import MarkdownDiv from './MarkdownDiv';
+import ReactMarkdown from "react-markdown";
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -47,7 +47,7 @@ const LabelAndValue: React.FC<ILabelAndValueProps> = (props) => {
             case ValueType.ExternalLink:
                 return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
             case ValueType.Markdown:
-                return <MarkdownDiv text={value} />
+                return <ReactMarkdown source={value} escapeHtml={true} />
             case ValueType.Date:
                 if (value && moment.isDate(value)) {
                     return <span>{moment(value).format("yyyy-MM-dd")}</span>

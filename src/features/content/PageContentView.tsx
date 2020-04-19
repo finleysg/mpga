@@ -1,6 +1,6 @@
 import React from 'react';
+import ReactMarkdown from "react-markdown";
 
-import MarkdownDiv from '../../components/MarkdownDiv';
 import { PageContent } from '../../models/Policies';
 
 export interface IPageContentViewProps {
@@ -12,7 +12,7 @@ const PageContentView: React.FC<IPageContentViewProps> = (props) => {
     return (
         <div>
             <h3 className="text-primary mb-3">{pageContent.title}</h3>
-            <MarkdownDiv text={pageContent.content!} />
+            <ReactMarkdown source={pageContent.content} escapeHtml={true} />
         </div>
     );
 }

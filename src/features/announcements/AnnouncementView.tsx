@@ -1,6 +1,6 @@
 import React from 'react';
 import { Announcement } from '../../models/Announcement';
-import MarkdownDiv from '../../components/MarkdownDiv';
+import ReactMarkdown from "react-markdown";
 
 export interface IAnnouncementView {
     announcement: Announcement,
@@ -11,7 +11,7 @@ const AnnouncementView: React.FC<IAnnouncementView> = (props) => {
     return (
         <div>
             <h5 className="text-secondary">{announcement.title}</h5>
-            <MarkdownDiv text={announcement.text} />
+            <ReactMarkdown source={announcement.text} escapeHtml={true} />
             {announcement.externalUrl && 
                 <a href={announcement.externalUrl}>{announcement.externalName}</a>}
             {announcement.document && 

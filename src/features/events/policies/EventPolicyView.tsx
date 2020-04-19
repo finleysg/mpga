@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MarkdownDiv from '../../../components/MarkdownDiv';
+import ReactMarkdown from "react-markdown";
 import { EventPolicy } from '../../../models/Events';
 
 export interface IEventPolicyViewProps {
@@ -12,7 +12,7 @@ const EventPolicyView: React.FC<IEventPolicyViewProps> = (props) => {
     return (
         <div>
             <h5 className="text-primary">{policy?.title}</h5>
-            <MarkdownDiv text={policy?.description || ""} />
+            <ReactMarkdown source={policy?.description} escapeHtml={true} />
         </div>
     );
 }

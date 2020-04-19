@@ -1,22 +1,22 @@
-import React from 'react';
+import React from "react";
+import ReactMarkdown from "react-markdown";
 
-import MarkdownDiv from '../../components/MarkdownDiv';
-import { Award } from '../../models/Events';
-import AwardWinnerList from './AwardWinnerList';
+import { Award } from "../../models/Events";
+import AwardWinnerList from "./AwardWinnerList";
 
 export interface IAwardViewProps {
-    award: Award,
-};
+    award: Award;
+}
 
 const AwardView: React.FC<IAwardViewProps> = (props) => {
-    const {award} = props;
+    const { award } = props;
     return (
         <div>
             <h3 className="text-primary">{award.name}</h3>
-            <MarkdownDiv text={award.description!} />
+            <ReactMarkdown source={award.description} escapeHtml={true} />
             <AwardWinnerList award={award} />
         </div>
     );
-}
+};
 
 export default AwardView;

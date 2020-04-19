@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MarkdownDiv from '../../components/MarkdownDiv';
+import ReactMarkdown from "react-markdown";
 import { Policy } from '../../models/Policies';
 
 export interface IPolicyViewProps {
@@ -12,7 +12,7 @@ const PolicyView: React.FC<IPolicyViewProps> = (props) => {
     return (
         <div>
             <h5 className="text-secondary">{policy.title}</h5>
-            <MarkdownDiv text={policy.description} />
+            <ReactMarkdown source={policy.description} escapeHtml={true} />
         </div>
     );
 }
