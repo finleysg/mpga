@@ -3,6 +3,8 @@ import { Action, Reducer } from "redux";
 import { User } from "../models/User";
 import { UserActionTypes, IRegisterData } from "./UserActions";
 import { Contact } from "../models/Clubs";
+import { LayoutActionTypes } from "./LayoutActions";
+import { IRouteChanged } from "./LayoutStore";
 
 export interface IUserStateFlags {
     isBusy: boolean;
@@ -175,7 +177,8 @@ type KnownActions =
     | IActivateAccountRequested
     | IActivateAccountSucceeded
     | IActivateAccountFailed
-    | IResetUser;
+    | IResetUser
+    | IRouteChanged;
 
 export const UsersReducer: Reducer<IUserState, KnownActions> = (
     state: IUserState | undefined,
@@ -278,6 +281,9 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
         }
         case UserActionTypes.RESET_USER: {
             return { ...state, user: User.Guest(), flags: defaultStateFlags };
+        }
+        case LayoutActionTypes.ROUTE_CHANGED: {
+            return { ...state, flags: { ...defaultStateFlags } };
         }
         default:
             return state;
