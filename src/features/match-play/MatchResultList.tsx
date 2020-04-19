@@ -88,79 +88,82 @@ export function MatchResultList() {
                     <FaSearch size={18} color={"secondary"} />
                 </FilterButton>
             </h3>
-            <LoadingContainer hasData={matchPlayState.results && matchPlayState.results.length > 0}>
-                <Table striped size="sm">
-                    <thead>
-                        <tr>
-                            <DateColumn>
-                                {viewFilter && (
-                                    <MultiSelect
-                                        clearText="Clear"
-                                        closeText="Apply"
-                                        label="Select..."
-                                        initialValues={selectedDates}
-                                        onChange={(selections) => setSelectedDates(selections)}>
-                                        {matchPlayState.matchDates.map((dt, index) => {
-                                            return (
-                                                <option key={index} value={dt}>
-                                                    {dt}
-                                                </option>
-                                            );
-                                        })}
-                                    </MultiSelect>
-                                )}
-                                Date
-                            </DateColumn>
-                            <GroupColumn>
-                                {viewFilter && (
-                                    <MultiSelect
-                                        clearText="Clear"
-                                        closeText="Apply"
-                                        label="Select..."
-                                        initialValues={selectedGroups}
-                                        onChange={(selections) => setSelectedGroups(selections)}>
-                                        {matchPlayState.groups.map((group, index) => {
-                                            return (
-                                                <option key={index} value={group}>
-                                                    {group}
-                                                </option>
-                                            );
-                                        })}
-                                    </MultiSelect>
-                                )}
-                                Group
-                            </GroupColumn>
-                            <TeamColumn>
-                                {viewFilter && (
-                                    <MultiSelect
-                                        clearText="Clear"
-                                        closeText="Apply"
-                                        label="Select..."
-                                        initialValues={selectedTeams}
-                                        onChange={(selections) => setSelectedTeams(selections)}>
-                                        {uniqueTeamNames().map((team, index) => {
-                                            return (
-                                                <option key={index} value={team}>
-                                                    {team}
-                                                </option>
-                                            );
-                                        })}
-                                    </MultiSelect>
-                                )}
-                                Home Team
-                            </TeamColumn>
-                            <th>Score</th>
-                            <th>Away Team</th>
-                            <th>Score</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredMatchResults().map((result: MatchResult) => (
-                            <MatchResultRow key={result.id} result={result} />
-                        ))}
-                    </tbody>
-                </Table>
+            <LoadingContainer hasData={matchPlayState.results && matchPlayState.results.length >= 0}>
+                {matchPlayState.results.length === 0 && <p>No results reported yet.</p>}
+                {matchPlayState.results.length > 0 && (
+                    <Table striped size="sm">
+                        <thead>
+                            <tr>
+                                <DateColumn>
+                                    {viewFilter && (
+                                        <MultiSelect
+                                            clearText="Clear"
+                                            closeText="Apply"
+                                            label="Select..."
+                                            initialValues={selectedDates}
+                                            onChange={(selections) => setSelectedDates(selections)}>
+                                            {matchPlayState.matchDates.map((dt, index) => {
+                                                return (
+                                                    <option key={index} value={dt}>
+                                                        {dt}
+                                                    </option>
+                                                );
+                                            })}
+                                        </MultiSelect>
+                                    )}
+                                    Date
+                                </DateColumn>
+                                <GroupColumn>
+                                    {viewFilter && (
+                                        <MultiSelect
+                                            clearText="Clear"
+                                            closeText="Apply"
+                                            label="Select..."
+                                            initialValues={selectedGroups}
+                                            onChange={(selections) => setSelectedGroups(selections)}>
+                                            {matchPlayState.groups.map((group, index) => {
+                                                return (
+                                                    <option key={index} value={group}>
+                                                        {group}
+                                                    </option>
+                                                );
+                                            })}
+                                        </MultiSelect>
+                                    )}
+                                    Group
+                                </GroupColumn>
+                                <TeamColumn>
+                                    {viewFilter && (
+                                        <MultiSelect
+                                            clearText="Clear"
+                                            closeText="Apply"
+                                            label="Select..."
+                                            initialValues={selectedTeams}
+                                            onChange={(selections) => setSelectedTeams(selections)}>
+                                            {uniqueTeamNames().map((team, index) => {
+                                                return (
+                                                    <option key={index} value={team}>
+                                                        {team}
+                                                    </option>
+                                                );
+                                            })}
+                                        </MultiSelect>
+                                    )}
+                                    Home Team
+                                </TeamColumn>
+                                <th>Score</th>
+                                <th>Away Team</th>
+                                <th>Score</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredMatchResults().map((result: MatchResult) => (
+                                <MatchResultRow key={result.id} result={result} />
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
             </LoadingContainer>
         </React.Fragment>
     );
