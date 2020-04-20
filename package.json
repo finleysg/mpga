@@ -13,6 +13,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.12.0",
+    "react-app-polyfill": "^1.0.6",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-bootstrap-typeahead": "^3.4.7",
     "react-datepicker": "^2.10.1",
@@ -48,12 +49,14 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie 11"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie 11"
     ]
   },
   "devDependencies": {

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -24,23 +23,21 @@ export interface ICalendarItemProps {
     tournamentName: string,
     hostCourseName: string,
     hostCourceImageUrl?: string,
-    startDate: Date,
+    eventDates: string,
     rounds: number,
     linkName?: string,
     OnSelect: (linkName: string) => void,
 }
 
 const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
-    const { linkName, tournamentName, hostCourseName, hostCourceImageUrl, startDate, rounds } = props;
-    const tournamentDates = rounds > 1 ?
-        `${moment(startDate).format("dddd, MMM D")} - ${moment(startDate).add("d", rounds-1).format("dddd, MMM D")}` :
-        moment(startDate).format("dddd, MMM D");
+    const { linkName, tournamentName, hostCourseName, hostCourceImageUrl, eventDates } = props;
+
     return (
         <CalendarItem onClick={() => linkName && props.OnSelect(linkName)}>
             {hostCourceImageUrl && <img src={hostCourceImageUrl} alt={hostCourseName} />}
             <p className="text-secondary"><strong>{tournamentName}</strong></p>
             <p>{hostCourseName}</p>
-            <p>{tournamentDates}</p>
+            <p>{eventDates}</p>
         </CalendarItem>
     );
 }

@@ -36,7 +36,7 @@ const EventCalendar: React.FC = () => {
                     tournamentName={event.name}
                     hostCourseName={event.location!.name}
                     hostCourceImageUrl={event.location?.logoUrl}
-                    startDate={event.startDate}
+                    eventDates={event.eventDates}
                     rounds={event.rounds}
                     linkName={event.tournament?.systemName}
                     OnSelect={handleNavigation}
