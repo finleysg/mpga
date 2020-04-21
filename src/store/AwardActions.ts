@@ -3,8 +3,10 @@ import { Award, AwardWinner } from '../models/Events';
 import NotificationActions from "./NotificationActions";
 import AppActions from "./AppActions";
 
+export const AwardForm: string = "award";
+export const AwardWinnerForm: string = "award-winner";
+
 export enum AwardActionTypes {
-    TOGGLE_EDIT = "TOGGLE_EDIT",
     APPEND_AWARD_WINNER = "APPEND_AWARD_WINNER",
     CANCEL_AWARD_WINNER = "CANCEL_AWARD_WINNER",
     GET_AWARD_SUCCEEDED = "GET_AWARD_SUCCEEDED",
@@ -14,14 +16,12 @@ const url = "/awards/";
 const winnerUrl = "/award-winners/";
 
 const AwardActions = {
-    ToggleEdit: () => (dispatch: any) => {
-        dispatch({ type: AwardActionTypes.TOGGLE_EDIT });
-    },
     AddNewAwardWinner: (awardName: string) => (dispatch: any) => {
         dispatch({ type: AwardActionTypes.APPEND_AWARD_WINNER, payload: awardName });
     },
     CancelNewAwardWinner: (awardName: string) => (dispatch: any) => {
         dispatch({ type: AwardActionTypes.CANCEL_AWARD_WINNER, payload: awardName });
+        dispatch(AppActions.CloseOpenForms(AwardWinnerForm));
     },
     LoadAward: (awardName: string) => async (dispatch: any) => {
         try {
@@ -41,9 +41,9 @@ const AwardActions = {
             } else {
                 await Api.put(`${url}${award.id}/`, payload);
             }
-            dispatch(AppActions.NotBusy());
             dispatch(AwardActions.LoadAward(award.name));
-            dispatch(AwardActions.ToggleEdit());
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(AwardForm));
             dispatch(NotificationActions.ToastSuccess(`${award.name} has been saved.`));
         } catch (error) {
             dispatch(AppActions.NotBusy());
@@ -60,8 +60,9 @@ const AwardActions = {
             } else {
                 await Api.put(`${winnerUrl}${winner.id}/`, payload);
             }
-            dispatch(AppActions.NotBusy());
             dispatch(AwardActions.LoadAward(award.name));
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(AwardWinnerForm));
             dispatch(NotificationActions.ToastSuccess(`${winner.winner} has been saved.`));
         } catch (error) {
             dispatch(AppActions.NotBusy());

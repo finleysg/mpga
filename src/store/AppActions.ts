@@ -12,6 +12,7 @@ export enum AppActionTypes {
     GET_CONFIG_FAILED = "GET_CONFIG_FAILED",
     SAVE_LOCATION = "SAVE_LOCATION",
     TOGGLE_EDIT_MODE = "TOGGLE_EDIT_MODE",
+    CLOSE_OPEN_FORMS = "CLOSE_OPEN_FORMS",
 }
 
 const url = constants.ApiUrl + "/settings/";
@@ -32,6 +33,7 @@ const AppActions = {
     },
     SaveLocation: (path: string) => (dispatch: any) => dispatch({ type: AppActionTypes.SAVE_LOCATION, payload: path }),
     ToggleEditMode: () => (dispatch: any) => dispatch({ type: AppActionTypes.TOGGLE_EDIT_MODE }),
+    CloseOpenForms: (name: string) => (dispatch: any) => dispatch({ type: AppActionTypes.CLOSE_OPEN_FORMS, payload: name }),
 };
 
 export default AppActions;

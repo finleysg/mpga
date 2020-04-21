@@ -7,6 +7,7 @@ export interface IAppState {
     config: AppConfig;
     isBusy: boolean;
     editMode: boolean;
+    closedForms: string[];
     location?: string;
 }
 
@@ -20,6 +21,7 @@ export const defaultState: IAppState = {
     },
     isBusy: false,
     editMode: false,
+    closedForms: [],
 };
 
 export interface IAppBusy extends Action {
@@ -48,8 +50,18 @@ export interface IAppSaveLocation extends Action {
 export interface IAppToggleEditMode extends Action {
     type: AppActionTypes.TOGGLE_EDIT_MODE;
 }
+export interface IAppCloseOpenForm extends Action {
+    type: AppActionTypes.CLOSE_OPEN_FORMS;
+    payload: string;
+}
 
-type KnownActions = IAppConfigsGetSucceeded | IAppBusy | IAppNotBusy | IAppSaveLocation | IAppToggleEditMode;
+type KnownActions =
+    | IAppConfigsGetSucceeded
+    | IAppBusy
+    | IAppNotBusy
+    | IAppSaveLocation
+    | IAppToggleEditMode
+    | IAppCloseOpenForm;
 
 export const AppReducer: Reducer<IAppState, KnownActions> = (
     state: IAppState | undefined,
@@ -74,6 +86,11 @@ export const AppReducer: Reducer<IAppState, KnownActions> = (
         }
         case AppActionTypes.TOGGLE_EDIT_MODE: {
             return { ...state, editMode: !state.editMode };
+        }
+        case AppActionTypes.CLOSE_OPEN_FORMS: {
+            const forms = state.closedForms.slice(0);
+            forms.unshift(action.payload);
+            return { ...state, closedForms: forms };
         }
         default:
             return state;

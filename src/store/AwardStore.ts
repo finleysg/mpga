@@ -5,17 +5,11 @@ import { Award, AwardWinner } from "../models/Events";
 
 export interface IAwardState {
     data: Map<string, Award>;
-    isEditing: boolean;
 }
 
 export const defaultState: IAwardState = {
     data: new Map(),
-    isEditing: false,
 };
-
-export interface IToggleAwardEdit extends Action {
-    type: AwardActionTypes.TOGGLE_EDIT;
-}
 
 export interface IAwardWinnerAppend extends Action {
     type: AwardActionTypes.APPEND_AWARD_WINNER;
@@ -32,7 +26,7 @@ export interface IAwardGetSucceeded extends Action {
     payload: Award;
 }
 
-type KnownActions = IToggleAwardEdit
+type KnownActions = 
     | IAwardWinnerAppend
     | IAwardWinnerCancel
     | IAwardGetSucceeded;
@@ -46,10 +40,6 @@ export const AwardReducer: Reducer<IAwardState, KnownActions> = (
     }
 
     switch (action.type) {
-        case AwardActionTypes.TOGGLE_EDIT: {
-            const edit = state.isEditing;
-            return { ...state, isEditing: !edit };
-        }
         case AwardActionTypes.APPEND_AWARD_WINNER: {
             const awardMap = state.data;
             const award = awardMap.get(action.payload) || new Award({});

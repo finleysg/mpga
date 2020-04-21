@@ -36,6 +36,7 @@ const TagPicker: React.FC<ITagPickerProps> = (props) => {
                 isLoading={isLoading}
                 filterBy={["name"]}
                 minLength={3}
+                allowNew={true}
                 onSearch={query => {
                     setQuery(query);
                 }}

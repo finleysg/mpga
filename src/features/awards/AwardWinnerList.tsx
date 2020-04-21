@@ -16,6 +16,10 @@ const AwardWinnerList: React.FC<IAwardWinnerListProps> = (props) => {
     const dispatch = useDispatch();
     const permissions = usePermissions();
 
+    const addNewAwardWinner = () => {
+        dispatch(AwardActions.AddNewAwardWinner(award.name));
+    }
+
     const saveAwardWinner = useCallback(
         (winner: AwardWinner) => {
             dispatch(AwardActions.SaveAwardWinner(award, winner));
@@ -29,7 +33,7 @@ const AwardWinnerList: React.FC<IAwardWinnerListProps> = (props) => {
                 <Button
                     variant="link"
                     className="text-warning"
-                    onClick={() => dispatch(AwardActions.AddNewAwardWinner(award.name))}>
+                    onClick={() => addNewAwardWinner()}>
                     Add New
                 </Button>
             )}
