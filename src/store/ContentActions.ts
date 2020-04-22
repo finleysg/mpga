@@ -1,26 +1,16 @@
 import { Api } from '../http';
 import { Policy, PageContent } from '../models/Policies';
 import NotificationActions from './NotificationActions';
+import AppActions from './AppActions';
+
+export const PageContentForm: string = "page-content";
+export const PolicyForm: string = "policy";
 
 export enum ContentActionTypes {
     APPEND_POLICY = "APPEND_POLICY",
     CANCEL_NEW_POLICY = "CANCEL_NEW_POLICY",
-    GET_POLICIES_REQUESTED = "GET_POLICIES_REQUESTED",
     GET_POLICIES_SUCCEEDED = "GET_POLICIES_SUCCEEDED",
-    GET_POLICIES_FAILED = "GET_POLICIES_FAILED",
-    SAVE_POLICY_REQUESTED = "SAVE_POLICY_REQUESTED",
-    SAVE_POLICY_SUCCEEDED = "SAVE_POLICY_SUCCEEDED",
-    SAVE_POLICY_FAILED = "SAVE_POLICY_FAILED",
-    DELETE_POLICY_REQUESTED = "DELETE_POLICY_REQUESTED",
-    DELETE_POLICY_SUCCEEDED = "DELETE_POLICY_SUCCEEDED",
-    DELETE_POLICY_FAILED = "DELETE_POLICY_FAILED",
-    PREVIEW_PAGE = "PREVIEW_PAGE",
-    GET_PAGE_REQUESTED = "GET_PAGE_REQUESTED",
     GET_PAGE_SUCCEEDED = "GET_PAGE_SUCCEEDED",
-    GET_PAGE_FAILED = "GET_PAGE_FAILED",
-    SAVE_PAGE_REQUESTED = "SAVE_PAGE_REQUESTED",
-    SAVE_PAGE_SUCCEEDED = "SAVE_PAGE_SUCCEEDED",
-    SAVE_PAGE_FAILED = "SAVE_PAGE_FAILED",
 };
 
 const policyUrl = "/policies/";
@@ -36,19 +26,20 @@ const ContentActions = {
     },
 
     LoadPolicies: (policyType: string) => async (dispatch: any) => {
-        dispatch({ type: ContentActionTypes.GET_POLICIES_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(policyUrl + "?type=" + policyType);
             const data = result.data.map((json: any) => new Policy(json));
+            dispatch(AppActions.NotBusy());
             dispatch({ type: ContentActionTypes.GET_POLICIES_SUCCEEDED, payload: data });
         } catch (error) {
-            dispatch({ type: ContentActionTypes.GET_POLICIES_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
     SavePolicy: (policy: Policy) => async (dispatch: any) => {
-        dispatch({ type: ContentActionTypes.SAVE_POLICY_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const payload = policy.prepJson();
             if (!policy.id) {
@@ -56,46 +47,45 @@ const ContentActions = {
             } else {
                 await Api.put(`${policyUrl}${policy.id}/`, payload);
             }
-            dispatch({ type: ContentActionTypes.SAVE_POLICY_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(PolicyForm));
             dispatch(ContentActions.LoadPolicies(policy.policyType));
             dispatch(NotificationActions.ToastSuccess(`${policy.title} has been saved.`))
         } catch (error) {
-            dispatch({ type: ContentActionTypes.SAVE_POLICY_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
     DeletePolicy: (policy: Policy) => async (dispatch: any) => {
-        dispatch({ type: ContentActionTypes.DELETE_POLICY_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             await Api.delete(`${policyUrl}${policy.id}/`);
-            dispatch({ type: ContentActionTypes.DELETE_POLICY_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(PolicyForm));
             dispatch(ContentActions.LoadPolicies(policy.policyType));
             dispatch(NotificationActions.ToastSuccess(`${policy.title} has been deleted.`))
         } catch (error) {
-            dispatch({ type: ContentActionTypes.DELETE_POLICY_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
-    PreviewPageContent: () => (dispatch: any) => {
-        dispatch({type: ContentActionTypes.PREVIEW_PAGE});
-    },
-
     LoadPageContent: (pageType: string) => async (dispatch: any) => {
-        dispatch({ type: ContentActionTypes.GET_PAGE_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(pageUrl + "?page=" + pageType);
             const data = new PageContent(result.data[0]);
+            dispatch(AppActions.NotBusy());
             dispatch({ type: ContentActionTypes.GET_PAGE_SUCCEEDED, payload: data });
         } catch (error) {
-            dispatch({ type: ContentActionTypes.GET_PAGE_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
     SavePageContent: (pageContent: PageContent) => async (dispatch: any) => {
-        dispatch({ type: ContentActionTypes.SAVE_PAGE_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const payload = pageContent.prepJson();
             if (!pageContent.id) {
@@ -103,11 +93,12 @@ const ContentActions = {
             } else {
                 await Api.put(`${pageUrl}${pageContent.id}/`, payload);
             }
-            dispatch({ type: ContentActionTypes.SAVE_PAGE_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(PageContentForm));
             dispatch(ContentActions.LoadPageContent(pageContent.pageType));
             dispatch(NotificationActions.ToastSuccess(`${pageContent.title} has been saved.`))
         } catch (error) {
-            dispatch({ type: ContentActionTypes.SAVE_PAGE_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     }

@@ -59,7 +59,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
             {({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                     <Form.Row>
-                        <Col sm={1}>
+                        <Col xs={12} sm={3} md={2} lg={1}>
                             <Form.Control
                                 name="year"
                                 placeholder="Year"
@@ -73,7 +73,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                             />
                             <Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
                         </Col>
-                        <Col sm={3}>
+                        <Col xs={12} sm={5} md={2} lg={3}>
                             <MultiSelect
                                 clearText="Clear"
                                 closeText="Apply"
@@ -94,7 +94,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 <option value="Tee Times">Tee Times</option>
                             </MultiSelect>
                         </Col>
-                        <Col sm={3}>
+                        <Col xs={12} sm={4} md={3} lg={3}>
                             <Form.Control
                                 as="select"
                                 name="tournamentId"
@@ -109,7 +109,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 })}
                             </Form.Control>
                         </Col>
-                        <Col sm={3}>
+                        <Col xs={12} sm={6} md={3} lg={3}>
                             <Form.Control
                                 name="tags"
                                 placeholder="Tags (comma separated)"
@@ -120,7 +120,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 onBlur={handleBlur}
                             />
                         </Col>
-                        <Col sm={2}>
+                        <Col xs={12} sm={6} md={2} lg={2}>
                             <Button variant="secondary" type="submit" size="sm">
                                 Search
                             </Button>

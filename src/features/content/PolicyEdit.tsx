@@ -1,12 +1,14 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../components/CancelButton";
+import Confirm from "../../components/Confirm";
+import DeleteButton from "../../components/DeleteButton";
+import SubmitButton from "../../components/SubmitButton";
 import { Policy } from "../../models/Policies";
 import { IPolicyViewProps } from "./PolicyView";
-import Confirm from "../../components/Confirm";
 
 export interface IPolicyEditProps extends IPolicyViewProps {
     Cancel: () => void;
@@ -15,18 +17,12 @@ export interface IPolicyEditProps extends IPolicyViewProps {
 }
 
 const schema = yup.object({
-    name: yup
-        .string()
-        .max(30)
-        .required(),
-    title: yup
-        .string()
-        .max(120)
-        .required(),
+    name: yup.string().max(30).required(),
+    title: yup.string().max(120).required(),
     description: yup.string().required(),
 });
 
-const PolicyEdit: React.FC<IPolicyEditProps> = props => {
+const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const policy = props.policy;
 
@@ -50,7 +46,7 @@ const PolicyEdit: React.FC<IPolicyEditProps> = props => {
                     actions.setSubmitting(false);
                 }}
                 initialValues={policy}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="policy.Name">
                             <Form.Label>Name</Form.Label>
@@ -95,23 +91,9 @@ const PolicyEdit: React.FC<IPolicyEditProps> = props => {
                             <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {policy.id !== 0 && (
-                            <Button
-                                className="ml-1"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Delete
-                            </Button>
-                        )}
-                        {policy.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />
+                        <CancelButton canCancel={policy.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

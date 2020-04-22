@@ -5,6 +5,8 @@ import { ExecutiveCommittee } from "../models/Clubs";
 import AppActions from "./AppActions";
 import NotificationActions from "./NotificationActions";
 
+export const CommitteeForm: string = "committee";
+
 export enum CommitteeActionTypes {
     ADD_COMMITTEE_MEMBER = "ADD_COMMITTEE_MEMBER",
     APPEND_COMMITTEE_MEMBER = "APPEND_COMMITTEE_MEMBER",
@@ -43,6 +45,7 @@ const CommitteeActions = {
                 await Api.put(`${committeeUrl}${member.id}/`, payload);
             }
             dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(CommitteeForm));
             dispatch(CommitteeActions.LoadCommittee());
             dispatch(NotificationActions.ToastSuccess(`${member.contact.name} has been saved.`));
         } catch (error) {
@@ -55,6 +58,7 @@ const CommitteeActions = {
         try {
             await Api.delete(`${committeeUrl}${member.id}/`);
             dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(CommitteeForm));
             dispatch(CommitteeActions.LoadCommittee());
             dispatch(NotificationActions.ToastSuccess(`${member.contact.name} has been deleted.`));
         } catch (error) {

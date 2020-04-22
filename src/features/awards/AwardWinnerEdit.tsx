@@ -1,11 +1,11 @@
 import { Formik } from "formik";
 import React from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
-import { AwardWinner } from "../../models/Events";
+import CancelButton from "../../components/CancelButton";
 import SubmitButton from "../../components/SubmitButton";
+import { AwardWinner } from "../../models/Events";
 
 export interface IAwardWinnerEditProps {
     winner: AwardWinner;
@@ -15,14 +15,11 @@ export interface IAwardWinnerEditProps {
 
 const schema = yup.object({
     year: yup.number().required(),
-    winner: yup
-        .string()
-        .max(100)
-        .required(),
+    winner: yup.string().max(100).required(),
     notes: yup.string(),
 });
 
-const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = props => {
+const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = (props) => {
     const { winner } = props;
 
     return (
@@ -36,7 +33,7 @@ const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = props => {
                     props.Save(newModel);
                 }}
                 initialValues={winner}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="winner.year">
                             <Form.Label>Year</Form.Label>
@@ -79,12 +76,8 @@ const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
-                        <SubmitButton isBusy={isSubmitting} />
-                        {winner.id! <= 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <CancelButton canCancel={!winner.id} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

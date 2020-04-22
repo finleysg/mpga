@@ -30,15 +30,18 @@ const AnnouncementList: React.FC = () => {
         [dispatch]
     );
 
+    // TODO: Why, when I provide dispatch and query in the dependency array,
+    // does the component go into an endless load loop?
     useEffect(() => {
         dispatch(AnnouncementActions.Load());
         dispatch(DocumentActions.Load(query));
+        // eslint-disable-next-line
     }, []);
 
     return (
         <div>
             <h3 className="text-primary">MPGA News</h3>
-            {permissions.canEditAnnouncements() && (
+            {permissions.canEditAnnouncements() && canAdd && (
                 <Button
                     variant="link"
                     className="text-warning"

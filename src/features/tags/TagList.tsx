@@ -22,7 +22,7 @@ export interface ITagListProps {
 const TagList: React.FC<ITagListProps> = (props) => {
     const { tags } = props;
     return (
-        <TagContainer>
+        <TagContainer className="mb-2 mt-1">
             {tags && tags.map((tag: ITag) => <li key={tag.id}>
                 <Tag tag={tag} RemoveTag={() => props.RemoveTag(tag)} />
             </li>)}

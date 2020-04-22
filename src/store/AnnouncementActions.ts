@@ -1,16 +1,14 @@
 import { Api } from '../http';
-import { Announcement } from '../models/Announcement';
+import { Announcement } from "../models/Announcement";
 import NotificationActions from './NotificationActions';
+import AppActions from './AppActions';
+
+export const AnnouncementForm: string = "announcement";
 
 export enum AnnouncementActionTypes {
     APPEND_ANNOUNCEMENT = "APPEND_ANNOUNCEMENT",
     CANCEL_NEW_ANNOUNCEMENT = "CANCEL_NEW_ANNOUNCEMENT",
-    GET_ANNOUNCEMENTS_REQUESTED = "GET_ANNOUNCEMENTS_REQUESTED",
     GET_ANNOUNCEMENTS_SUCCEEDED = "GET_ANNOUNCEMENTS_SUCCEEDED",
-    GET_ANNOUNCEMENTS_FAILED = "GET_ANNOUNCEMENTS_FAILED",
-    SAVE_ANNOUNCEMENT_REQUESTED = "SAVE_ANNOUNCEMENT_REQUESTED",
-    SAVE_ANNOUNCEMENT_SUCCEEDED = "SAVE_ANNOUNCEMENT_SUCCEEDED",
-    SAVE_ANNOUNCEMENT_FAILED = "SAVE_ANNOUNCEMENT_FAILED",
 };
 
 const url = "/announcements/";
@@ -25,19 +23,20 @@ const AnnouncementActions = {
     },
 
     Load: () => async (dispatch: any) => {
-        dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(url);
             const data = result.data.map((json: any) => new Announcement(json));
+            dispatch(AppActions.NotBusy());
             dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_SUCCEEDED, payload: data });
         } catch (error) {
-            dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
     Save: (announcement: Announcement) => async (dispatch: any) => {
-        dispatch({ type: AnnouncementActionTypes.SAVE_ANNOUNCEMENT_REQUESTED});
+        dispatch(AppActions.Busy());
         try {
             const payload = announcement.toJson();
             if (!announcement.id) {
@@ -45,11 +44,12 @@ const AnnouncementActions = {
             } else {
                 await Api.put(`${url}${announcement.id}/`, payload);
             }
-            dispatch({ type: AnnouncementActionTypes.SAVE_ANNOUNCEMENT_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(AnnouncementForm));
             dispatch(AnnouncementActions.Load());
             dispatch(NotificationActions.ToastSuccess(`${announcement.title} has been saved.`))
         } catch (error) {
-            dispatch({ type: AnnouncementActionTypes.SAVE_ANNOUNCEMENT_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     }

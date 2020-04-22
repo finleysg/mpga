@@ -1,10 +1,11 @@
 import React from "react";
 
-import EditableDiv from "../../components/EditableDiv";
 import { MpgaDocument } from "../../models/Documents";
 import usePermissions from "../../utilities/Permissions";
 import DocumentEdit from "./DocumentEdit";
 import DocumentView, { IDocumentViewProps } from "./DocumentView";
+import WithEdit from "../../components/WithEdit";
+import { DocumentForm } from "../../store/DocumentActions";
 
 export interface IDocumentDetail extends IDocumentViewProps {
     edit: boolean;
@@ -18,7 +19,8 @@ const DocumentDetail: React.FC<IDocumentDetail> = (props) => {
     const { document, edit, render, Cancel, Delete, Save } = props;
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={DocumentForm}
             initEdit={edit}
             canEdit={permissions.canEditDocuments()}
             viewComponent={<DocumentView document={document} render={render} />}

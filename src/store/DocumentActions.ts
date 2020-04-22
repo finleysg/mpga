@@ -3,6 +3,9 @@ import { MpgaDocument } from "../models/Documents";
 import { EventDetail } from "../models/Events";
 import { IApplicationState } from "./";
 import NotificationActions from "./NotificationActions";
+import AppActions from "./AppActions";
+
+export const DocumentForm: string = "document";
 
 export interface IDocumentSearch {
     key: string;
@@ -19,9 +22,6 @@ export enum DocumentActionTypes {
     GET_DOCUMENTS_REQUESTED = "GET_DOCUMENTS_REQUESTED",
     GET_DOCUMENTS_SUCCEEDED = "GET_DOCUMENTS_SUCCEEDED",
     GET_DOCUMENTS_FAILED = "GET_DOCUMENTS_FAILED",
-    SAVE_DOCUMENT_REQUESTED = "SAVE_DOCUMENT_REQUESTED",
-    SAVE_DOCUMENT_SUCCEEDED = "SAVE_DOCUMENT_SUCCEEDED",
-    SAVE_DOCUMENT_FAILED = "SAVE_DOCUMENT_FAILED",
 }
 
 const url = "/documents/";
@@ -75,6 +75,7 @@ const DocumentActions = {
     },
 
     Load: (query: IDocumentSearch) => async (dispatch: any) => {
+        dispatch(AppActions.Busy());
         dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_REQUESTED, payload: { key: query.key, query: query } });
         try {
             const queryString = prepareQueryString(query);
@@ -84,8 +85,10 @@ const DocumentActions = {
                 type: DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED,
                 payload: { key: query.key, documents: data },
             });
+            dispatch(AppActions.NotBusy());
         } catch (error) {
             dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_FAILED, payload: { key: query.key } });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -96,7 +99,7 @@ const DocumentActions = {
     ) => {
         const queries = getState().documents.queries;
         const requery = queries.has(key) && queries.get(key);
-        dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const payload = prepareFormData(document, file);
             if (!document.id) {
@@ -104,13 +107,14 @@ const DocumentActions = {
             } else {
                 await Api.patch(`${url}${document.id}/`, payload);
             }
-            dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED });
             if (requery) {
                 dispatch(DocumentActions.Load(requery));
             }
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(DocumentForm));
             dispatch(NotificationActions.ToastSuccess(`${document.title} has been saved.`));
         } catch (error) {
-            dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -118,16 +122,17 @@ const DocumentActions = {
     Delete: (key: string, document: MpgaDocument) => async (dispatch: any, getState: () => IApplicationState) => {
         const queries = getState().documents.queries;
         const requery = queries.has(key) && queries.get(key);
-        dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             await Api.delete(`${url}${document.id}/`);
-            dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED });
             if (requery) {
                 dispatch(DocumentActions.Load(requery));
             }
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(DocumentForm));
             dispatch(NotificationActions.ToastSuccess(`${document.title} has been deleted.`));
         } catch (error) {
-            dispatch({ type: DocumentActionTypes.SAVE_DOCUMENT_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },

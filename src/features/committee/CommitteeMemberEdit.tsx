@@ -1,13 +1,14 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../components/CancelButton";
 import Confirm from "../../components/Confirm";
-import { Contact, ExecutiveCommittee, IClub } from '../../models/Clubs';
-import { IExecutiveCommitteeProps } from "./CommitteeMemberView";
+import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
+import { Contact, ExecutiveCommittee, IClub } from "../../models/Clubs";
+import { IExecutiveCommitteeProps } from "./CommitteeMemberView";
 
 export interface IExecutiveCommitteeData {
     firstName: string;
@@ -25,7 +26,7 @@ export interface IExecutiveCommitteeData {
 }
 
 export interface IExecutiveCommitteeEditProps extends IExecutiveCommitteeProps {
-    clubs: IClub[],
+    clubs: IClub[];
     Cancel: () => void;
     Remove: (member: ExecutiveCommittee) => void;
     Save: (member: ExecutiveCommittee) => void;
@@ -35,14 +36,8 @@ const phoneRegEx = /^[2-9]\d{2}-\d{3}-\d{4}$/;
 const schema = yup.object({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
-    email: yup
-        .string()
-        .email()
-        .required(),
-    primaryPhone: yup
-        .string()
-        .matches(phoneRegEx)
-        .required(),
+    email: yup.string().email().required(),
+    primaryPhone: yup.string().matches(phoneRegEx).required(),
     addressTxt: yup.string().nullable(),
     city: yup.string().nullable(),
     state: yup.string().nullable(),
@@ -69,7 +64,7 @@ const translateExecutiveCommittee = (ec: ExecutiveCommittee): IExecutiveCommitte
     };
 };
 
-const CommitteeMemberEdit: React.FC<IExecutiveCommitteeEditProps> = props => {
+const CommitteeMemberEdit: React.FC<IExecutiveCommitteeEditProps> = (props) => {
     const ec = translateExecutiveCommittee(props.committeeMember);
     const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -183,10 +178,14 @@ const CommitteeMemberEdit: React.FC<IExecutiveCommitteeEditProps> = props => {
                                 isInvalid={!!errors.homeClub}
                                 onChange={handleChange}
                                 onBlur={handleBlur}>
-                                    <option value={undefined}>--Select a Home Club--</option>
-                                    {props.clubs.map((c) => {
-                                        return <option key={c.id} value={c.id}>{c.name}</option>
-                                    })}
+                                <option value={undefined}>--Select a Home Club--</option>
+                                {props.clubs.map((c) => {
+                                    return (
+                                        <option key={c.id} value={c.id}>
+                                            {c.name}
+                                        </option>
+                                    );
+                                })}
                             </Form.Control>
                             <Form.Control.Feedback type="invalid">{errors.homeClub}</Form.Control.Feedback>
                         </Form.Group>
@@ -243,21 +242,13 @@ const CommitteeMemberEdit: React.FC<IExecutiveCommitteeEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.zip}</Form.Control.Feedback>
                         </Form.Group>
-                        <SubmitButton isBusy={isSubmitting} />
-                        {props.committeeMember.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
-                        {props.committeeMember.id! > 0 && (
-                            <Button
-                                className="ml-1"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Remove
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton
+                            canDelete={props.committeeMember.id! > 0}
+                            title="Remove"
+                            OnDelete={() => setShowConfirmation(true)}
+                        />
+                        <CancelButton canCancel={props.committeeMember.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

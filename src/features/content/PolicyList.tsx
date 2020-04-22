@@ -2,12 +2,12 @@ import React, { useCallback, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 
-import Loading from "../../components/Loading";
 import { Policy } from "../../models/Policies";
 import { IApplicationState } from "../../store";
 import ContentActions from "../../store/ContentActions";
 import PolicyDetail from "./PolicyDetail";
 import usePermissions from "../../utilities/Permissions";
+import LoadingContainer from "../../components/LoadingContainer";
 
 export interface IPolicyListProps {
     policyCode: string;
@@ -32,24 +32,6 @@ const PolicyList: React.FC<IPolicyListProps> = (props) => {
 
     return (
         <div>
-            {state.isBusy ? (
-                <Loading />
-            ) : (
-                <>
-                    {getPolicies()?.map((policy) => {
-                        return (
-                            <PolicyDetail
-                                key={policy.id}
-                                policy={policy}
-                                edit={policy.id === 0}
-                                Cancel={() => dispatch(ContentActions.CancelNewPolicy(props.policyCode))}
-                                Delete={deletePolicy}
-                                Save={savePolicy}
-                            />
-                        );
-                    })}
-                </>
-            )}
             {permissions.canEditPolicies() && (
                 <Button
                     variant="link"
@@ -58,6 +40,20 @@ const PolicyList: React.FC<IPolicyListProps> = (props) => {
                     Add New
                 </Button>
             )}
+            <LoadingContainer hasData={getPolicies() !== undefined}>
+                {getPolicies()?.map((policy) => {
+                    return (
+                        <PolicyDetail
+                            key={policy.id}
+                            policy={policy}
+                            edit={policy.id === 0}
+                            Cancel={() => dispatch(ContentActions.CancelNewPolicy(props.policyCode))}
+                            Delete={deletePolicy}
+                            Save={savePolicy}
+                        />
+                    );
+                })}
+            </LoadingContainer>
         </div>
     );
 };

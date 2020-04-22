@@ -41,27 +41,12 @@ export interface IGetDocumentsFailed extends Action {
     payload: { key: string };
 }
 
-export interface IDocumentSaveRequested extends Action {
-    type: DocumentActionTypes.SAVE_DOCUMENT_REQUESTED;
-}
-
-export interface IDocumentSaveSucceeded extends Action {
-    type: DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED;
-}
-
-export interface IDocumentSaveFailed extends Action {
-    type: DocumentActionTypes.SAVE_DOCUMENT_FAILED;
-}
-
 type KnownActions =
     | IDocumentAppend
     | IDocumentCancel
     | IGetDocumentsRequested
     | IGetDocumentsSucceeded
-    | IGetDocumentsFailed
-    | IDocumentSaveRequested
-    | IDocumentSaveSucceeded
-    | IDocumentSaveFailed;
+    | IGetDocumentsFailed;
 
 export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
     state: IDocumentState | undefined,
@@ -125,15 +110,6 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const documentMap = state.documents;
             documentMap.delete(key);
             return { ...state, documents: documentMap, isBusy: false };
-        }
-        case DocumentActionTypes.SAVE_DOCUMENT_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false };
-        }
-        case DocumentActionTypes.SAVE_DOCUMENT_SUCCEEDED: {
-            return { ...state, isBusy: false };
-        }
-        case DocumentActionTypes.SAVE_DOCUMENT_FAILED: {
-            return { ...state, isBusy: false, hasError: true };
         }
         default:
             return state;

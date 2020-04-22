@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
-import EditContainer from "../../components/EditContainer";
+import WithEdit from "../../components/WithEdit";
 import { Announcement } from "../../models/Announcement";
+import { AnnouncementForm } from "../../store/AnnouncementActions";
 import usePermissions from "../../utilities/Permissions";
 import AnnouncementEdit, { IAnnouncementEdit } from "./AnnouncementEdit";
 import AnnouncementView from "./AnnouncementView";
@@ -12,19 +13,17 @@ export interface IAnnouncementDetail extends IAnnouncementEdit {
 
 const AnnouncementDetail: React.FC<IAnnouncementDetail> = (props) => {
     const { announcement, currentDocuments, edit, Cancel, Save } = props;
-    const [doEdit, setDoEdit] = useState(edit);
     const permissions = usePermissions();
 
     const saveAnnouncement = (announcement: Announcement) => {
-        setDoEdit(false);
         Save(announcement);
     };
 
     return (
-        <EditContainer
-            doEdit={doEdit}
+        <WithEdit
+            formName={AnnouncementForm}
+            initEdit={edit}
             canEdit={permissions.canEditAnnouncements()}
-            ToggleEdit={() => setDoEdit(!doEdit)}
             viewComponent={<AnnouncementView announcement={announcement} />}
             editComponent={
                 <AnnouncementEdit

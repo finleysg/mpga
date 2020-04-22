@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import EditableDiv from '../../components/EditableDiv';
-import Loading from '../../components/Loading';
 import { PageContent } from '../../models/Policies';
 import { IApplicationState } from '../../store';
-import ContentActions from '../../store/ContentActions';
+import ContentActions, { PageContentForm } from '../../store/ContentActions';
 import PageContentEdit from './PageContentEdit';
 import PageContentView from './PageContentView';
 import usePermissions from "../../utilities/Permissions";
+import LoadingContainer from "../../components/LoadingContainer";
+import WithEdit from "../../components/WithEdit";
 
 export interface IPageContentDetailProps {
     pageCode: string;
@@ -34,14 +34,15 @@ const PageContentDetail: React.FC<IPageContentDetailProps> = (props) => {
     }, [dispatch, pageCode]);
 
     return (
-        <>
-            {state.isBusy ?
-            <Loading /> :
-            <EditableDiv initEdit={false} canEdit={permissions.canEditPageContent()}
+        <LoadingContainer hasData={getPage() !== undefined}>
+            <WithEdit
+                formName={PageContentForm}
+                initEdit={false} 
+                canEdit={permissions.canEditPageContent()}
                 viewComponent={<PageContentView pageContent={getPage() || new PageContent({})} />}
-                editComponent={<PageContentEdit pageContent={getPage() || new PageContent({})} Save={saveContent} />}>
-            </EditableDiv>}
-        </>
+                editComponent={<PageContentEdit pageContent={getPage() || new PageContent({})} Save={saveContent} />}
+            />
+        </LoadingContainer>
     );
 }
 

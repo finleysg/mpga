@@ -1,9 +1,10 @@
 import React from "react";
 
-import EditableDiv from "../../components/EditableDiv";
+import WithEdit from "../../components/WithEdit";
+import { PolicyForm } from "../../store/ContentActions";
+import usePermissions from "../../utilities/Permissions";
 import PolicyEdit, { IPolicyEditProps } from "./PolicyEdit";
 import PolicyView from "./PolicyView";
-import usePermissions from "../../utilities/Permissions";
 
 export interface IPolicyDetailProps extends IPolicyEditProps {
     edit: boolean;
@@ -14,7 +15,8 @@ const PolicyDetail: React.FC<IPolicyDetailProps> = (props) => {
     const permissions = usePermissions();
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={PolicyForm}
             initEdit={edit}
             canEdit={permissions.canEditPolicies()}
             viewComponent={<PolicyView policy={policy} />}

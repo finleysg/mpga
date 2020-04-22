@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 
 import { MpgaDocument } from "../../models/Documents";
 import { EventLink } from "../../models/Events";
@@ -9,11 +10,19 @@ import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 import EventActions from "../../store/EventActions";
 import usePermissions from "../../utilities/Permissions";
 import DocumentEdit from "../documents/DocumentEdit";
-import DocumentLoader from "../documents/DocumentLoader";
 import EventDocumentList from "./EventDocumentList";
 import EventLinkEdit from "./links/EventLinkEdit";
 import EventLinkList from "./links/EventLinkList";
 import EventRegistration from "./registration/EventRegistration";
+
+export const FormContainer = styled.div`
+    border-width: 1px;
+    border-color: silver;
+    border-style: solid;
+    padding: 10px;
+    margin-bottom: 10px;
+`;
+FormContainer.displayName = "FormContainer";
 
 export interface IEventInformationLinksProps {
     name: string;
@@ -31,6 +40,11 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
         key: queryKey,
         event: eventState.currentEvent,
     };
+
+    useEffect(() => {
+        dispatch(DocumentActions.Load(query));
+        // eslint-disable-next-line
+    }, []);
 
     const saveEventLink = useCallback(
         (eventLink: EventLink) => {
@@ -66,7 +80,6 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
 
     return (
         <React.Fragment>
-            <DocumentLoader query={query} />
             {permissions.canManageEvent() && (
                 <div>
                     <Button variant="link" className="text-warning" onClick={() => setAddDocument(true)}>
@@ -78,26 +91,30 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
                 </div>
             )}
             {addLink && (
-                <EventLinkEdit
-                    eventLink={new EventLink({ id: 0, event: eventState.currentEvent.id })}
-                    Cancel={() => setAddLink(false)}
-                    Delete={deleteEventLink}
-                    Save={saveEventLink}
-                />
+                <FormContainer>
+                    <EventLinkEdit
+                        eventLink={new EventLink({ id: 0, event: eventState.currentEvent.id })}
+                        Cancel={() => setAddLink(false)}
+                        Delete={deleteEventLink}
+                        Save={saveEventLink}
+                    />
+                </FormContainer>
             )}
             {addDocument && (
-                <DocumentEdit
-                    document={
-                        new MpgaDocument({
-                            id: 0,
-                            year: props.year,
-                            tournament: eventState.currentEvent.tournament?.id,
-                        })
-                    }
-                    Cancel={() => setAddDocument(false)}
-                    Save={saveDocument}
-                    Delete={deleteDocument}
-                />
+                <FormContainer>
+                    <DocumentEdit
+                        document={
+                            new MpgaDocument({
+                                id: 0,
+                                year: props.year,
+                                tournament: eventState.currentEvent.tournament?.id,
+                            })
+                        }
+                        Cancel={() => setAddDocument(false)}
+                        Save={saveDocument}
+                        Delete={deleteDocument}
+                    />
+                </FormContainer>
             )}
             <React.Fragment>
                 <EventRegistration />

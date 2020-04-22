@@ -1,12 +1,14 @@
-import * as yup from "yup";
-import React from "react";
 import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
+import React from "react";
 import Form from "react-bootstrap/Form";
-import { Announcement } from "../../models/Announcement";
-import { IAnnouncementView } from "./AnnouncementView";
+import * as yup from "yup";
+
+import CancelButton from "../../components/CancelButton";
 import { DatePickerField } from "../../components/DatePickerField";
+import SubmitButton from "../../components/SubmitButton";
+import { Announcement } from "../../models/Announcement";
 import { MpgaDocument } from "../../models/Documents";
+import { IAnnouncementView } from "./AnnouncementView";
 
 export interface IAnnouncementEdit extends IAnnouncementView {
     currentDocuments: MpgaDocument[];
@@ -64,7 +66,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                     actions.setSubmitting(false);
                 }}
                 initialValues={announcementData}>
-                {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="announcement.Title">
                             <Form.Label>Title</Form.Label>
@@ -171,14 +173,8 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.externalName}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Submit
-                        </Button>
-                        {announcement.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <CancelButton canCancel={announcement.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

@@ -18,11 +18,13 @@ const WithEdit: React.FC<IWithEditProps> = (props) => {
     const [doEdit, setDoEdit] = useState(initEdit);
     const appState = useSelector((state: IApplicationState) => state.app);
 
+    // Using the closedForms collection as a signal that there was a successful
+    // async action that means we're done editting the current record.
     useEffect(() => {
         if (!initEdit && appState.closedForms.length > 0 && formName === appState.closedForms[0]) {
             setDoEdit(false);
         }
-    }, [formName, appState.closedForms]);
+    }, [initEdit, formName, appState.closedForms]);
 
     return (
         <EditContainer

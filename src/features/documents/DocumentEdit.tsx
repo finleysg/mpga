@@ -1,14 +1,16 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../components/CancelButton";
 import Confirm from "../../components/Confirm";
+import DeleteButton from "../../components/DeleteButton";
 import FilePicker from "../../components/FilePicker";
+import SubmitButton from "../../components/SubmitButton";
 import { ITag, MpgaDocument } from "../../models/Documents";
-import TagPicker from "../tags/TagPicker";
 import { Tournament } from "../../models/Events";
+import TagPicker from "../tags/TagPicker";
 
 export interface IDocumentEdit {
     document: MpgaDocument;
@@ -69,7 +71,7 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
                     props.Save(newModel, values.file);
                 }}
                 initialValues={doc}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="doc.Year">
                             <Form.Label>Year</Form.Label>
@@ -147,23 +149,9 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
                         <FilePicker OnSelected={(files: any[]) => (values.file = files[0])} />
                         {/* {props.document?.file && <small className="text-muted">{props.document.file}</small>} */}
                         <TagPicker selectedTags={values.tags || []} OnChange={(tags: ITag[]) => (values.tags = tags)} />
-                        <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {doc.id !== 0 && (
-                            <Button
-                                className="ml-1 mt-2"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Delete
-                            </Button>
-                        )}
-                        {doc.id === 0 && (
-                            <Button className="ml-1 mt-2" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton canDelete={doc.id !== 0} OnDelete={() => setShowConfirmation(true)} />
+                        <CancelButton canCancel={doc.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>
