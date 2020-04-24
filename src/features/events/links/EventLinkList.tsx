@@ -46,14 +46,14 @@ const EventLinkList: React.FC<IEventLinkProps> = (props) => {
     };
 
     return (
-        <React.Fragment>
+        <div>
             {links && links.length > 0 && (
                 <React.Fragment>
                     <h5 className="text-primary mt-1">{props.title}</h5>
                     {links?.map((link: EventLink) => renderLink(link))}
                 </React.Fragment>
             )}
-        </React.Fragment>
+        </div>
     );
 };
 

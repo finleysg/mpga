@@ -2,12 +2,12 @@ import React, { useCallback, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 
-import EditableDiv from "../../components/EditableDiv";
 import LoadingContainer from "../../components/LoadingContainer";
+import WithEdit from "../../components/WithEdit";
 import constants from "../../constants";
 import { Club } from "../../models/Clubs";
 import { IApplicationState } from "../../store";
-import MemberClubActions from "../../store/MemberClubActions";
+import MemberClubActions, { ClubForm } from "../../store/MemberClubActions";
 import usePermissions from "../../utilities/Permissions";
 import ClubDuesPayment from "../payments/ClubDuesPayment";
 import MemberClubEdit from "./MemberClubEdit";
@@ -49,7 +49,8 @@ const MemberClubDetail: React.FC = () => {
 
     return (
         <LoadingContainer hasData={clubState.selectedClub !== undefined}>
-            <EditableDiv
+            <WithEdit
+                formName={ClubForm}
                 initEdit={false}
                 canEdit={permissions.canEditClubPage()}
                 viewComponent={

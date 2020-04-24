@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import EditableDiv from "../../../components/EditableDiv";
+import WithEdit from "../../../components/WithEdit";
+import { EventLinkForm } from "../../../store/EventActions";
 import usePermissions from "../../../utilities/Permissions";
 import EventLinkEdit, { IEventLinkEditProps } from "./EventLinkEdit";
 import EventLinkView, { ILinkRenderProps } from "./EventLinkView";
@@ -15,7 +16,8 @@ const EventLinkDetail: React.FunctionComponent<IEventLinkDetailProps> = (props) 
     const { eventLink, edit, render, Cancel, Save, Delete } = props;
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={EventLinkForm}
             initEdit={edit}
             canEdit={permissions.canManageEvent()}
             viewComponent={<EventLinkView eventLink={eventLink} render={render} />}

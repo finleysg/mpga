@@ -1,7 +1,8 @@
 import React from "react";
 
-import EditableDiv from "../../../components/EditableDiv";
+import WithEdit from "../../../components/WithEdit";
 import { TournamentWinner } from "../../../models/Events";
+import { TournamentWinnerForm } from "../../../store/TournamentWinnerActions";
 import usePermissions from "../../../utilities/Permissions";
 import TournamentWinnerEdit from "../../tournaments/TournamentWinnerEdit";
 import EventWinnerView, { IEventWinnerViewProps } from "./EventWinnerView";
@@ -17,7 +18,8 @@ const EventWinnerDetail: React.FC<IEventWinnerDetailProps> = (props) => {
     const permissions = usePermissions();
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={TournamentWinnerForm}
             initEdit={edit}
             canEdit={permissions.canManageEvent()}
             viewComponent={<EventWinnerView winner={winner} />}

@@ -5,6 +5,8 @@ import NotificationActions from "./NotificationActions";
 import AppActions from "./AppActions";
 import { ITournamentHistorySearch } from '../features/tournaments/TournamentHistorySearch';
 
+export const TournamentWinnerForm: string = "tournament-winner";
+
 export enum TournamentWinnerActionTypes {
     GET_TOURNAMENT_WINNERS_SUCCEEDED = "GET_TOURNAMENT_WINNERS_SUCCEEDED",
     APPEND_NEW_TOURNAMENT_WINNER = "APPEND_NEW_TOURNAMENT_WINNER",
@@ -16,6 +18,7 @@ const tournamentWinnerUrl = constants.ApiUrl + "/tournament-winners/";
 
 const TournamentWinnerActions = {
     LoadTournamentWinners: (tournament: Tournament) => async (dispatch: any) => {
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(`${tournamentWinnerUrl}?name=${tournament.systemName}`);
             const data = result.data.map((json: any) => new TournamentWinner(json));
@@ -33,11 +36,13 @@ const TournamentWinnerActions = {
                 }
                 return acc;
             }, []);
+            dispatch(AppActions.NotBusy());
             dispatch({
                 type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED,
                 payload: grouped,
             });
         } catch (error) {
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },

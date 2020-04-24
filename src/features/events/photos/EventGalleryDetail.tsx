@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ToggleDiv } from "../../../components/EditableDiv";
+import { EditOrView } from "../../../components/EditContainer";
 import Loading from "../../../components/Loading";
 import ToggleEditButton from "../../../components/ToggleEditButton";
 import { MpgaPhoto } from "../../../models/Documents";
@@ -12,6 +12,7 @@ import PhotoActions from "../../../store/PhotoActions";
 import usePermissions from "../../../utilities/Permissions";
 import PhotoUpload from "../../gallery/PhotoUpload";
 import EventGalleryView from "./EventGalleryView";
+import LoadingContainer from "../../../components/LoadingContainer";
 
 interface IEventGalleryDetailProps {
     eventDetail: EventDetail;
@@ -33,30 +34,22 @@ const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = (props) => {
     ]);
 
     return (
-        <>
-            {!photoState.randomPhoto ? (
-                <Loading />
-            ) : (
-                <ToggleDiv doEdit={doUpload}>
-                    {permissions.canManageEvent() && (
-                        <ToggleEditButton
-                            isEditting={doUpload}
-                            openIcon={<FaCamera size={20} color={"warning"} />}
-                            Toggled={() => setDoUpload(!doUpload)}
-                        />
-                    )}
-                    {doUpload && !photoState.isBusy && (
-                        <PhotoUpload
-                            tournament={eventDetail.tournament!}
-                            year={eventDetail.eventYear}
-                            Save={savePhoto}
-                        />
-                    )}
-                    {doUpload && photoState.isBusy && <Loading />}
-                    {!doUpload && <EventGalleryView eventDetail={eventDetail} samplePhoto={photoState.randomPhoto} />}
-                </ToggleDiv>
-            )}
-        </>
+        <LoadingContainer hasData={photoState.randomPhoto !== undefined}>
+            <EditOrView doEdit={doUpload}>
+                {permissions.canManageEvent() && (
+                    <ToggleEditButton
+                        isEditting={doUpload}
+                        openIcon={<FaCamera size={20} color={"warning"} />}
+                        Toggled={() => setDoUpload(!doUpload)}
+                    />
+                )}
+                {doUpload && !photoState.isBusy && (
+                    <PhotoUpload tournament={eventDetail.tournament!} year={eventDetail.eventYear} Save={savePhoto} />
+                )}
+                {doUpload && photoState.isBusy && <Loading />}
+                {!doUpload && <EventGalleryView eventDetail={eventDetail} samplePhoto={photoState.randomPhoto!} />}
+            </EditOrView>
+        </LoadingContainer>
     );
 };
 

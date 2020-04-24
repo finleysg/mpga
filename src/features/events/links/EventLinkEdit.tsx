@@ -1,10 +1,12 @@
 import { Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../../components/CancelButton";
 import Confirm from "../../../components/Confirm";
+import DeleteButton from "../../../components/DeleteButton";
+import SubmitButton from "../../../components/SubmitButton";
 import { EventLink } from "../../../models/Events";
 
 export interface IEventLinkEditProps {
@@ -34,7 +36,6 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = (props) => {
     };
 
     const saveEventLink = (values: EventLink, actions: FormikHelpers<EventLink>) => {
-        actions.setSubmitting(false);
         const newModel = new EventLink({
             id: props.eventLink.id,
             event: props.eventLink.event,
@@ -51,7 +52,7 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = (props) => {
                 validationSchema={schema}
                 onSubmit={(values, actions) => saveEventLink(values, actions)}
                 initialValues={eventLink}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="eventLink.title">
                             <Form.Label className="full-width">Title</Form.Label>
@@ -98,23 +99,9 @@ const EventLinkEdit: React.FC<IEventLinkEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Url for the link</Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {eventLink.id !== 0 && (
-                            <Button
-                                className="ml-1"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Delete
-                            </Button>
-                        )}
-                        {eventLink.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton canDelete={eventLink.id !== 0} OnDelete={() => setShowConfirmation(true)} />
+                        <CancelButton canCancel={eventLink.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

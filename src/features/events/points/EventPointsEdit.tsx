@@ -1,11 +1,13 @@
-import { Formik, FormikHelpers } from 'formik';
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import * as yup from 'yup';
+import { Formik, FormikHelpers } from "formik";
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import * as yup from "yup";
 
-import Confirm from '../../../components/Confirm';
-import { EventPoints } from '../../../models/Events';
+import CancelButton from "../../../components/CancelButton";
+import Confirm from "../../../components/Confirm";
+import DeleteButton from "../../../components/DeleteButton";
+import SubmitButton from "../../../components/SubmitButton";
+import { EventPoints } from "../../../models/Events";
 
 export interface IEventPointsEditProps {
     points: EventPoints;
@@ -15,15 +17,11 @@ export interface IEventPointsEditProps {
 }
 
 const schema = yup.object({
-    place: yup
-        .number()
-        .required(),
-    points: yup
-        .number()
-        .required(),
+    place: yup.number().required(),
+    points: yup.number().required(),
 });
 
-const EventPointsEdit: React.FC<IEventPointsEditProps> = props => {
+const EventPointsEdit: React.FC<IEventPointsEditProps> = (props) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const { points } = props;
 
@@ -37,7 +35,6 @@ const EventPointsEdit: React.FC<IEventPointsEditProps> = props => {
     };
 
     const saveEventPoints = (values: EventPoints, actions: FormikHelpers<EventPoints>) => {
-        actions.setSubmitting(false);
         const newModel = new EventPoints();
         newModel.id = points.id;
         newModel.event = points.event;
@@ -49,7 +46,7 @@ const EventPointsEdit: React.FC<IEventPointsEditProps> = props => {
     return (
         <div>
             <Formik validationSchema={schema} onSubmit={saveEventPoints} initialValues={points}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="points.place">
                             <Form.Label>Place</Form.Label>
@@ -75,23 +72,9 @@ const EventPointsEdit: React.FC<IEventPointsEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.points}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {points.id !== 0 && (
-                            <Button
-                                className="ml-1"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Delete
-                            </Button>
-                        )}
-                        {points.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton canDelete={points.id !== 0} OnDelete={() => setShowConfirmation(true)} />
+                        <CancelButton canCancel={points.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

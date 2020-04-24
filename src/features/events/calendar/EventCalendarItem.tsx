@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const CalendarItem = styled.div`
     cursor: pointer;
@@ -19,14 +19,14 @@ const CalendarItem = styled.div`
 CalendarItem.displayName = "CalendarItem";
 
 export interface ICalendarItemProps {
-    eventId: number,
-    tournamentName: string,
-    hostCourseName: string,
-    hostCourceImageUrl?: string,
-    eventDates: string,
-    rounds: number,
-    linkName?: string,
-    OnSelect: (linkName: string) => void,
+    eventId: number;
+    tournamentName: string;
+    hostCourseName: string;
+    hostCourceImageUrl?: string;
+    eventDates: string;
+    rounds: number;
+    linkName?: string;
+    OnSelect: (linkName: string) => void;
 }
 
 const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
@@ -35,11 +35,13 @@ const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
     return (
         <CalendarItem onClick={() => linkName && props.OnSelect(linkName)}>
             {hostCourceImageUrl && <img src={hostCourceImageUrl} alt={hostCourseName} />}
-            <p className="text-secondary"><strong>{tournamentName}</strong></p>
+            <p className="text-secondary">
+                <strong>{tournamentName}</strong>
+            </p>
             <p>{hostCourseName}</p>
             <p>{eventDates}</p>
         </CalendarItem>
     );
-}
+};
 
 export default EventCalendarItem;

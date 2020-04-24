@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 
-import Loading from "../../components/Loading";
+import LoadingContainer from "../../components/LoadingContainer";
 import { ClubContact } from "../../models/Clubs";
 import { IApplicationState } from "../../store";
 import MemberClubActions from "../../store/MemberClubActions";
@@ -43,16 +43,14 @@ const ClubContactList: React.FC = () => {
     return (
         <div>
             <h3 className="text-primary">Club Contacts</h3>
-            {permissions.canEditClubPage() && canAdd && (
-                <Button variant="link" className="text-warning" onClick={() => setFindContact(true)}>
-                    Add New Contact
-                </Button>
-            )}
-            {findContact && <ContactSearch allowNew={true} OnSelect={addClubContact} />}
-            {state.isBusy ? (
-                <Loading />
-            ) : (
-                state.selectedClub?.clubContacts.map((cc: ClubContact) => {
+            <LoadingContainer hasData={state.selectedClub?.clubContacts !== undefined}>
+                {permissions.canEditClubPage() && canAdd && (
+                    <Button variant="link" className="text-warning" onClick={() => setFindContact(true)}>
+                        Add New Contact
+                    </Button>
+                )}
+                {findContact && <ContactSearch allowNew={true} OnSelect={addClubContact} />}
+                {state.selectedClub?.clubContacts.map((cc: ClubContact) => {
                     return (
                         <ClubContactDetail
                             key={cc.id}
@@ -63,8 +61,8 @@ const ClubContactList: React.FC = () => {
                             Save={saveClubContact}
                         />
                     );
-                })
-            )}
+                })}
+            </LoadingContainer>
         </div>
     );
 };

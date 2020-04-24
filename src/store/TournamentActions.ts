@@ -6,6 +6,8 @@ import TournamentWinnerActions from './TournamentWinnerActions';
 import AppActions from './AppActions';
 import DocumentActions from "./DocumentActions";
 
+export const TournamentDetailForm: string = "tournament-detail";
+
 export enum TournamentActionTypes {
     GET_TOURNAMENT_SUCCEEDED = "GET_TOURNAMENT_SUCCEEDED",
     GET_TOURNAMENTS_SUCCEEDED = "GET_TOURNAMENTS_SUCCEEDED",
@@ -15,15 +17,18 @@ const tournamentUrl = constants.ApiUrl + "/tournaments/";
 
 const TournamentActions = {
     LoadTournaments: () => async (dispatch: any) => {
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(tournamentUrl);
             const data = result.data.map((t: any) => new Tournament(t));
             dispatch({ type: TournamentActionTypes.GET_TOURNAMENTS_SUCCEEDED, payload: data });
         } catch (error) {
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     LoadTournament: (name: string, loadRelatedDocuments: boolean = false) => async (dispatch: any) => {
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(`${tournamentUrl}?name=${name}`);
             const data = new Tournament(result.data[0]);
@@ -37,6 +42,7 @@ const TournamentActions = {
                 }));
             }
         } catch (error) {
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },

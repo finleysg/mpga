@@ -7,24 +7,12 @@ import { Policy } from "../models/Policies";
 export interface IEventState {
     events: EventDetail[];
     currentEvent: EventDetail;
-    isBusy: boolean;
-    hasError: boolean;
 }
 
 export const defaultState: IEventState = {
     events: [],
     currentEvent: new EventDetail({}),
-    isBusy: false,
-    hasError: false,
 };
-
-export interface IEventDataRequested extends Action {
-    type: EventActionTypes.EVENT_DATA_REQUESTED;
-}
-
-export interface IEventDataFailed extends Action {
-    type: EventActionTypes.EVENT_DATA_FAILED;
-}
 
 export interface IEventsGetSucceeded extends Action {
     type: EventActionTypes.GET_EVENTS_SUCCEEDED;
@@ -36,10 +24,6 @@ export interface IEventGetSucceeded extends Action {
     payload: EventDetail;
 }
 
-export interface ISaveEventSucceeded extends Action {
-    type: EventActionTypes.SAVE_EVENT_SUCCEEDED;
-}
-
 export interface IAddNewEventLink extends Action {
     type: EventActionTypes.ADD_NEW_EVENT_LINK;
     payload: string;
@@ -47,14 +31,6 @@ export interface IAddNewEventLink extends Action {
 
 export interface ICancelNewEventLink extends Action {
     type: EventActionTypes.CANCEL_NEW_EVENT_LINK;
-}
-
-export interface ISaveEventLinkSucceeded extends Action {
-    type: EventActionTypes.SAVE_EVENT_LINK_SUCCEEDED;
-}
-
-export interface IDeleteEventLinkSucceeded extends Action {
-    type: EventActionTypes.DELETE_EVENT_LINK_SUCCEEDED;
 }
 
 export interface IAddNewEventPoints extends Action {
@@ -65,14 +41,6 @@ export interface ICancelNewEventPoints extends Action {
     type: EventActionTypes.CANCEL_NEW_EVENT_POINTS;
 }
 
-export interface ISaveEventPointsSucceeded extends Action {
-    type: EventActionTypes.SAVE_EVENT_POINTS_SUCCEEDED;
-}
-
-export interface IDeleteEventPointsSucceeded extends Action {
-    type: EventActionTypes.DELETE_EVENT_POINTS_SUCCEEDED;
-}
-
 export interface IAddNewEventPolicy extends Action {
     type: EventActionTypes.ADD_NEW_EVENT_POLICY;
 }
@@ -81,32 +49,15 @@ export interface ICancelNewEventPolicy extends Action {
     type: EventActionTypes.CANCEL_NEW_EVENT_POLICY;
 }
 
-export interface ISaveEventPolicySucceeded extends Action {
-    type: EventActionTypes.SAVE_EVENT_POLICY_SUCCEEDED;
-}
-
-export interface IRemoveEventPolicySucceeded extends Action {
-    type: EventActionTypes.REMOVE_EVENT_POLICY_SUCCEEDED;
-}
-
 type KnownActions =
-    | IEventDataRequested
-    | IEventDataFailed
     | IEventsGetSucceeded
     | IEventGetSucceeded
-    | ISaveEventSucceeded
     | IAddNewEventLink
     | ICancelNewEventLink
-    | ISaveEventLinkSucceeded
-    | IDeleteEventLinkSucceeded
     | IAddNewEventPoints
     | ICancelNewEventPoints
-    | ISaveEventPointsSucceeded
-    | IDeleteEventPointsSucceeded
     | IAddNewEventPolicy
-    | ICancelNewEventPolicy
-    | ISaveEventPolicySucceeded
-    | IRemoveEventPolicySucceeded;
+    | ICancelNewEventPolicy;
 
 export const EventsReducer: Reducer<IEventState, KnownActions> = (
     state: IEventState | undefined,
@@ -188,23 +139,11 @@ export const EventsReducer: Reducer<IEventState, KnownActions> = (
             }
             return { ...state };
         }
-        case EventActionTypes.EVENT_DATA_REQUESTED: {
-            return { ...state, isBusy: true, hasError: false };
-        }
         case EventActionTypes.GET_EVENTS_SUCCEEDED: {
-            return { ...state, events: action.payload, isBusy: false };
+            return { ...state, events: action.payload };
         }
         case EventActionTypes.GET_EVENT_SUCCEEDED: {
-            return { ...state, currentEvent: action.payload, isBusy: false };
-        }
-        case EventActionTypes.SAVE_EVENT_SUCCEEDED:
-        case EventActionTypes.SAVE_EVENT_LINK_SUCCEEDED:
-        case EventActionTypes.SAVE_EVENT_POINTS_SUCCEEDED:
-        case EventActionTypes.SAVE_EVENT_POLICY_SUCCEEDED: {
-            return { ...state, isBusy: false };
-        }
-        case EventActionTypes.EVENT_DATA_FAILED: {
-            return { ...state, isBusy: false, hasError: true };
+            return { ...state, currentEvent: action.payload };
         }
         default:
             return state;

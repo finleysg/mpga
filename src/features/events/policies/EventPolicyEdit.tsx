@@ -1,10 +1,12 @@
 import { Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../../components/CancelButton";
 import Confirm from "../../../components/Confirm";
+import DeleteButton from "../../../components/DeleteButton";
+import SubmitButton from "../../../components/SubmitButton";
 import { EventPolicy } from "../../../models/Events";
 import { Policy } from "../../../models/Policies";
 
@@ -16,18 +18,12 @@ export interface IEventPolicyEditProps {
 }
 
 const schema = yup.object({
-    name: yup
-        .string()
-        .max(30)
-        .required(),
-    title: yup
-        .string()
-        .max(120)
-        .required(),
+    name: yup.string().max(30).required(),
+    title: yup.string().max(120).required(),
     description: yup.string().required(),
 });
 
-const EventPolicyEdit: React.FC<IEventPolicyEditProps> = props => {
+const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const policy = {
         id: props.policy.id || 0,
@@ -47,9 +43,8 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = props => {
     };
 
     const saveEventPolicy = (values: any, actions: FormikHelpers<any>) => {
-        actions.setSubmitting(false);
         const updatedPolicy = new Policy(values);
-        updatedPolicy.policyType = "TN";  // Tournament policy
+        updatedPolicy.policyType = "TN"; // Tournament policy
         const newModel = new EventPolicy({
             id: props.policy.id,
             event: props.policy.event,
@@ -69,7 +64,7 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = props => {
                 </p>
             )}
             <Formik validationSchema={schema} onSubmit={saveEventPolicy} initialValues={policy}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="policy.Name">
                             <Form.Label>Name</Form.Label>
@@ -114,23 +109,9 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = props => {
                             <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {policy.id !== 0 && (
-                            <Button
-                                className="ml-1"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => setShowConfirmation(true)}>
-                                Remove
-                            </Button>
-                        )}
-                        {policy.id === 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />
+                        <CancelButton canCancel={policy.id === 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

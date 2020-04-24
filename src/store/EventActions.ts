@@ -5,25 +5,22 @@ import { Api } from '../http';
 import { EventDetail, EventLink, EventPoints, EventPolicy } from '../models/Events';
 import { IApplicationState } from './';
 import NotificationActions from './NotificationActions';
+import AppActions from './AppActions';
+
+export const EventForm: string = "event";
+export const EventLinkForm: string = "event-link";
+export const EventPolicyForm: string = "event-policy";
+export const EventPointsForm: string = "event-points";
 
 export enum EventActionTypes {
-    EVENT_DATA_REQUESTED = "EVENT_DATA_REQUESTED",
-    EVENT_DATA_FAILED = "EVENT_DATA_FAILED",
     GET_EVENTS_SUCCEEDED = "GET_EVENTS_SUCCEEDED",
     GET_EVENT_SUCCEEDED = "GET_EVENT_SUCCEEDED",
-    SAVE_EVENT_SUCCEEDED = "SAVE_EVENT_SUCCEEDED",
     ADD_NEW_EVENT_LINK = "ADD_NEW_EVENT_LINK",
     CANCEL_NEW_EVENT_LINK = "CANCEL_NEW_EVENT_LINK",
-    SAVE_EVENT_LINK_SUCCEEDED = "SAVE_EVENT_LINK_SUCCEEDED",
-    DELETE_EVENT_LINK_SUCCEEDED = "DELETE_EVENT_LINK_SUCCEEDED",
     ADD_NEW_EVENT_POINTS = "ADD_NEW_EVENT_POINTS",
     CANCEL_NEW_EVENT_POINTS = "CANCEL_NEW_EVENT_POINTS",
-    SAVE_EVENT_POINTS_SUCCEEDED = "SAVE_EVENT_POINTS_SUCCEEDED",
-    DELETE_EVENT_POINTS_SUCCEEDED = "DELETE_EVENT_POINTS_SUCCEEDED",
     ADD_NEW_EVENT_POLICY = "ADD_NEW_EVENT_POLICY",
     CANCEL_NEW_EVENT_POLICY = "CANCEL_NEW_EVENT_POLICY",
-    SAVE_EVENT_POLICY_SUCCEEDED = "SAVE_EVENT_POLICY_SUCCEEDED",
-    REMOVE_EVENT_POLICY_SUCCEEDED = "REMOVE_EVENT_POLICY_SUCCEEDED",
 }
 
 const eventUrl = constants.ApiUrl + "/events/";
@@ -55,29 +52,31 @@ const eventYear = (evt: EventDetail): any => {
 
 const EventActions = {
     LoadEvents: () => async (dispatch: any) => {
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(eventUrl + "?year=" + constants.EventCalendarYear.toString());
             const data = result.data.map((json: any) => new EventDetail(json));
+            dispatch(AppActions.NotBusy());
             dispatch({ type: EventActionTypes.GET_EVENTS_SUCCEEDED, payload: data });
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     LoadEvent: (systemName: string, year: number) => async (dispatch: any) => {
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const result = await Api.get(eventUrl + "?name=" + systemName + "&year=" + year.toString());
             const data = new EventDetail(result.data[0]);
+            dispatch(AppActions.NotBusy());
             dispatch({ type: EventActionTypes.GET_EVENT_SUCCEEDED, payload: data });
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     SaveEvent: (eventDetail: EventDetail) => async (dispatch: any) => {
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const payload = prepareEvent(eventDetail);
             if (!eventDetail.id) {
@@ -85,11 +84,12 @@ const EventActions = {
             } else {
                 await Api.put(`${eventUrl}${eventDetail.id}/`, payload);
             }
-            dispatch({ type: EventActionTypes.SAVE_EVENT_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventForm));
             dispatch(EventActions.LoadEvent(eventDetail.tournament?.systemName!, eventYear(eventDetail)));
             dispatch(NotificationActions.ToastSuccess(`${eventDetail.name} has been saved.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -101,7 +101,7 @@ const EventActions = {
     },
     SaveEventLink: (eventLink: EventLink) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const payload = eventLink.prepJson();
             if (!eventLink.id) {
@@ -109,24 +109,26 @@ const EventActions = {
             } else {
                 await Api.put(`${eventLinkUrl}${eventLink.id}/`, payload);
             }
-            dispatch({ type: EventActionTypes.SAVE_EVENT_LINK_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventLinkForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventLink.title} has been saved.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     DeleteEventLink: (eventLink: EventLink) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             await Api.delete(`${eventLinkUrl}${eventLink.id}/`);
-            dispatch({ type: EventActionTypes.DELETE_EVENT_LINK_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventLinkForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventLink.title} has been deleted.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -138,7 +140,7 @@ const EventActions = {
     },
     SaveEventPoints: (eventPoints: EventPoints) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const payload = eventPoints.prepJson();
             if (!eventPoints.id) {
@@ -146,24 +148,26 @@ const EventActions = {
             } else {
                 await Api.put(`${eventPointsUrl}${eventPoints.id}/`, payload);
             }
-            dispatch({ type: EventActionTypes.SAVE_EVENT_POINTS_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventPointsForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventPoints.ordinalPlace} place has been saved.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     DeleteEventPoints: (eventPoints: EventPoints) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             await Api.delete(`${eventPointsUrl}${eventPoints.id}/`);
-            dispatch({ type: EventActionTypes.DELETE_EVENT_POINTS_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventPointsForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventPoints.ordinalPlace} place has been deleted.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
@@ -175,7 +179,7 @@ const EventActions = {
     },
     SaveEventPolicy: (eventPolicy: EventPolicy) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             const payload = eventPolicy.prepJson();
             if (!eventPolicy.id) {
@@ -183,24 +187,26 @@ const EventActions = {
             } else {
                 await Api.put(`${eventPolicyUrl}${eventPolicy.id}/`, payload);
             }
-            dispatch({ type: EventActionTypes.SAVE_EVENT_POLICY_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventPolicyForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventPolicy.policy?.name} has been saved.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
     RemoveEventPolicy: (eventPolicy: EventPolicy) => async (dispatch: any, getState: () => IApplicationState) => {
         const currentEvent = getState().events.currentEvent;
-        dispatch({ type: EventActionTypes.EVENT_DATA_REQUESTED });
+        dispatch(AppActions.Busy());
         try {
             await Api.delete(`${eventPolicyUrl}${eventPolicy.id}/`);
-            dispatch({ type: EventActionTypes.REMOVE_EVENT_POLICY_SUCCEEDED });
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(EventPolicyForm));
             dispatch(EventActions.LoadEvent(currentEvent.tournament?.systemName!, currentEvent.eventYear));
             dispatch(NotificationActions.ToastSuccess(`${eventPolicy.policy?.name} has been removed.`));
         } catch (error) {
-            dispatch({ type: EventActionTypes.EVENT_DATA_FAILED });
+            dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     }

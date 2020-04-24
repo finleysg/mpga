@@ -1,6 +1,7 @@
 import React from "react";
 
-import EditableDiv from "../../components/EditableDiv";
+import WithEdit from "../../components/WithEdit";
+import { ClubContactForm } from "../../store/MemberClubActions";
 import usePermissions from "../../utilities/Permissions";
 import ClubContactEdit, { IClubContactEditProps } from "./ClubContactEdit";
 import ClubContactView from "./ClubContactView";
@@ -14,13 +15,13 @@ const ClubContactDetail: React.FC<IClubContactDetail> = (props) => {
     const permissions = usePermissions();
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={ClubContactForm}
             initEdit={edit}
             canEdit={permissions.canEditClubPage()}
             viewComponent={<ClubContactView clubContact={clubContact} />}
-            editComponent={
-                <ClubContactEdit clubContact={clubContact} Cancel={Cancel} Save={Save} Delete={Delete} />
-            }></EditableDiv>
+            editComponent={<ClubContactEdit clubContact={clubContact} Cancel={Cancel} Save={Save} Delete={Delete} />}
+        />
     );
 };
 

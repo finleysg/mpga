@@ -1,9 +1,9 @@
 import { Formik } from "formik";
 import React from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import SubmitButton from "../../components/SubmitButton";
 import { TournamentWinner } from "../../models/Events";
 
 export interface ITournamentWinnerEditProps {
@@ -38,10 +38,9 @@ const TournamentWinnerEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
                     newModel.id = winner.id;
                     newModel.isMatch = winner.isMatch;
                     props.Save(newModel);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={winner}>
-                {({ handleSubmit, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="winner.year">
                             <Form.Label>Year</Form.Label>
@@ -171,9 +170,7 @@ const TournamentWinnerEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
+                        <SubmitButton />
                         {/* {winner.id! <= 0 && (
                             <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
                                 Cancel

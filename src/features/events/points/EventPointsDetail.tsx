@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import EditableDiv from "../../../components/EditableDiv";
+import WithEdit from "../../../components/WithEdit";
+import { EventPointsForm } from "../../../store/EventActions";
 import usePermissions from "../../../utilities/Permissions";
 import EventPointsEdit, { IEventPointsEditProps } from "./EventPointsEdit";
 import EventPointsView from "./EventPointsView";
@@ -14,7 +15,8 @@ const EventPointsDetail: React.FunctionComponent<IEventPointsDetailProps> = (pro
     const { points, edit, Cancel, Save, Delete } = props;
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={EventPointsForm}
             initEdit={edit}
             canEdit={permissions.canManageEvent()}
             viewComponent={<EventPointsView points={points} />}

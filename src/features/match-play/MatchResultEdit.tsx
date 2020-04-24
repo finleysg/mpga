@@ -1,10 +1,11 @@
 import { Formik } from "formik";
 import React from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import CancelButton from "../../components/CancelButton";
 import { DatePickerField } from "../../components/DatePickerField";
+import SubmitButton from "../../components/SubmitButton";
 import { MatchResult, Team } from "../../models/Clubs";
 
 export interface IMatchResultEditProps {
@@ -17,10 +18,7 @@ export interface IMatchResultEditProps {
 
 const schema = yup.object({
     matchDate: yup.date().required(),
-    groupName: yup
-        .string()
-        .max(20)
-        .required(),
+    groupName: yup.string().max(20).required(),
     homeTeam: yup.number().required(),
     homeTeamScore: yup.number().required(),
     awayTeam: yup.number().required(),
@@ -29,7 +27,7 @@ const schema = yup.object({
     notes: yup.string(),
 });
 
-const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
+const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
     const { result } = props;
 
     return (
@@ -37,16 +35,16 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
-                    actions.setSubmitting(true);
                     const newModel = new MatchResult(values);
                     newModel.id = result.id;
                     props.Save(newModel);
                 }}
                 initialValues={result}>
-                {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors, isSubmitting }) => (
+                {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="matchDate">
-                            <Form.Label>Match Date</Form.Label><br />
+                            <Form.Label>Match Date</Form.Label>
+                            <br />
                             <DatePickerField
                                 name="matchDate"
                                 className="full-width"
@@ -90,8 +88,8 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
                                 onBlur={handleBlur}>
                                 <option value={undefined}>--Home Team--</option>
                                 {props.teams
-                                    .filter(t => t.groupName === values.groupName)
-                                    .map(team => {
+                                    .filter((t) => t.groupName === values.groupName)
+                                    .map((team) => {
                                         return (
                                             <option key={team.id} value={team.club.id}>
                                                 {team.club.name}
@@ -125,8 +123,8 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
                                 onBlur={handleBlur}>
                                 <option value={undefined}>--Away Team--</option>
                                 {props.teams
-                                    .filter(t => t.groupName === values.groupName)
-                                    .map(team => {
+                                    .filter((t) => t.groupName === values.groupName)
+                                    .map((team) => {
                                         return (
                                             <option key={team.id} value={team.club.id}>
                                                 {team.club.name}
@@ -172,14 +170,8 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = props => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
-                        {result.id! <= 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )}
+                        <SubmitButton />
+                        <CancelButton canCancel={result.id! <= 0} OnCancel={() => props.Cancel()} />
                     </Form>
                 )}
             </Formik>

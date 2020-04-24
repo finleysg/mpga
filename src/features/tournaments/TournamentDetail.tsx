@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-import EditableDiv from "../../components/EditableDiv";
+import WithEdit from "../../components/WithEdit";
 import { Tournament } from "../../models/Events";
-import TournamentActions from "../../store/TournamentActions";
+import TournamentActions, { TournamentDetailForm } from "../../store/TournamentActions";
 import usePermissions from "../../utilities/Permissions";
 import TournamentEdit from "./TournamentEdit";
 import TournamentView, { ITournamentViewProps } from "./TournamentView";
@@ -20,7 +20,8 @@ const TournamentDetail: React.FC<ITournamentViewProps> = (props) => {
 
     return (
         <React.Fragment>
-            <EditableDiv
+            <WithEdit
+                formName={TournamentDetailForm}
                 initEdit={false}
                 canEdit={permissions.canEditPageContent()}
                 viewComponent={<TournamentView tournament={tournament} />}

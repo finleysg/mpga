@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import EditableDiv from "../../../components/EditableDiv";
+import WithEdit from "../../../components/WithEdit";
+import { EventPolicyForm } from "../../../store/EventActions";
 import usePermissions from "../../../utilities/Permissions";
 import EventPolicyEdit, { IEventPolicyEditProps } from "./EventPolicyEdit";
 import EventPolicyView from "./EventPolicyView";
@@ -14,7 +15,8 @@ const EventPolicyDetail: React.FunctionComponent<IEventPolicyDetailProps> = (pro
     const permissions = usePermissions();
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={EventPolicyForm}
             initEdit={edit}
             canEdit={permissions.canManageEvent()}
             viewComponent={<EventPolicyView policy={policy} />}

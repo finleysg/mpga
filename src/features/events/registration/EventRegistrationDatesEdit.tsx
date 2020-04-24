@@ -1,9 +1,10 @@
-import * as yup from "yup";
-import React from "react";
 import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
+import React from "react";
 import Form from "react-bootstrap/Form";
+import * as yup from "yup";
+
 import { DatePickerField } from "../../../components/DatePickerField";
+import SubmitButton from "../../../components/SubmitButton";
 import { EventDetail } from "../../../models/Events";
 
 export interface IEventRegistrationDatesEditProps {
@@ -17,14 +18,13 @@ const schema = yup.object({
     registrationEnd: yup.date().required(),
 });
 
-const EventRegistrationDatesEdit: React.FC<IEventRegistrationDatesEditProps> = props => {
+const EventRegistrationDatesEdit: React.FC<IEventRegistrationDatesEditProps> = (props) => {
     let eventDetail = props.eventDetail;
     return (
         <div>
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
-                    actions.setSubmitting(false);
                     const newModel = Object.assign({}, eventDetail);
                     newModel.registrationStart = values.registrationStart;
                     newModel.registrationEnd = values.registrationEnd;
@@ -32,7 +32,7 @@ const EventRegistrationDatesEdit: React.FC<IEventRegistrationDatesEditProps> = p
                     props.Save(newModel);
                 }}
                 initialValues={eventDetail}>
-                {({ handleSubmit, setFieldValue, handleBlur, values, errors, isSubmitting }) => (
+                {({ handleSubmit, setFieldValue, handleBlur, values, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="eventDetail.registrationStart">
                             <Form.Label className="full-width">Registration Start</Form.Label>
@@ -82,9 +82,7 @@ const EventRegistrationDatesEdit: React.FC<IEventRegistrationDatesEditProps> = p
                                 Online registration ends at this date and time.
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
+                        <SubmitButton />
                     </Form>
                 )}
             </Formik>

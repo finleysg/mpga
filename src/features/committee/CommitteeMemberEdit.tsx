@@ -32,12 +32,12 @@ export interface IExecutiveCommitteeEditProps extends IExecutiveCommitteeProps {
     Save: (member: ExecutiveCommittee) => void;
 }
 
-const phoneRegEx = /^[2-9]\d{2}-\d{3}-\d{4}$/;
+// const phoneRegEx = /^[2-9]\d{2}-\d{3}-\d{4}$/;
 const schema = yup.object({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
     email: yup.string().email().required(),
-    primaryPhone: yup.string().matches(phoneRegEx).required(),
+    primaryPhone: yup.string().required(),
     addressTxt: yup.string().nullable(),
     city: yup.string().nullable(),
     state: yup.string().nullable(),

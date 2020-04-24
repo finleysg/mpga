@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-import EditableDiv from "../../../components/EditableDiv";
+import WithEdit from "../../../components/WithEdit";
 import { EventDetail } from "../../../models/Events";
-import EventActions from "../../../store/EventActions";
+import EventActions, { EventForm } from "../../../store/EventActions";
 import usePermissions from "../../../utilities/Permissions";
 import EventFormatEdit from "./EventFormatEdit";
 import EventFormatView from "./EventFormatView";
@@ -22,7 +22,8 @@ const EventFormatDetail: React.FunctionComponent<IEventDetailProps> = (props) =>
     ]);
 
     return (
-        <EditableDiv
+        <WithEdit
+            formName={EventForm}
             initEdit={false}
             canEdit={permissions.canManageEvent()}
             viewComponent={<EventFormatView eventDetail={eventDetail} />}

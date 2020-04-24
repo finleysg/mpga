@@ -1,10 +1,10 @@
-import { Formik } from 'formik';
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import * as yup from 'yup';
+import { Formik } from "formik";
+import React from "react";
+import Form from "react-bootstrap/Form";
+import * as yup from "yup";
 
-import { EventDetail } from '../../../models/Events';
+import SubmitButton from "../../../components/SubmitButton";
+import { EventDetail } from "../../../models/Events";
 
 interface IEventDetailProps {
     eventDetail: EventDetail;
@@ -27,37 +27,26 @@ const EventFormatEdit: React.FunctionComponent<IEventDetailProps> = (props) => {
                     newModel.description = values.description;
                     props.Save(newModel);
                 }}
-                initialValues={eventDetail}
-            >
-                {({
-                    handleSubmit,
-                    handleChange,
-                    handleBlur,
-                    values,
-                    touched,
-                    errors,
-                    isSubmitting,
-                }) => (
+                initialValues={eventDetail}>
+                {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="description">
                             <Form.Label>Event format</Form.Label>
-                            <Form.Control as="textarea" rows="16" name="description"
+                            <Form.Control
+                                as="textarea"
+                                rows="16"
+                                name="description"
                                 placeholder="Event format description"
                                 value={values.description}
                                 isValid={touched.description && !errors.description}
                                 isInvalid={!!errors.description}
                                 onChange={handleChange}
-                                onBlur={handleBlur} />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.description}
-                            </Form.Control.Feedback>
-                            <Form.Text className="text-muted">
-                                Markdown supported.
-                            </Form.Text>
+                                onBlur={handleBlur}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
+                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
-                        <Button variant="secondary" type="submit" size="sm" disabled={isSubmitting}>
-                            Save
-                        </Button>
+                        <SubmitButton />
                     </Form>
                 )}
             </Formik>
