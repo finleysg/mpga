@@ -40,6 +40,7 @@ const EventCalendar: React.FC = () => {
                             eventDates={event.eventDates}
                             rounds={event.rounds}
                             linkName={event.tournament?.systemName}
+                            eventType={event.eventType}
                             OnSelect={handleNavigation}
                         />
                     );

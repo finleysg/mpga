@@ -26,11 +26,12 @@ export interface ICalendarItemProps {
     eventDates: string;
     rounds: number;
     linkName?: string;
+    eventType: string;
     OnSelect: (linkName: string) => void;
 }
 
 const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
-    const { linkName, tournamentName, hostCourseName, hostCourceImageUrl, eventDates } = props;
+    const { linkName, tournamentName, hostCourseName, hostCourceImageUrl, eventDates, eventType } = props;
 
     return (
         <CalendarItem onClick={() => linkName && props.OnSelect(linkName)}>
@@ -39,7 +40,9 @@ const EventCalendarItem: React.FC<ICalendarItemProps> = (props) => {
                 <strong>{tournamentName}</strong>
             </p>
             <p>{hostCourseName}</p>
-            <p>{eventDates}</p>
+            {eventType === "P" && <p className="text-danger">POSTPONED: new date is TBD</p>}
+            {eventType === "C" && <p className="text-danger">CANCELED</p>}
+            {eventType !== "P" && eventType !== "C" && <p>{eventDates}</p>}
         </CalendarItem>
     );
 };

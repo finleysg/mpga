@@ -116,16 +116,18 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
                     />
                 </FormContainer>
             )}
-            <React.Fragment>
-                <EventRegistration />
-                <EventLinkList title="Register Now" linkType="Registration" />
-                <EventDocumentList queryKey={queryKey} title="Register by Mail" documentType="Registration" />
-                <EventLinkList title="Online Tee Times" linkType="Tee Times" />
-                <EventDocumentList queryKey={queryKey} title="Tee Times" documentType="Tee Times" />
-                <EventLinkList title="Online Results" linkType="Results" />
-                <EventDocumentList queryKey={queryKey} title="Results" documentType="Results" />
-                <EventLinkList title="Media" linkType="Media" />
-            </React.Fragment>
+            {eventState.currentEvent.eventType !== "C" && eventState.currentEvent.eventType !== "P" && (
+                <React.Fragment>
+                    <EventRegistration />
+                    <EventLinkList title="Register Now" linkType="Registration" />
+                    <EventDocumentList queryKey={queryKey} title="Register by Mail" documentType="Registration" />
+                    <EventLinkList title="Online Tee Times" linkType="Tee Times" />
+                    <EventDocumentList queryKey={queryKey} title="Tee Times" documentType="Tee Times" />
+                    <EventLinkList title="Online Results" linkType="Results" />
+                    <EventDocumentList queryKey={queryKey} title="Results" documentType="Results" />
+                    <EventLinkList title="Media" linkType="Media" />
+                </React.Fragment>
+            )}
         </React.Fragment>
     );
 }

@@ -1,22 +1,23 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import LoadingContainer from "../../components/LoadingContainer";
+import constants from "../../constants";
 import { IApplicationState } from "../../store";
-import { IDocumentSearch } from "../../store/DocumentActions";
+import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 import DocumentList from "../documents/DocumentList";
 import { DocumentViewType, IDocumentRenderProps } from "../documents/DocumentView";
 
-export interface IMatchPlayDocumentsProps {
-    query: IDocumentSearch;
-}
-
-const MatchPlayDocuments: React.FC<IMatchPlayDocumentsProps> = props => {
+const MatchPlayDocuments: React.FC = () => {
+    const dispatch = useDispatch();
     const documentState = useSelector((state: IApplicationState) => state.documents);
+    const queryKey = "match-play";
+    const query: IDocumentSearch = {
+        key: queryKey,
+        documentTypes: ["Match Play", "Match Play Brackets"],
+        year: constants.MatchPlayYear,
+    };
     const documents = () => {
-        return documentState.documents
-            .get(props.query.key)
-            ?.filter(d => props.query.documentTypes!.indexOf(d.documentType) >= 0);
+        return documentState.documents.get(queryKey)?.filter((d) => query.documentTypes!.indexOf(d.documentType) >= 0);
     };
     const documentRender: IDocumentRenderProps = {
         viewType: DocumentViewType.Button,
@@ -24,10 +25,13 @@ const MatchPlayDocuments: React.FC<IMatchPlayDocumentsProps> = props => {
         external: true,
     };
 
+    useEffect(() => {
+        dispatch(DocumentActions.Load(query));  
+        // eslint-disable-next-line
+    }, []);
+    
     return (
-        <LoadingContainer hasData={documents() !== undefined && documents()!.length > 0}>
-            <DocumentList query={props.query} documents={documents() || []} render={documentRender} />
-        </LoadingContainer>
+        <DocumentList query={query} documents={documents() || []} render={documentRender} />
     );
 };
 

@@ -37,6 +37,7 @@ const MatchResultEntry: React.FC = () => {
         <React.Fragment>
             <EditContainer
                 doEdit={doEdit}
+                hideEdit={true}
                 canEdit={permissions.canPostMatchResult()}
                 ToggleEdit={() => setDoEdit(!doEdit)}
                 viewComponent={

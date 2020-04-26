@@ -23,7 +23,9 @@ const EventLocationView: React.FunctionComponent<IEventDetailProps> = (props) =>
                 <CourseLogo src={eventDetail.location?.logoUrl} />
             </a>
             <h4 className="text-secondary">{eventDetail.location?.name}</h4>
-            <h5>{eventDetail.eventDates}</h5>
+            {eventDetail.eventType === "P" && <h5 className="text-danger">POSTPONED</h5>}
+            {eventDetail.eventType === "C" && <h5 className="text-danger">CANCELED</h5>}
+            {eventDetail.eventType !== "P" && eventDetail.eventType !== "C" && <h5>{eventDetail.eventDates}</h5>}
         </div>
     );
 };

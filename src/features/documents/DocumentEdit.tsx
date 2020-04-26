@@ -62,7 +62,6 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, actions) => {
-                    actions.setSubmitting(false);
                     const newModel = new MpgaDocument(values);
                     newModel.id = props.document?.id;
                     newModel.tournament = values.tournamentId || props.document?.tournament;

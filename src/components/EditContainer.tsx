@@ -21,15 +21,16 @@ export interface IEditable {
     editComponent: ReactNode;
     doEdit: boolean;
     canEdit: boolean;
+    hideEdit?: boolean;
     openIcon?: ReactNode;
     ToggleEdit: () => void;
 }
 
 const EditContainer: React.FC<IEditable> = props => {
-    const { viewComponent, editComponent, doEdit, canEdit, ToggleEdit } = props;
+    const { viewComponent, editComponent, doEdit, canEdit, hideEdit, ToggleEdit } = props;
     return (
         <EditOrView doEdit={doEdit}>
-            {canEdit && (
+            {canEdit && hideEdit !== true && (
                 <ToggleEditButton isEditting={doEdit} openIcon={props.openIcon} Toggled={() => ToggleEdit()} />
             )}
             {doEdit ? editComponent : viewComponent}

@@ -81,7 +81,7 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const documentMap = state.documents;
             const documents = documentMap?.get(key) || [];
             const idx = documents.findIndex((d) => d.id === 0);
-            if (idx && idx >= 0) {
+            if (idx >= 0) {
                 documents.splice(idx, 1);
                 documentMap.set(key, documents);
                 return { ...state, documents: documentMap };
@@ -98,8 +98,6 @@ export const DocumentsReducer: Reducer<IDocumentState, KnownActions> = (
             const key = action.payload.key;
             const documentMap = state.documents;
             const sorted = action.payload.documents.sort((d1, d2) => {
-                // const a = new Date(d1.lastUpdate!);
-                // const b = new Date(d2.lastUpdate!);
                 return d1.year > d2.year ? -1 : d1.year < d2.year ? 1 : 0;
             });
             documentMap.set(key, sorted);

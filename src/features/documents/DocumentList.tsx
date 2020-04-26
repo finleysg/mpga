@@ -1,14 +1,13 @@
 import React, { useCallback } from "react";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import Loading from "../../components/Loading";
 import { MpgaDocument } from "../../models/Documents";
-import { IApplicationState } from "../../store";
 import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 import usePermissions from "../../utilities/Permissions";
 import DocumentDetail from "./DocumentDetail";
 import { IDocumentRenderProps } from "./DocumentView";
+import LoadingContainer from "../../components/LoadingContainer";
 
 export interface IDocumentListProps {
     query: IDocumentSearch;
@@ -20,7 +19,6 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
     const { query, documents } = props;
     const dispatch = useDispatch();
     const permissions = usePermissions();
-    const state = useSelector((state: IApplicationState) => state.documents);
     const canAdd = documents?.findIndex((d) => d.id === 0) || -1 < 0;
 
     const saveDocument = useCallback(
@@ -48,10 +46,8 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
                     Add New
                 </Button>
             )}
-            {state.isBusy ? (
-                <Loading />
-            ) : (
-                documents.map((document: MpgaDocument) => {
+            <LoadingContainer hasData={true}>
+                {documents.map((document: MpgaDocument) => {
                     return (
                         <DocumentDetail
                             key={document.id}
@@ -63,8 +59,8 @@ const DocumentList: React.FC<IDocumentListProps> = (props) => {
                             Save={saveDocument}
                         />
                     );
-                })
-            )}
+                })}
+            </LoadingContainer>
         </div>
     );
 };
