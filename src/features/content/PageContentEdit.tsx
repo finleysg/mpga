@@ -1,11 +1,13 @@
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
 import { PageContent } from "../../models/Policies";
 import { IPageContentViewProps } from "./PageContentView";
+import EditorModal from "../../components/EditorModal";
+import Button from "react-bootstrap/Button";
 
 export interface IPageContentEditProps extends IPageContentViewProps {
     Save: (policy: PageContent) => void;
@@ -18,6 +20,8 @@ const schema = yup.object({
 
 const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
     const pageContent = props.pageContent;
+    const [useEditor, setUseEditor] = useState(false);
+
     return (
         <div>
             <Formik
@@ -44,12 +48,12 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="policy.Description">
-                            <Form.Label>PageContent text</Form.Label>
+                            <Form.Label>Text</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows="12"
                                 name="content"
-                                placeholder="Page content text"
+                                placeholder="Page text"
                                 value={values.content}
                                 isValid={touched.content && !errors.content}
                                 isInvalid={!!errors.content}
@@ -60,6 +64,22 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
                             <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
+                        <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            className="ml-2"
+                            onClick={() => setUseEditor(true)}>
+                            Open Editor
+                        </Button>
+                        <EditorModal
+                            text={values.content}
+                            show={useEditor}
+                            Cancel={() => setUseEditor(false)}
+                            Close={(markdown) => {
+                                values.content = markdown;
+                                setUseEditor(false);
+                            }}
+                        />
                     </Form>
                 )}
             </Formik>
