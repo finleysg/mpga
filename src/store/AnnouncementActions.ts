@@ -26,9 +26,11 @@ const AnnouncementActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(url);
-            const data = result.data.map((json: any) => new Announcement(json));
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new Announcement(json));
+                dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: AnnouncementActionTypes.GET_ANNOUNCEMENTS_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

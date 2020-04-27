@@ -20,8 +20,10 @@ const TournamentActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(tournamentUrl);
-            const data = result.data.map((t: any) => new Tournament(t));
-            dispatch({ type: TournamentActionTypes.GET_TOURNAMENTS_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = result.data.map((t: any) => new Tournament(t));
+                dispatch({ type: TournamentActionTypes.GET_TOURNAMENTS_SUCCEEDED, payload: data });
+            }
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -31,16 +33,19 @@ const TournamentActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(`${tournamentUrl}?name=${name}`);
-            const data = new Tournament(result.data[0]);
-            dispatch(TournamentWinnerActions.LoadTournamentWinners(data));
-            dispatch({ type: TournamentActionTypes.GET_TOURNAMENT_SUCCEEDED, payload: data });
-            if (loadRelatedDocuments) {
-                dispatch(DocumentActions.Load({
-                    key: `${name}-results`,
-                    documentTypes: ["Results"],
-                    tournamentId: data.id,
-                }));
+            if (result && result.data) {
+                const data = new Tournament(result.data[0]);
+                dispatch(TournamentWinnerActions.LoadTournamentWinners(data));
+                dispatch({ type: TournamentActionTypes.GET_TOURNAMENT_SUCCEEDED, payload: data });
+                if (loadRelatedDocuments) {
+                    dispatch(DocumentActions.Load({
+                        key: `${name}-results`,
+                        documentTypes: ["Results"],
+                        tournamentId: data.id,
+                    }));
+                }
             }
+            dispatch(AppActions.NotBusy());
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

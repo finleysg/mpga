@@ -29,8 +29,10 @@ const CommitteeActions = {
     LoadCommittee: () => async (dispatch: any) => {
         try {
             const result = await Api.get(committeeUrl);
-            const data = result.data.map((t: any) => new ExecutiveCommittee(t));
-            dispatch({ type: CommitteeActionTypes.LOAD_COMMITTEE_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = result.data.map((t: any) => new ExecutiveCommittee(t));
+                dispatch({ type: CommitteeActionTypes.LOAD_COMMITTEE_SUCCEEDED, payload: data });
+            }
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
         }

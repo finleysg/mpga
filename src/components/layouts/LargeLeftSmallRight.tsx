@@ -6,8 +6,8 @@ import { ITwoColumns } from './TwoEvenColumns';
 const LargeLeftSmallRight: React.FC<ITwoColumns> = (props) => {
     return (
         <Row>
-            <Col md={6} lg={8}>{props.LeftColumn}</Col>
-            <Col md={6} lg={4}>{props.RightColumn}</Col>
+            <Col sm={12} md={8} lg={9}>{props.LeftColumn}</Col>
+            <Col sm={12} md={4} lg={3}>{props.RightColumn}</Col>
         </Row>
     );
 }

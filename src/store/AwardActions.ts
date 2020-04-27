@@ -26,8 +26,10 @@ const AwardActions = {
     LoadAward: (awardName: string) => async (dispatch: any) => {
         try {
             const result = await Api.get(url + "?name=" + awardName);
-            const data = new Award(result.data[0]);
-            dispatch({ type: AwardActionTypes.GET_AWARD_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = new Award(result.data[0]);
+                dispatch({ type: AwardActionTypes.GET_AWARD_SUCCEEDED, payload: data });
+            }
         } catch (error) {
             dispatch(NotificationActions.ToastError(error));
         }

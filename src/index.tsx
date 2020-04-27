@@ -1,5 +1,6 @@
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
+import * as Sentry from "@sentry/browser";
 import { createBrowserHistory } from "history";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -9,6 +10,7 @@ import { routerMiddleware, routerReducer } from "react-router-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
+import { AxiosResponse } from "axios";
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -17,6 +19,8 @@ import constants from "./constants";
 import { AppRoutes } from "./routes/AppRoutes";
 import * as serviceWorker from "./serviceWorker";
 import { IApplicationState, reducers } from "./store";
+import { UserActionTypes } from "./store/UserActions";
+import { Api } from "./http";
 
 function buildRootReducer(reducers: any) {
     return combineReducers<IApplicationState>(Object.assign({}, reducers, { routing: routerReducer }));
@@ -37,7 +41,25 @@ const store = createStore(
     )
 );
 
+Api.interceptors.response.use(
+    (response: AxiosResponse) => {
+        return response;
+    },
+    (error) => {
+        if (error.response.status === 401) {
+            sessionStorage.removeItem(constants.BearerTokenName);
+            localStorage.removeItem(constants.BearerTokenName);
+            store.dispatch({ type: UserActionTypes.RESET_USER });
+        } else {
+            Sentry.captureException(error);
+            return error;
+        }
+    }
+);
+
 const stripePromise = loadStripe(constants.StripePublicKey);
+
+Sentry.init({dsn: "https://73c06439a90442629476cfcb5d92f0c3@o59115.ingest.sentry.io/5214360"});
 
 function renderApp() {
     ReactDOM.render(

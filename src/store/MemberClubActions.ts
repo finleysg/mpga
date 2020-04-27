@@ -29,20 +29,22 @@ const MemberClubActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(clubsUrl);
-            const data = result.data.map((json: any) => {
-                return {
-                    id: json.id,
-                    name: json.name,
-                    systemName: json.system_name,
-                    website: json.website || "",
-                    location: json.golf_course?.city || "",
-                    size: json.size,
-                    isCurrent: false,
-                } as IClub;
-            });
-            dispatch({ type: MemberClubActionTypes.LOAD_CLUBS_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = result.data.map((json: any) => {
+                    return {
+                        id: json.id,
+                        name: json.name,
+                        systemName: json.system_name,
+                        website: json.website || "",
+                        location: json.golf_course?.city || "",
+                        size: json.size,
+                        isCurrent: false,
+                    } as IClub;
+                });
+                dispatch({ type: MemberClubActionTypes.LOAD_CLUBS_SUCCEEDED, payload: data });
+                dispatch(MemberClubActions.LoadMemberships(constants.MemberClubYear));
+            }
             dispatch(AppActions.NotBusy());
-            dispatch(MemberClubActions.LoadMemberships(constants.MemberClubYear));
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -51,24 +53,28 @@ const MemberClubActions = {
 
     LoadMemberships: (year: number) => async (dispatch: any, getState: () => IApplicationState) => {
         const result = await Api.get(membershipsUrl + "?year=" + year);
-        const memberships: Membership[] = result.data.map((json: any) => new Membership(json));
-        const clubs = getState().memberClubs.clubs;
-        const updatedClubs = clubs.map((club: IClub) => {
-            const membership = memberships.findIndex((m) => m.club === club.id);
-            club.isCurrent = membership >= 0;
-            return Object.assign({}, club);
-        });
-        dispatch({ type: MemberClubActionTypes.LOAD_MEMBERSHIPS_SUCCEEDED, payload: updatedClubs });
+        if (result && result.data) {
+            const memberships: Membership[] = result.data.map((json: any) => new Membership(json));
+            const clubs = getState().memberClubs.clubs;
+            const updatedClubs = clubs.map((club: IClub) => {
+                const membership = memberships.findIndex((m) => m.club === club.id);
+                club.isCurrent = membership >= 0;
+                return Object.assign({}, club);
+            });
+            dispatch({ type: MemberClubActionTypes.LOAD_MEMBERSHIPS_SUCCEEDED, payload: updatedClubs });
+        }
     },
 
     LoadMemberClub: (systemName: string) => async (dispatch: any) => {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(clubsUrl + "?name=" + systemName);
-            const data = new Club(result.data[0]);
-            dispatch({ type: MemberClubActionTypes.GET_CLUB_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = new Club(result.data[0]);
+                dispatch({ type: MemberClubActionTypes.GET_CLUB_SUCCEEDED, payload: data });
+                dispatch(MemberClubActions.LoadMembership(data.id!));
+            }
             dispatch(AppActions.NotBusy());
-            dispatch(MemberClubActions.LoadMembership(data.id!));
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -77,9 +83,11 @@ const MemberClubActions = {
 
     LoadMembership: (clubId: number) => async (dispatch: any) => {
         const result = await Api.get(membershipsUrl + "?club=" + clubId.toString());
-        const memberships: Membership[] = result.data.map((json: any) => new Membership(json));
-        const mostRecentMembership = memberships && memberships.length > 0 ? memberships[0] : undefined;
-        dispatch({ type: MemberClubActionTypes.LOAD_MEMBERSHIP_SUCCEEDED, payload: mostRecentMembership });
+        if (result && result.data) {
+            const memberships: Membership[] = result.data.map((json: any) => new Membership(json));
+            const mostRecentMembership = memberships && memberships.length > 0 ? memberships[0] : undefined;
+            dispatch({ type: MemberClubActionTypes.LOAD_MEMBERSHIP_SUCCEEDED, payload: mostRecentMembership });
+        }
     },
 
     SaveMemberClub: (club: Club) => async (dispatch: any) => {

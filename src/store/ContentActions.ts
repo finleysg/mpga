@@ -29,9 +29,11 @@ const ContentActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(policyUrl + "?type=" + policyType);
-            const data = result.data.map((json: any) => new Policy(json));
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new Policy(json));
+                dispatch({ type: ContentActionTypes.GET_POLICIES_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: ContentActionTypes.GET_POLICIES_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -75,9 +77,11 @@ const ContentActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(pageUrl + "?page=" + pageType);
-            const data = new PageContent(result.data[0]);
+            if (result && result.data) {
+                const data = new PageContent(result.data[0]);
+                dispatch({ type: ContentActionTypes.GET_PAGE_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: ContentActionTypes.GET_PAGE_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

@@ -20,9 +20,11 @@ const MatchPlayActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(teamsUrl + "?year=" + constants.MatchPlayYear);
-            const data = result.data.map((json: any) => new Team(json));
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new Team(json));
+                dispatch({ type: MatchPlayActionTypes.LOAD_TEAMS_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: MatchPlayActionTypes.LOAD_TEAMS_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -32,12 +34,14 @@ const MatchPlayActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(resultsUrl + "?year=" + constants.MatchPlayYear);
-            const data = result.data.map((json: any) => new MatchResult(json));
-            dispatch(AppActions.NotBusy());
-            dispatch({ type: MatchPlayActionTypes.LOAD_MATCH_RESULTS_SUCCEEDED, payload: data });
-            if (getState().matchPlay.teams.length === 0) {
-                dispatch(MatchPlayActions.LoadTeams());
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new MatchResult(json));
+                dispatch({ type: MatchPlayActionTypes.LOAD_MATCH_RESULTS_SUCCEEDED, payload: data });
+                if (getState().matchPlay.teams.length === 0) {
+                    dispatch(MatchPlayActions.LoadTeams());
+                }
             }
+            dispatch(AppActions.NotBusy());
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

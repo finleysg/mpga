@@ -55,9 +55,11 @@ const EventActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(eventUrl + "?year=" + constants.EventCalendarYear.toString());
-            const data = result.data.map((json: any) => new EventDetail(json));
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new EventDetail(json));
+                dispatch({ type: EventActionTypes.GET_EVENTS_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: EventActionTypes.GET_EVENTS_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
@@ -67,9 +69,11 @@ const EventActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(eventUrl + "?name=" + systemName + "&year=" + year.toString());
-            const data = new EventDetail(result.data[0]);
+            if (result && result.data) {
+                const data = new EventDetail(result.data[0]);
+                dispatch({ type: EventActionTypes.GET_EVENT_SUCCEEDED, payload: data });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({ type: EventActionTypes.GET_EVENT_SUCCEEDED, payload: data });
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

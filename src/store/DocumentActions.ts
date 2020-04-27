@@ -80,11 +80,13 @@ const DocumentActions = {
         try {
             const queryString = prepareQueryString(query);
             const result = await Api.get(`${url}${queryString}`);
-            const data = result.data.map((json: any) => new MpgaDocument(json));
-            dispatch({
-                type: DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED,
-                payload: { key: query.key, documents: data },
-            });
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new MpgaDocument(json));
+                dispatch({
+                    type: DocumentActionTypes.GET_DOCUMENTS_SUCCEEDED,
+                    payload: { key: query.key, documents: data },
+                });
+            }
             dispatch(AppActions.NotBusy());
         } catch (error) {
             dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_FAILED, payload: { key: query.key } });

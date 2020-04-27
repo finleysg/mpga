@@ -1,6 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import * as Sentry from "@sentry/browser";
 
-import constants from './constants';
+import constants from "./constants";
 
 const Api = axios.create({
     baseURL: constants.ApiUrl,
@@ -28,13 +29,17 @@ Auth.interceptors.request.use((config: AxiosRequestConfig) => {
     return config;
 });
 
-// Auth.interceptors.request.use((config: AxiosRequestConfig) => {
-//     if (config.url === "/users/me/" || config.url === "/token/logout/") {
-//         const token = getTokenFromStorage();
-//         config.headers["Authorization"] = "Token " + token;
-//     }
-//     return config;
-// });
+Auth.interceptors.response.use(
+    (response: AxiosResponse) => {
+        return response;
+    },
+    (error) => {
+        if (error.response.status !== 401) {
+            Sentry.captureException(error);
+        }
+        return error;
+    }
+);
 
 const getTokenFromStorage = (): string | null => {
     let token = localStorage.getItem(constants.BearerTokenName);

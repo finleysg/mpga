@@ -51,8 +51,10 @@ const PhotoActions = {
         dispatch({ type: PhotoActionTypes.GET_RANDOM_PHOTO_REQUESTED});
         try {
             const result = await Api.get(`/tournament-photos/random/${tournament.id}/`);
-            const data = new MpgaPhoto(result.data);
-            dispatch({ type: PhotoActionTypes.GET_RANDOM_PHOTO_SUCCEEDED, payload: data });
+            if (result && result.data) {
+                const data = new MpgaPhoto(result.data);
+                dispatch({ type: PhotoActionTypes.GET_RANDOM_PHOTO_SUCCEEDED, payload: data });
+            }
         } catch (error) {
             dispatch({ type: PhotoActionTypes.GET_RANDOM_PHOTO_FAILED });
             dispatch(NotificationActions.ToastError(error));
@@ -66,8 +68,10 @@ const PhotoActions = {
             try {
                 const requestUrl = year ? `${url}?tournament=${tournament.id}&year=${year}` : `${url}?tournament=${tournament.id}`;
                 const result = await Api.get(requestUrl);
-                const data = result.data.map((json: any) => new MpgaPhoto(json));
-                dispatch({ type: PhotoActionTypes.GET_PHOTOS_SUCCEEDED, payload: data });
+                if (result && result.data) {
+                    const data = result.data.map((json: any) => new MpgaPhoto(json));
+                    dispatch({ type: PhotoActionTypes.GET_PHOTOS_SUCCEEDED, payload: data });
+                }
             } catch (error) {
                 dispatch({ type: PhotoActionTypes.GET_PHOTOS_FAILED });
                 dispatch(NotificationActions.ToastError(error));

@@ -21,26 +21,29 @@ const TournamentWinnerActions = {
         dispatch(AppActions.Busy());
         try {
             const result = await Api.get(`${tournamentWinnerUrl}?name=${tournament.systemName}`);
-            const data = result.data.map((json: any) => new TournamentWinner(json));
-            const grouped = data.reduce((acc: ITournamentWinnerGroup[], item: TournamentWinner) => {
-                const group = acc.find(g => g.year === item.year);
-                if (group) {
-                    group.winners.push(item);
-                } else {
-                    acc.push({
-                        year: item.year,
-                        location: item.location,
-                        tournament: tournament,
-                        winners: [item],
-                    });
-                }
-                return acc;
-            }, []);
+            if (result && result.data) {
+                const data = result.data.map((json: any) => new TournamentWinner(json));
+                const grouped = data.reduce((acc: ITournamentWinnerGroup[], item: TournamentWinner) => {
+                    const group = acc.find(g => g.year === item.year);
+                    if (group) {
+                        group.winners.push(item);
+                    } else {
+                        acc.push({
+                            year: item.year,
+                            location: item.location,
+                            tournament: tournament,
+                            winners: [item],
+                        });
+                    }
+                    return acc;
+                }, []);
+                dispatch({
+                    type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED,
+                    payload: grouped,
+                });
+            }
             dispatch(AppActions.NotBusy());
-            dispatch({
-                type: TournamentWinnerActionTypes.GET_TOURNAMENT_WINNERS_SUCCEEDED,
-                payload: grouped,
-            });
+
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

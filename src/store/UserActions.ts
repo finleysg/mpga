@@ -56,9 +56,13 @@ const UserActions = {
         dispatch({ type: UserActionTypes.GET_USER_REQUESTED });
         try {
             const result = await Auth.get("/users/me/");
-            const user = new User().fromJson(result.data);
-            dispatch({ type: UserActionTypes.GET_USER_SUCCEEDED, payload: user });
-            dispatch(UserActions.GetUserContactRoles(user.email))
+            if (result && result.data) {
+                const user = new User().fromJson(result.data);
+                dispatch({ type: UserActionTypes.GET_USER_SUCCEEDED, payload: user });
+                dispatch(UserActions.GetUserContactRoles(user.email));
+            } else {
+                dispatch(UserActions.ResetUser());
+            }
         } catch (error) {
             dispatch(UserActions.ResetUser());
         }

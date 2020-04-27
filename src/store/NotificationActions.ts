@@ -1,5 +1,4 @@
 import { NotificationType } from "./NotificationStore";
-import UserActions from "./UserActions";
 
 export enum NotificationActionTypes {
     APPEND_NOTIFICATION = "APPEND_NOTIFICATION",
@@ -23,6 +22,33 @@ const toast = (title: string, message: string, type: NotificationType) => (dispa
     });
 };
 
+const parseError = (err: any): string => {
+    let message: string;
+    if (err.error !== undefined) {
+        if (err.status === 0) {
+            message = `Could not reach the mpga server because your internet connection 
+                        was lost, the connection timed out, or the server is not responding.`;
+        } else {
+            const body = err.error || {};
+            if (body.non_field_errors) {
+                // django-rest-auth
+                message = body.non_field_errors[0];
+            } else if (body.username) {
+                // django-rest-auth
+                message = body.username[0];
+            } else if (body.detail) {
+                // django-rest-framework
+                message = body.detail;
+            } else {
+                message = JSON.stringify(body);
+            }
+        }
+    } else {
+        message = err.message ? err.message : err.toString();
+    }
+    return message;
+};
+
 const NotificationActions = {
     ToastMessage: (message: string) => (dispatch: any) => {
         toast("Information", message, NotificationType.Information)(dispatch);
@@ -31,12 +57,8 @@ const NotificationActions = {
         toast("Success", message, NotificationType.Success)(dispatch);
     },
     ToastError: (error: any) => (dispatch: any) => {
-        const message: string = error.message || error || "error";
-        if (message.endsWith("401")) {
-            dispatch(UserActions.ResetUser());
-        } else if (message !== "error") {
-            toast("Error", error.message || error || "An error occurred", NotificationType.Error)(dispatch);
-        }
+        const message = parseError(error);
+        toast("Error", message || "An error occurred", NotificationType.Error)(dispatch);
     },
     RemoveToast: (id: number) => (dispatch: any) => {
         dispatch({
