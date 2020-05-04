@@ -3,6 +3,8 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { Editor } from "@toast-ui/react-editor";
+
 import SubmitButton from "../../components/SubmitButton";
 import { PageContent } from "../../models/Policies";
 import { IPageContentViewProps } from "./PageContentView";
@@ -13,24 +15,27 @@ export interface IPageContentEditProps extends IPageContentViewProps {
 
 const schema = yup.object({
     title: yup.string().max(120).required(),
-    content: yup.string().required(),
+    // content: yup.string().required(),
 });
 
 const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
     const pageContent = props.pageContent;
+    const editorRef = React.createRef<Editor>();
+
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new PageContent(values);
                     newModel.id = pageContent.id;
+                    newModel.content = editorRef.current?.getInstance().getMarkdown() || pageContent.content;
                     props.Save(newModel);
                 }}
                 initialValues={pageContent}>
                 {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="policy.Title">
+                        <Form.Group controlId="title">
                             <Form.Label>Title</Form.Label>
                             <Form.Control
                                 name="title"
@@ -43,21 +48,18 @@ const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="policy.Description">
-                            <Form.Label>PageContent text</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="12"
-                                name="content"
-                                placeholder="Page content text"
-                                value={values.content}
-                                isValid={touched.content && !errors.content}
-                                isInvalid={!!errors.content}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                        <Form.Group controlId="description">
+                            <Form.Label>Text</Form.Label>
+                            <Editor
+                                initialValue={values.content}
+                                previewStyle="tab"
+                                height="300px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.content}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                     </Form>

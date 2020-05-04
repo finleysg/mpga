@@ -3,6 +3,8 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { Editor } from "@toast-ui/react-editor";
+
 import SubmitButton from "../../../components/SubmitButton";
 import { EventDetail } from "../../../models/Events";
 
@@ -17,14 +19,15 @@ const schema = yup.object({
 
 const EventFormatEdit: React.FunctionComponent<IEventDetailProps> = (props) => {
     const { eventDetail } = props;
+    const editorRef = React.createRef<Editor>();
+
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
-                    actions.setSubmitting(false);
+                onSubmit={(values) => {
                     const newModel = Object.assign({}, eventDetail);
-                    newModel.description = values.description;
+                    newModel.description = editorRef.current?.getInstance().getMarkdown() || values.description;
                     props.Save(newModel);
                 }}
                 initialValues={eventDetail}>
@@ -32,19 +35,16 @@ const EventFormatEdit: React.FunctionComponent<IEventDetailProps> = (props) => {
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="description">
                             <Form.Label>Event format</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="16"
-                                name="description"
-                                placeholder="Event format description"
-                                value={values.description}
-                                isValid={touched.description && !errors.description}
-                                isInvalid={!!errors.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.description}
+                                previewStyle="tab"
+                                height="480px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                     </Form>

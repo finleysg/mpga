@@ -1,4 +1,6 @@
 import "./layout.scss";
+import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 import React, { useEffect } from "react";
 import Navbar from "react-bootstrap/Navbar";

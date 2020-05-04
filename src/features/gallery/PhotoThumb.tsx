@@ -6,7 +6,7 @@ import { MpgaPhoto } from "../../models/Documents";
 import usePermissions from "../../utilities/Permissions";
 import PhotoEditModal from "./PhotoEditModal";
 import PhotoModal from "./PhotoModal";
-import { Notes } from "../awards/AwardWinnerView";
+import Notes from "../../components/Notes";
 
 export interface IPhotoView {
     photo: MpgaPhoto;

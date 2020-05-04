@@ -61,6 +61,7 @@ const TournamentActions = {
                 await Api.put(`${tournamentUrl}${tournament.id}/`, payload);
             }
             dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(TournamentDetailForm));
             dispatch(TournamentActions.LoadTournaments());
             dispatch(NotificationActions.ToastSuccess(`${tournament.name} has been saved.`))
         } catch (error) {

@@ -50,7 +50,7 @@ const AnnouncementList: React.FC = () => {
                     Add Announcement
                 </Button>
             )}
-            <LoadingContainer hasData={state.data?.length > 0}>
+            <LoadingContainer hasData={state.data !== undefined}>
                 {state.data.map((announcement: Announcement) => {
                     return (
                         <AnnouncementDetail

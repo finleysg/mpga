@@ -1,7 +1,9 @@
-import { Formik, FormikHelpers } from "formik";
+import { Formik } from "formik";
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
+
+import { Editor } from "@toast-ui/react-editor";
 
 import CancelButton from "../../../components/CancelButton";
 import Confirm from "../../../components/Confirm";
@@ -24,6 +26,7 @@ const schema = yup.object({
 });
 
 const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const [showConfirmation, setShowConfirmation] = useState(false);
     const policy = {
         id: props.policy.id || 0,
@@ -42,9 +45,10 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
         props.Remove(props.policy);
     };
 
-    const saveEventPolicy = (values: any, actions: FormikHelpers<any>) => {
+    const saveEventPolicy = (values: any) => {
         const updatedPolicy = new Policy(values);
         updatedPolicy.policyType = "TN"; // Tournament policy
+        updatedPolicy.description = editorRef.current?.getInstance().getMarkdown() || policy.description;
         const newModel = new EventPolicy({
             id: props.policy.id,
             event: props.policy.event,
@@ -95,19 +99,16 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="policy.Description">
                             <Form.Label>Policy text</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="4"
-                                name="description"
-                                placeholder="Policy text"
-                                value={values.description}
-                                isValid={touched.description && !errors.description}
-                                isInvalid={!!errors.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.description}
+                                previewStyle="tab"
+                                height="240px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                         <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />

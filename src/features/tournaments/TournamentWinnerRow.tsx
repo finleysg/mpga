@@ -6,7 +6,7 @@ import { Tournament, TournamentWinner } from "../../models/Events";
 import TournamentWinnerActions from "../../store/TournamentWinnerActions";
 import usePermissions from "../../utilities/Permissions";
 import TournamentWinnerEditModal from "./TournamentWinnerEditModal";
-import { Notes } from "../awards/AwardWinnerView";
+import Notes from "../../components/Notes";
 
 export interface ITournamentWinnerRowProps {
     tournament: Tournament;

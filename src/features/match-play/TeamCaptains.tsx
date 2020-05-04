@@ -3,7 +3,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
 import { ClubContact } from "../../models/Clubs";
-import { Notes } from "../awards/AwardWinnerView";
+import Notes from "../../components/Notes";
 
 export interface ITeamCaptainProps {
     captains: ClubContact[];

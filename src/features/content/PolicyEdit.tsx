@@ -9,6 +9,7 @@ import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
 import { Policy } from "../../models/Policies";
 import { IPolicyViewProps } from "./PolicyView";
+import { Editor } from "@toast-ui/react-editor";
 
 export interface IPolicyEditProps extends IPolicyViewProps {
     Cancel: () => void;
@@ -19,10 +20,11 @@ export interface IPolicyEditProps extends IPolicyViewProps {
 const schema = yup.object({
     name: yup.string().max(30).required(),
     title: yup.string().max(120).required(),
-    description: yup.string().required(),
+    // description: yup.string().required(),
 });
 
 const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const [showConfirmation, setShowConfirmation] = useState(false);
     const policy = props.policy;
 
@@ -39,11 +41,11 @@ const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new Policy(values);
                     newModel.id = props.policy.id;
+                    newModel.description = editorRef.current?.getInstance().getMarkdown() || policy.description;
                     props.Save(newModel);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={policy}>
                 {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
@@ -76,20 +78,17 @@ const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="policy.Description">
-                            <Form.Label>Policy text</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="4"
-                                name="description"
-                                placeholder="Policy text"
-                                value={values.description}
-                                isValid={touched.description && !errors.description}
-                                isInvalid={!!errors.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Form.Label>Description</Form.Label>
+                            <Editor
+                                initialValue={values.description}
+                                previewStyle="tab"
+                                height="240px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                         <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />

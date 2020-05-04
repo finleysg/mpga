@@ -9,6 +9,7 @@ import SubmitButton from "../../components/SubmitButton";
 import { Announcement } from "../../models/Announcement";
 import { MpgaDocument } from "../../models/Documents";
 import { IAnnouncementView } from "./AnnouncementView";
+import { Editor } from "@toast-ui/react-editor";
 
 export interface IAnnouncementEdit extends IAnnouncementView {
     currentDocuments: MpgaDocument[];
@@ -29,7 +30,7 @@ interface IAnnouncementData {
 
 const schema = yup.object({
     title: yup.string().required(),
-    text: yup.string().required(),
+    // text: yup.string().required(),
     starts: yup.date().required(),
     expires: yup.date().required(),
     documentId: yup.string().nullable(),
@@ -42,6 +43,7 @@ const schema = yup.object({
 });
 
 const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const announcement = props.announcement;
     const announcementData = {
         title: announcement.title,
@@ -58,12 +60,12 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new Announcement(values);
                     newModel.id = props.announcement.id;
                     newModel.document = props.currentDocuments.find((d) => d.id?.toString() === values.document);
+                    newModel.text = editorRef.current?.getInstance().getMarkdown() || announcement.text;
                     props.Save(newModel);
-                    actions.setSubmitting(false);
                 }}
                 initialValues={announcementData}>
                 {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
@@ -81,20 +83,18 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="announcement.Text">
-                            <Form.Label>Message</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="4"
-                                name="text"
-                                value={values.text}
-                                isValid={touched.text && !errors.text}
-                                isInvalid={!!errors.text}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                        <Form.Group controlId="description">
+                            <Form.Label>Text</Form.Label>
+                            <Editor
+                                initialValue={values.text}
+                                previewStyle="tab"
+                                height="240px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.text}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <Form.Group controlId="announcement.Starts">
                             <Form.Label className="full-width">Display Start</Form.Label>

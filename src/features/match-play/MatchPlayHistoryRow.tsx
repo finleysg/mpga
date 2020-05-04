@@ -7,7 +7,7 @@ import TournamentWinnerActions from "../../store/TournamentWinnerActions";
 import MatchPlayHistoryEditModal from "./MatchPlayHistoryEditModal";
 import { ITournamentWinnerRowProps } from "../tournaments/TournamentWinnerRow";
 import usePermissions from "../../utilities/Permissions";
-import { Notes } from "../awards/AwardWinnerView";
+import Notes from "../../components/Notes";
 
 const MatchPlayHistoryRow: React.FC<ITournamentWinnerRowProps> = (props) => {
     const { tournament, winner } = props;
@@ -48,7 +48,7 @@ const MatchPlayHistoryRow: React.FC<ITournamentWinnerRowProps> = (props) => {
             </tr>
             {winner.notes && showNote && !doEdit && (
                 <tr>
-                    <td colSpan={permissions.canEditTournamentHistory() ? 5 : 4}><Notes>{winner.notes}</Notes></td>
+                    <td colSpan={permissions.canEditTournamentHistory() ? 7 : 6}><Notes>{winner.notes}</Notes></td>
                 </tr>
             )}
         </React.Fragment>
