@@ -4,7 +4,7 @@ import { TiDocumentText } from "react-icons/ti";
 import styled from "styled-components";
 
 import { MatchResult } from "../../models/Clubs";
-import { Notes } from "../awards/AwardWinnerView";
+import Notes from "../../components/Notes";
 
 interface ITeamCellProps {
     teamName: string;

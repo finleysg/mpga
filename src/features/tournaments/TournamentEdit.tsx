@@ -6,6 +6,7 @@ import * as yup from "yup";
 import SubmitButton from "../../components/SubmitButton";
 import { Tournament } from "../../models/Events";
 import { ITournamentViewProps } from "./TournamentView";
+import { Editor } from "@toast-ui/react-editor";
 
 export interface ITournamentEditProps extends ITournamentViewProps {
     Save: (tournament: Tournament) => void;
@@ -18,13 +19,16 @@ const schema = yup.object({
 
 const TournamentEdit: React.FC<ITournamentEditProps> = (props) => {
     const tournament = props.tournament;
+    const editorRef = React.createRef<Editor>();
+
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new Tournament(values);
                     newModel.id = tournament.id;
+                    newModel.description = editorRef.current?.getInstance().getMarkdown() || tournament.description;
                     props.Save(newModel);
                 }}
                 initialValues={tournament}>
@@ -45,19 +49,16 @@ const TournamentEdit: React.FC<ITournamentEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="tournament.Description">
                             <Form.Label>Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="8"
-                                name="description"
-                                placeholder="Tournament description"
-                                value={values.description}
-                                isValid={touched.description && !errors.description}
-                                isInvalid={!!errors.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.description}
+                                previewStyle="tab"
+                                height="400px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                     </Form>

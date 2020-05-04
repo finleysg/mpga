@@ -6,6 +6,7 @@ import * as yup from "yup";
 import SubmitButton from "../../components/SubmitButton";
 import { Award } from "../../models/Events";
 import { IAwardViewProps } from "./AwardView";
+import { Editor } from "@toast-ui/react-editor";
 
 export interface IAwardEditProps extends IAwardViewProps {
     Save: (policy: Award) => void;
@@ -16,15 +17,17 @@ const schema = yup.object({
 });
 
 const AwardEdit: React.FC<IAwardEditProps> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const award = props.award;
 
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new Award(values);
                     newModel.id = award.id;
+                    newModel.description = editorRef.current?.getInstance().getMarkdown() || award.description;
                     props.Save(newModel);
                 }}
                 initialValues={award}>
@@ -32,19 +35,16 @@ const AwardEdit: React.FC<IAwardEditProps> = (props) => {
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="awardDescription">
                             <Form.Label>Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="12"
-                                name="description"
-                                placeholder="Award description"
-                                value={values.description || ""}
-                                isValid={touched.description && !errors.description}
-                                isInvalid={!!errors.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.description}
+                                previewStyle="tab"
+                                height="300px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                     </Form>

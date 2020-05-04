@@ -3,6 +3,8 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { Editor } from "@toast-ui/react-editor";
+
 import SubmitButton from "../../components/SubmitButton";
 import { TournamentWinner } from "../../models/Events";
 import { ITournamentWinnerEditProps } from "../tournaments/TournamentWinnerEdit";
@@ -19,12 +21,13 @@ const schema = yup.object({
 
 const MatchPlayHistoryEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
     const { winner } = props;
+    const editorRef = React.createRef<Editor>();
 
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const updated = {
                         winnerClub: "",
                         coWinnerClub: "",
@@ -32,6 +35,7 @@ const MatchPlayHistoryEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
                     };
                     const newModel = new TournamentWinner(updated);
                     newModel.id = winner.id;
+                    newModel.notes = editorRef.current?.getInstance().getMarkdown();
                     newModel.isMatch = true;
                     props.Save(newModel);
                 }}
@@ -117,18 +121,16 @@ const MatchPlayHistoryEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="winner.notes">
                             <Form.Label>Notes</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="3"
-                                name="notes"
-                                placeholder="Notes"
-                                value={values.notes}
-                                isValid={touched.notes && !errors.notes}
-                                isInvalid={!!errors.notes}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.notes}
+                                previewStyle="tab"
+                                height="200px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
                         <SubmitButton />
                         {/* {winner.id! <= 0 &&

@@ -4,12 +4,7 @@ import Row from "react-bootstrap/Row";
 import { TiDocumentText } from "react-icons/ti";
 
 import { AwardWinner } from "../../models/Events";
-import styled from "styled-components";
-
-export const Notes = styled.span`
-    font-size: .9em;
-    font-style: italic;
-`;
+import Notes from "../../components/Notes";
 
 export interface IAwardWinnerViewProps {
     winner: AwardWinner;

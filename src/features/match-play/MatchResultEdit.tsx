@@ -24,7 +24,7 @@ const schema = yup.object({
     awayTeam: yup.number().required(),
     awayTeamScore: yup.number().required(),
     forfeit: yup.bool(),
-    notes: yup.string(),
+    notes: yup.string().max(140),
 });
 
 const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
@@ -34,7 +34,7 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new MatchResult(values);
                     newModel.id = result.id;
                     props.Save(newModel);

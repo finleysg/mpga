@@ -3,6 +3,8 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { Editor } from "@toast-ui/react-editor";
+
 import CancelButton from "../../components/CancelButton";
 import SubmitButton from "../../components/SubmitButton";
 import { AwardWinner } from "../../models/Events";
@@ -20,16 +22,17 @@ const schema = yup.object({
 });
 
 const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const { winner } = props;
 
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
-                    actions.setSubmitting(false);
+                onSubmit={(values) => {
                     const newModel = new AwardWinner(values);
                     newModel.id = winner.id;
+                    newModel.notes = editorRef.current?.getInstance().getMarkdown() || "";
                     props.Save(newModel);
                 }}
                 initialValues={winner}>
@@ -63,18 +66,16 @@ const AwardWinnerEdit: React.FC<IAwardWinnerEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="winner.notes">
                             <Form.Label>Notes</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="3"
-                                name="notes"
-                                placeholder="Notes"
-                                value={values.notes || ""}
-                                isValid={touched.notes && !errors.notes}
-                                isInvalid={!!errors.notes}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.notes}
+                                previewStyle="tab"
+                                height="200px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
                         </Form.Group>
                         <SubmitButton />
                         <CancelButton canCancel={!winner.id} OnCancel={() => props.Cancel()} />

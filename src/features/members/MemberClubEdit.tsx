@@ -3,6 +3,8 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { Editor } from "@toast-ui/react-editor";
+
 import SubmitButton from "../../components/SubmitButton";
 import { Club } from "../../models/Clubs";
 
@@ -19,15 +21,17 @@ const schema = yup.object({
 });
 
 const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
+    const editorRef = React.createRef<Editor>();
     const club = props.club;
 
     return (
         <div>
             <Formik
                 validationSchema={schema}
-                onSubmit={(values, actions) => {
+                onSubmit={(values) => {
                     const newModel = new Club(values);
                     newModel.id = props.club.id;
+                    newModel.notes = editorRef.current?.getInstance().getMarkdown();
                     props.Save(newModel);
                 }}
                 initialValues={club}>
@@ -75,18 +79,16 @@ const MemberClubEdit: React.FC<IMemberClubEditProps> = (props) => {
                         </Form.Group>
                         <Form.Group controlId="club.Notes">
                             <Form.Label>Notes</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows="8"
-                                name="notes"
-                                value={values.notes}
-                                isValid={touched.notes && !errors.notes}
-                                isInvalid={!!errors.notes}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <Editor
+                                initialValue={values.notes}
+                                previewStyle="tab"
+                                height="360px"
+                                initialEditType="wysiwyg"
+                                useCommandShortcut={true}
+                                useDefaultHTMLSanitizer={true}
+                                hideModeSwitch={true}
+                                ref={editorRef}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Markdown supported. Tell us about your club.</Form.Text>
                         </Form.Group>
                         <SubmitButton />
                     </Form>
