@@ -224,7 +224,7 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
         }
         case UserActionTypes.CREATE_USER_FAILED: {
             let exists = false;
-            if (action.payload === "A user is already registered with this e-mail address.") {
+            if (action.payload === "user already exists") {
                 exists = true;
             }
             return {
@@ -233,7 +233,7 @@ export const UsersReducer: Reducer<IUserState, KnownActions> = (
                     ...defaultStateFlags,
                     accountExists: exists,
                     hasError: true,
-                    errorMessage: action.payload,
+                    errorMessage: exists ? "We already have an account for you." : action.payload,
                 },
             };
         }

@@ -162,10 +162,10 @@ const UserActions = {
             await Auth.post("/users/", accountRequest);
             dispatch({ type: UserActionTypes.CREATE_USER_SUCCEEDED });
         } catch (error) {
-            dispatch(NotificationActions.ToastError(error));
-            if (error.response?.data?.email && error.response?.data?.email[0]) {
-                dispatch({ type: UserActionTypes.CREATE_USER_FAILED, payload: error.response?.data?.email[0] });
+            if (error?.response?.data && error.response.data[0] === "user already exists") {
+                dispatch({ type: UserActionTypes.CREATE_USER_FAILED, payload: "user already exists" });
             } else {
+                dispatch(NotificationActions.ToastError(error));
                 dispatch({ type: UserActionTypes.CREATE_USER_FAILED, payload: userActionError });
             }
         }

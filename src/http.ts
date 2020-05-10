@@ -37,7 +37,7 @@ Auth.interceptors.response.use(
         if (error.response.status !== 401) {
             Sentry.captureException(error);
         }
-        return error;
+        throw error;
     }
 );
 
