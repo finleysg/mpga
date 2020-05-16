@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Model } from "./Model";
+import { BaseModel } from "./Model";
 
 export interface ITag {
     id: number;
@@ -18,7 +18,7 @@ export interface IPhotoTag {
     tag: ITag;
 }
 
-export class MpgaDocument extends Model {
+export class MpgaDocument extends BaseModel {
     year = moment().year();
     title = "";
     documentType = "Other";
@@ -51,13 +51,13 @@ export class MpgaDocument extends Model {
     }
 }
 
-export class MpgaPhoto extends Model {
+export class MpgaPhoto extends BaseModel {
     year = moment().year();
     caption?: string;
     photoType = "Other";
     thumbnailUrl?: string;
     imageUrl?: string;
-    //rawImage?: string;
+    rawImage?: string;
     lastUpdate?: Date;
     createdBy?: string;
     tournament?: number;

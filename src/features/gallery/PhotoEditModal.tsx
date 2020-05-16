@@ -41,7 +41,6 @@ const PhotoEditModal: React.FC<IPhotoModalProps> = props => {
                 <Formik
                     validationSchema={schema}
                     onSubmit={(values, actions) => {
-                        actions.setSubmitting(false);
                         const newModel = new MpgaPhoto({
                             id: photo.id,
                             year: photo.year,

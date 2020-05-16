@@ -1,9 +1,9 @@
 import moment from "moment";
-import { Model } from "./Model";
+import { BaseModel } from "./Model";
 import { Policy } from "./Policies";
 import { Contact, GolfCourse } from "./Clubs";
 
-export class AwardWinner extends Model {
+export class AwardWinner extends BaseModel {
     year: number = 0;
     winner: string = "";
     notes: string = "";
@@ -17,7 +17,7 @@ export class AwardWinner extends Model {
     }
 }
 
-export class Award extends Model {
+export class Award extends BaseModel {
     name: string = "";
     description: string = "";
     winners: AwardWinner[] = [];
@@ -35,7 +35,7 @@ export class Award extends Model {
     }
 }
 
-export class TournamentWinner extends Model {
+export class TournamentWinner extends BaseModel {
     tournament: number = 0;
     year: number = 0;
     location: string = "";
@@ -80,7 +80,7 @@ export interface ITournamentWinnerGroup {
     winners: TournamentWinner[];
 }
 
-export class Tournament extends Model {
+export class Tournament extends BaseModel {
     name: string = "";
     systemName: string = "";
     description: string = "";
@@ -98,7 +98,7 @@ export class Tournament extends Model {
     }
 }
 
-export class EventChair extends Model {
+export class EventChair extends BaseModel {
     chair: Contact | undefined;
 
     fromJson(obj: any): any {
@@ -108,14 +108,14 @@ export class EventChair extends Model {
     }
 }
 
-export class EventPoints extends Model {
+export class EventPoints extends BaseModel {
     event: number = 0;
     place: number = 0;
     points: number = 0;
     ordinalPlace?: string;
 }
 
-export class EventPolicy extends Model {
+export class EventPolicy extends BaseModel {
     event: number = 0;
     policy: Policy | undefined;
     order: number | undefined;
@@ -130,7 +130,7 @@ export class EventPolicy extends Model {
     }
 }
 
-export class EventLink extends Model {
+export class EventLink extends BaseModel {
     event: number = 0;
     linkType: string = "";
     title: string = "";
@@ -143,7 +143,7 @@ export class EventLink extends Model {
     }
 }
 
-export class EventDetail extends Model {
+export class EventDetail extends BaseModel {
     location?: GolfCourse;
     tournament?: Tournament;
     name: string = "";

@@ -1,6 +1,6 @@
-import { Model } from './Model';
+import { BaseModel } from './Model';
 
-export class PageContent extends Model {
+export class PageContent extends BaseModel {
     pageType: string = "";
     title: string = "";
     content: string = "";
@@ -12,7 +12,7 @@ export class PageContent extends Model {
     }
 }
 
-export class Policy extends Model {
+export class Policy extends BaseModel {
     policyType: string = "";
     name: string = "";
     title: string = "";

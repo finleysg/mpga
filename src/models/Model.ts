@@ -6,7 +6,7 @@ export interface IModel {
   fromJson(obj: any): any;
 }
 
-export class Model implements IModel {
+export class BaseModel implements IModel {
   id: number | undefined;
 
   prepJson(): any {

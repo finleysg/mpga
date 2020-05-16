@@ -1,6 +1,6 @@
-import { Model } from "./Model";
+import { BaseModel } from "./Model";
 
-export class ContactMessage extends Model {
+export class ContactMessage extends BaseModel {
     messageType: string = "General";
     course: string = "";
     contactName: string = "";

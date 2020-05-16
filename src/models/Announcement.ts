@@ -1,8 +1,8 @@
 import moment from 'moment';
-import { Model } from "./Model";
+import { BaseModel } from "./Model";
 import { MpgaDocument } from "./Documents";
 
-export class Announcement extends Model {
+export class Announcement extends BaseModel {
 
     static Create = () => {
         const instance = new Announcement({

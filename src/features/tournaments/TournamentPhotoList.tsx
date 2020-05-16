@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Carousel, { Modal, ModalGateway, ViewType } from "react-images";
+import Carousel, { Modal, ModalGateway } from "react-images";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -10,35 +10,7 @@ import { MpgaPhoto } from "../../models/Documents";
 import { IApplicationState } from "../../store";
 import PhotoActions from "../../store/PhotoActions";
 import GalleryMenu from "../gallery/GalleryMenu";
-import PhotoThumb from "../gallery/PhotoThumb";
-import styled from "styled-components";
-
-const Gallery = styled.div`
-    overflow: hidden;
-    margin-left: -2px;
-    margin-right: -2px;
-`;
-Gallery.displayName = "Gallery";
-
-const Image = styled.div`
-    background-color: #eee;
-    box-sizing: border-box;
-    float: left;
-    margin: 2px;
-    overflow: hidden;
-    padding-bottom: 16%;
-    position: relative;
-    width: calc(10% - 4px);
-    &:hover: {
-        opacity: 0.9;
-    }
-    > img {
-        cursor: pointer;
-        position: absolute;
-        max-width: 100%;
-    }
-`;
-Image.displayName = "Image";
+import PhotoGallery from "../gallery/PhotoGallery";
 
 const TournamentPhotoList: React.FC = () => {
     let { year } = useParams();
@@ -47,8 +19,6 @@ const TournamentPhotoList: React.FC = () => {
     const dispatch = useDispatch();
     const state = useSelector((state: IApplicationState) => state.photos);
     const tournament = useSelector((state: IApplicationState) => state.tournament?.currentTournament);
-
-    const savePhoto = useCallback((photo: MpgaPhoto) => dispatch(PhotoActions.UpdatePhoto(photo)), [dispatch]);
 
     useEffect(() => {
         if (tournament) {
@@ -61,27 +31,6 @@ const TournamentPhotoList: React.FC = () => {
         setSelectedIndex(index);
     };
 
-    const layoutThumbs = (photos: any[]): JSX.Element => {
-        if (photos.length === 0) {
-            return (
-                <p>
-                    We dont have any pictures for this season. Have a tournament photo to share? Send them to
-                    info@mpga.net
-                </p>
-            );
-        } else {
-            return (
-                <Gallery>
-                    {photos.map((photo, j) => (
-                        <Image onClick={() => toggleLightbox(j)} key={photo.source.thumbnail}>
-                            <img alt={photo.caption} src={photo.source.thumbnail} />
-                        </Image>
-                    ))}
-                </Gallery>
-            );
-        }
-    };
-
     const imageList = (photos: MpgaPhoto[]) => {
         return photos.map((p: MpgaPhoto) => {
             return {
@@ -89,7 +38,8 @@ const TournamentPhotoList: React.FC = () => {
                 source: {
                     regular: p.imageUrl!,
                     thumbnail: p.thumbnailUrl,
-                    // fullscreen: p.rawImage,
+                    fullscreen: p.rawImage,
+                    download: p.rawImage,
                 },
             };
         });
@@ -109,16 +59,15 @@ const TournamentPhotoList: React.FC = () => {
                 <Loading />
             ) : (
                 <React.Fragment>
-                    {layoutThumbs(imageList(state.data))}
+                    <PhotoGallery photos={state.data} OnSelect={(idx) => toggleLightbox(idx)} />
                     <ModalGateway>
                         {lightboxIsOpen ? (
                             <Modal onClose={() => toggleLightbox(selectedIndex)}>
                                 <Carousel views={imageList(state.data)} currentIndex={selectedIndex} />
                             </Modal>
                         ) : null}
-                    </ModalGateway>                    
+                    </ModalGateway>
                 </React.Fragment>
-
             )}
         </div>
     );

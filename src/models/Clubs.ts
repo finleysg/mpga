@@ -1,4 +1,4 @@
-import { Model } from "./Model";
+import { BaseModel } from "./Model";
 import { IContactData } from "../features/contacts/ContactApi";
 import { IClubContactData } from "../features/members/ClubContactEdit";
 import moment from "moment";
@@ -14,7 +14,7 @@ export class Address {
     }
 }
 
-export class GolfCourse extends Model {
+export class GolfCourse extends BaseModel {
     name: string = "";
     addressTxt?: string;
     city?: string;
@@ -45,7 +45,7 @@ export class GolfCourse extends Model {
     }
 }
 
-export class Contact extends Model {
+export class Contact extends BaseModel {
     firstName: string = "";
     lastName: string = "";
     primaryPhone?: string;
@@ -107,7 +107,7 @@ export interface IClub {
     president?: string;
 }
 
-export class Club extends Model {
+export class Club extends BaseModel {
     name: string = "";
     systemName: string = "";
     website?: string;
@@ -154,7 +154,7 @@ export class Club extends Model {
     }
 }
 
-export class Membership extends Model {
+export class Membership extends BaseModel {
     year: number = 0;
     club: number = 0;
     paymentDate: string = "";
@@ -173,7 +173,7 @@ export class Membership extends Model {
     }
 }
 
-export class Team extends Model {
+export class Team extends BaseModel {
     localId: string = Math.floor(Math.random() * 1000).toString();
     year: number = 0;
     club: Club = new Club({});
@@ -218,7 +218,7 @@ export class Team extends Model {
     }
 }
 
-export class ClubContactRole extends Model {
+export class ClubContactRole extends BaseModel {
     clubContact: number | undefined;
     role: string | undefined;
 
@@ -231,7 +231,7 @@ export class ClubContactRole extends Model {
     }
 }
 
-export class ClubContact extends Model {
+export class ClubContact extends BaseModel {
     club: number | undefined;
     contact: Contact | undefined;
     isPrimary = false;
@@ -318,7 +318,7 @@ export class ClubValidationMessage {
     }
 }
 
-export class ExecutiveCommittee extends Model {
+export class ExecutiveCommittee extends BaseModel {
     contact: Contact = new Contact({ id: 0 });
     role: string = "";
     homeClub: number = 0;
@@ -363,7 +363,7 @@ export class ExecutiveCommittee extends Model {
     }
 }
 
-export class Affiliate extends Model {
+export class Affiliate extends BaseModel {
     organization: string | undefined;
     website: string | undefined;
     notes: string | undefined;
@@ -377,7 +377,7 @@ export class Affiliate extends Model {
     }
 }
 
-export class MatchResult extends Model {
+export class MatchResult extends BaseModel {
     groupName: string = "";
     matchDate: any;
     homeTeam: number = 0;
