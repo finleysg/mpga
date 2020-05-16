@@ -55,6 +55,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                 if (
                     segments.indexOf("detail") === 1 ||
                     segments.indexOf("contact") === 1 ||
+                    segments.indexOf("gallery") === 1 ||
                     segments.indexOf("history") === 1
                 ) {
                     const tournamentName = segments[2];
@@ -78,25 +79,6 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                                 activeClassName="active">
                                 Contact
                             </NavLink>
-                        </Nav>
-                    );
-                } else if (segments.indexOf("gallery") === 1) {
-                    const tournamentName = segments[2];
-                    const years = [];
-                    for (let year = 2000; year <= constants.EventCalendarYear; year++) {
-                        years.push(year);
-                    }
-                    return (
-                        <Nav>
-                            <NavDropdown title="Select Season" id="collasible-nav-dropdown">
-                                {years.map((year) => {
-                                    return (
-                                        <NavDropdown.Item key="year">
-                                            <NavLink to={`${url}/gallery/${tournamentName}/${year}`}>{year}</NavLink>
-                                        </NavDropdown.Item>
-                                    );
-                                })}
-                            </NavDropdown>
                         </Nav>
                     );
                 } else {

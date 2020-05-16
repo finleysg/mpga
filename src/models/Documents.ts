@@ -57,6 +57,7 @@ export class MpgaPhoto extends Model {
     photoType = "Other";
     thumbnailUrl?: string;
     imageUrl?: string;
+    //rawImage?: string;
     lastUpdate?: Date;
     createdBy?: string;
     tournament?: number;
