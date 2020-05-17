@@ -68,9 +68,8 @@ const usePermissions = () => {
     };
 
     const canViewReports = () => {
-        return false;
-        // const user = session.user;
-        // return app.editMode && (user.isCommittee || user.isAdmin);
+        const user = session.user;
+        return user.isCommittee || user.isAdmin;
     };
 
     const canManageEvent = () => {

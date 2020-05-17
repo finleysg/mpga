@@ -72,7 +72,7 @@ const Sidenav: React.FC<ISidenavProps> = (props) => {
                     </NavLink>
                 )}
                 {permissions.canViewReports() && (
-                    <NavLink to="/admin/reports" className="nav-link" activeClassName="active">
+                    <NavLink to="/admin/reports/current-clubs" className="nav-link" activeClassName="active">
                         <FaRegFileExcel size={iconSize} color={"secondary"} /> Reports
                     </NavLink>
                 )}

@@ -36,11 +36,11 @@ export interface IClubContactEditProps extends IClubContactProps {
 }
 
 const schema = yup.object({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
+    firstName: yup.string().max(30).required(),
+    lastName: yup.string().max(30).required(),
     email: yup.string().email().required(),
     primaryPhone: yup.string().required(),
-    alternatePhone: yup.string().nullable(),
+    notes: yup.string().max(150).nullable(),
     isPrimary: yup.boolean(),
     useForMailings: yup.boolean(),
     addressTxt: yup.string().when("useForMailings", {
@@ -77,7 +77,7 @@ const translateClubContact = (cc: ClubContact): IClubContactData => {
         city: contact.city,
         state: contact.state,
         zip: contact.zip,
-        notes: contact.notes,
+        notes: cc.notes,
         isPrimary: cc.isPrimary,
         sendEmail: cc.sendEmail,
         useForMailings: cc.useForMailings,
@@ -164,7 +164,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.primaryPhone}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Format: xxx-xxx-xxxx</Form.Text>
                         </Form.Group>
-                        <Form.Group controlId="cc.alternatePhone">
+                        {/* <Form.Group controlId="cc.alternatePhone">
                             <Form.Label>Alternate phone</Form.Label>
                             <Form.Control
                                 placeholder="xxx-xxx-xxxx"
@@ -177,7 +177,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             />
                             <Form.Control.Feedback type="invalid">{errors.alternatePhone}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Format: xxx-xxx-xxxx</Form.Text>
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group controlId="cc.roles">
                             <Form.Label>Roles</Form.Label>
                             <RolePicker
@@ -205,6 +205,19 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                                 }}
                                 onBlur={handleBlur}
                             />
+                        </Form.Group>
+                        <Form.Group controlId="cc.notes">
+                            <Form.Label>Notes</Form.Label>
+                            <Form.Control
+                                name="notes"
+                                value={values.notes}
+                                isValid={touched.notes && !errors.notes}
+                                isInvalid={!!errors.notes}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
+                            <Form.Text className="text-muted">For multiple captains, indicate the team here.</Form.Text>
                         </Form.Group>
                         {showAddress && (
                             <>

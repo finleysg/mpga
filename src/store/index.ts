@@ -12,6 +12,7 @@ import * as MessageStore from "./MessageStore";
 import * as NotificationStore from "./NotificationStore";
 import * as PaymentStore from "./PaymentStore";
 import * as PhotoStore from "./PhotoStore";
+import * as ReportStore from "./ReportStore";
 import * as TournamentStore from "./TournamentStore";
 import * as TournamentWinnerStore from "./TournamentWinnerStore";
 import * as UserStore from "./UserStore";
@@ -32,6 +33,7 @@ export interface IApplicationState {
 	notifications: NotificationStore.INotificationState,
     payments: PaymentStore.IPaymentState,
     photos: PhotoStore.IPhotoState,
+    reports: ReportStore.IReportState,
 	session: UserStore.IUserState,
 	tournament: TournamentStore.ITournamentState,
 	winners: TournamentWinnerStore.ITournamentWinnerState,
@@ -55,6 +57,7 @@ export const reducers = {
 	notifications: NotificationStore.NotificationReducer,
     payments: PaymentStore.PaymentsReducer,
     photos: PhotoStore.PhotosReducer,
+    reports: ReportStore.ReportsReducer,
 	session: UserStore.UsersReducer,
 	tournament: TournamentStore.TournamentReducer,
 	winners: TournamentWinnerStore.TournamentWinnersReducer,

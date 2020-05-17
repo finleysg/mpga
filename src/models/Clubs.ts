@@ -116,7 +116,7 @@ export class Club extends BaseModel {
     size?: number;
     golfCourse?: GolfCourse;
     clubContacts: ClubContact[] = [];
-    years: number[] = []; // years for which we have membership data
+    membershipData?: Membership;
 
     constructor(obj: any) {
         super();
