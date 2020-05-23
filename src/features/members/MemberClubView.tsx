@@ -22,7 +22,7 @@ const MemberClubView: React.FC<IMemberClubDetailProps> = (props) => {
                 label={"Date joined"}
                 value={membership?.paymentDate }
                 labelStyle={LabelStyle.Stacked}
-                valueType={ValueType.Text} />
+                valueType={ValueType.Date} />
             <LabelAndValue
                 label={"Club website"}
                 value={club.website}

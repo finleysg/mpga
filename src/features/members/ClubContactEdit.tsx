@@ -41,8 +41,8 @@ const schema = yup.object({
     email: yup.string().email().required(),
     primaryPhone: yup.string().required(),
     notes: yup.string().max(150).nullable(),
-    isPrimary: yup.boolean(),
-    useForMailings: yup.boolean(),
+    isPrimary: yup.boolean().required(),
+    useForMailings: yup.boolean().required(),
     addressTxt: yup.string().when("useForMailings", {
         is: (value) => value === true,
         then: yup.string().required("a valid address is required for mailing"),
@@ -71,7 +71,6 @@ const translateClubContact = (cc: ClubContact): IClubContactData => {
         firstName: contact.firstName,
         lastName: contact.lastName,
         primaryPhone: contact.primaryPhone,
-        alternatePhone: contact.alternatePhone,
         email: contact.email,
         addressTxt: contact.addressTxt,
         city: contact.city,
@@ -164,20 +163,6 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             <Form.Control.Feedback type="invalid">{errors.primaryPhone}</Form.Control.Feedback>
                             <Form.Text className="text-muted">Format: xxx-xxx-xxxx</Form.Text>
                         </Form.Group>
-                        {/* <Form.Group controlId="cc.alternatePhone">
-                            <Form.Label>Alternate phone</Form.Label>
-                            <Form.Control
-                                placeholder="xxx-xxx-xxxx"
-                                name="alternatePhone"
-                                value={values.alternatePhone}
-                                isValid={touched.alternatePhone && !errors.alternatePhone}
-                                isInvalid={!!errors.alternatePhone}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.alternatePhone}</Form.Control.Feedback>
-                            <Form.Text className="text-muted">Format: xxx-xxx-xxxx</Form.Text>
-                        </Form.Group> */}
                         <Form.Group controlId="cc.roles">
                             <Form.Label>Roles</Form.Label>
                             <RolePicker
@@ -189,6 +174,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             <Form.Check
                                 name="isPrimary"
                                 label={"This is a primary contact"}
+                                value={values.isPrimary.toString()}
                                 checked={values.isPrimary}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -198,6 +184,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             <Form.Check
                                 name="useForMailings"
                                 label={"Send mailings to this contact"}
+                                value={values.useForMailings.toString()}
                                 checked={values.useForMailings}
                                 onChange={(e: any) => {
                                     setShowAddress(!showAddress);
@@ -210,7 +197,7 @@ const ClubContactEdit: React.FC<IClubContactEditProps> = (props) => {
                             <Form.Label>Notes</Form.Label>
                             <Form.Control
                                 name="notes"
-                                value={values.notes}
+                                value={values.notes || ""}
                                 isValid={touched.notes && !errors.notes}
                                 isInvalid={!!errors.notes}
                                 onChange={handleChange}

@@ -52,7 +52,7 @@ Api.interceptors.response.use(
             store.dispatch({ type: UserActionTypes.RESET_USER });
         } else {
             Sentry.captureException(error);
-            return error;
+            throw error;
         }
     }
 );

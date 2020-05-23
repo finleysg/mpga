@@ -141,7 +141,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
                 <tbody>
                     {reportData.clubs.map((club: Club) =>
                         club.clubContacts.filter(cc => applyFilter(cc)).map((cc: ClubContact) => (
-                            <tr>
+                            <tr key={cc.id}>
                                 <td>{club.name}</td>
                                 <td>{cc.contact?.firstName}</td>
                                 <td>{cc.contact?.lastName}</td>

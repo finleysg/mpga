@@ -107,6 +107,11 @@ const usePermissions = () => {
         return app.editMode && (user.isCommittee || user.isHistorian || user.isAdmin);
     };
 
+    const canEnterPayment = () => {
+        const user = session.user;
+        return app.editMode && (user.isOfficer || user.isAdmin);
+    }
+
     return {
         canPostMatchResult,
         canToggleEditMode,
@@ -125,6 +130,7 @@ const usePermissions = () => {
         canEditAwards,
         canEditPhotos,
         canUploadPhotos,
+        canEnterPayment,
     };
 };
 

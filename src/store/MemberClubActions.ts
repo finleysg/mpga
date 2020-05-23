@@ -9,6 +9,7 @@ import AppActions from "./AppActions";
 
 export const ClubForm: string = "club";
 export const ClubContactForm: string = "club-contact";
+export const MembershipForm: string = "membership";
 
 export enum MemberClubActionTypes {
     LOAD_CLUBS_SUCCEEDED = "LOAD_CLUBS_SUCCEEDED",
@@ -23,6 +24,18 @@ export enum MemberClubActionTypes {
 const clubsUrl = "/clubs/";
 const membershipsUrl = "/memberships/";
 const clubContactsUrl = "/club-contacts/";
+
+const convertPayment = (mem: Membership): any => {
+    const payment = {
+        year: mem.year,
+        club: mem.club,
+        payment_date: mem.paymentDate.toISOString().substring(0, 10),
+        payment_code: mem.paymentCode,
+        payment_type: mem.paymentType,
+        notes: mem.notes,
+    };
+    return payment;
+}
 
 const MemberClubActions = {
     LoadMemberClubs: () => async (dispatch: any) => {
@@ -99,6 +112,22 @@ const MemberClubActions = {
             dispatch(AppActions.CloseOpenForms(ClubForm));
             dispatch(MemberClubActions.LoadMemberClub(club.systemName));
             dispatch(NotificationActions.ToastSuccess(`${club.name} has been saved.`));
+        } catch (error) {
+            dispatch(AppActions.NotBusy());
+            dispatch(NotificationActions.ToastError(error));
+        }
+    },
+
+    CreateMembership: (membership: Membership) => async (dispatch: any, getState: () => IApplicationState) => {
+        const currentClub = getState().memberClubs.selectedClub;
+        dispatch(AppActions.Busy());
+        try {
+            const payload = convertPayment(membership);
+            await Api.post(membershipsUrl, payload);
+            dispatch(AppActions.NotBusy());
+            dispatch(AppActions.CloseOpenForms(MembershipForm));
+            dispatch(MemberClubActions.LoadMemberClub(currentClub.systemName));
+            dispatch(NotificationActions.ToastSuccess(`${currentClub.name} has been updated.`));
         } catch (error) {
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));

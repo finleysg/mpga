@@ -97,12 +97,12 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
                 </thead>
                 <tbody>
                     {clubList.map((club: Club) => (
-                        <tr>
+                        <tr key={club.id}>
                             <td>{club.name}</td>
                             <td>{club.systemName}</td>
                             <td>{club.golfCourse?.name}</td>
                             <td>{club.size}</td>
-                            {current && <td>{club.membershipData?.paymentDate}</td>}
+                            {current && <td>{club.membershipData?.paymentDate.toISOString().substring(0, 10)}</td>}
                             {current && <td>{paymentMethod(club.membershipData!)}</td>}
                         </tr>
                     ))}

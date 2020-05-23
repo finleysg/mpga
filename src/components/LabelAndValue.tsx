@@ -50,7 +50,7 @@ const LabelAndValue: React.FC<ILabelAndValueProps> = (props) => {
                 return <ReactMarkdown source={value} escapeHtml={true} />
             case ValueType.Date:
                 if (value && moment.isDate(value)) {
-                    return <span>{moment(value).format("yyyy-MM-dd")}</span>
+                    return <span>{moment(value).format("YYYY-MM-DD")}</span>
                 } else {
                     return <span>{defaultValue || "n/a"}</span>
                 }

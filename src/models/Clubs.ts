@@ -157,17 +157,16 @@ export class Club extends BaseModel {
 export class Membership extends BaseModel {
     year: number = 0;
     club: number = 0;
-    paymentDate: string = "";
+    paymentDate: Date = new Date();
     paymentType: string = "";
     paymentCode?: string;
-    createDate: Date = new Date();
     notes?: string;
 
     constructor(obj: any) {
         super();
         if (obj) {
             const mem = super.fromJson(obj);
-            mem.paymentDate = obj.payment_date;
+            mem.paymentDate = obj.payment_date ? moment(obj.payment_date).add(6, "hours").toDate() : new Date();
             Object.assign(this, mem);
         }
     }

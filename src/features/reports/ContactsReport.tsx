@@ -56,7 +56,7 @@ const ContactsReport: React.FunctionComponent<IContactReportProps> = (props) => 
                 </thead>
                 <tbody>
                     {reportData.contacts.map((contact: Contact) => (
-                        <tr>
+                        <tr key={contact.id}>
                             <td>{contact.firstName}</td>
                             <td>{contact.lastName}</td>
                             <td>{contact.email}</td>
