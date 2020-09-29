@@ -1,22 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Table from "react-bootstrap/Table";
-import { useDispatch, useSelector } from "react-redux";
 
 import constants from "../../constants";
 import { IClub } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
-import MemberClubActions from "../../store/MemberClubActions";
 import MemberClubRow from "./MemberClubRow";
+import useMemberClubs from "./UseMemberClubs";
 
 const MemberClubList: React.FC = () => {
-    const dispatch = useDispatch();
-    const state = useSelector((state: IApplicationState) => state.memberClubs);
-
-    useEffect(() => {
-        if (!state.clubs || state.clubs.length === 0) {
-            dispatch(MemberClubActions.LoadMemberClubs());
-        }
-    }, [dispatch, state.clubs]);
+    const clubs = useMemberClubs();
 
     return (
         <div>
@@ -32,7 +23,7 @@ const MemberClubList: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {state.clubs.map((club: IClub) => (
+                    {clubs.map((club: IClub) => (
                         <MemberClubRow key={club.id} club={club} />
                     ))}
                 </tbody>
