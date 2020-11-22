@@ -14,21 +14,22 @@ export interface IPolicyListProps {
 }
 
 const PolicyList: React.FC<IPolicyListProps> = (props) => {
+    const { policyCode } = props;
     const dispatch = useDispatch();
     const permissions = usePermissions();
     const state = useSelector((state: IApplicationState) => state.content);
 
     const getPolicies = () => {
-        return state.policies.get(props.policyCode);
+        return state.policies.get(policyCode);
     };
 
+    const cancelPolicy = useCallback(() => dispatch(ContentActions.CancelNewPolicy(policyCode)), [dispatch, policyCode])
     const savePolicy = useCallback((policy: Policy) => dispatch(ContentActions.SavePolicy(policy)), [dispatch]);
-
     const deletePolicy = useCallback((policy: Policy) => dispatch(ContentActions.DeletePolicy(policy)), [dispatch]);
 
     useEffect(() => {
-        dispatch(ContentActions.LoadPolicies(props.policyCode));
-    }, [dispatch, props.policyCode]);
+        dispatch(ContentActions.LoadPolicies(policyCode));
+    }, [dispatch, policyCode]);
 
     return (
         <div>
@@ -47,7 +48,7 @@ const PolicyList: React.FC<IPolicyListProps> = (props) => {
                             key={policy.id}
                             policy={policy}
                             edit={policy.id === 0}
-                            Cancel={() => dispatch(ContentActions.CancelNewPolicy(props.policyCode))}
+                            Cancel={cancelPolicy}
                             Delete={deletePolicy}
                             Save={savePolicy}
                         />

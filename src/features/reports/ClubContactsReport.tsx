@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import Table from "react-bootstrap/Table";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from 'react';
 
-import { ClubContact, Club } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
-import ReportActions from "../../store/ReportActions";
-import { CSVLink } from "react-csv";
+import Table from 'react-bootstrap/Table';
+import { CSVLink } from 'react-csv';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Club, ClubContact } from '../../models/Clubs';
+import { IApplicationState } from '../../store';
+import ReportActions from '../../store/ReportActions';
 
 interface IClubContactReportProps {
     filter?: string;
@@ -23,8 +24,8 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
     }, [dispatch, reportData.clubContacts]);
 
     const formatRoles = (cc: ClubContact): string => {
-        return (cc.roles && cc.roles?.map(r => r.role).join(", ")) || "";
-    }
+        return (cc.roles && cc.roles?.map((r) => r.role).join(", ")) || "";
+    };
 
     const applyFilter = (cc: ClubContact): boolean => {
         if (filter === "primary") {
@@ -32,11 +33,11 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
         } else if (filter === "mailings") {
             return cc.useForMailings;
         } else if (filter === "captains") {
-            const role = cc.roles?.findIndex(r => r.role && r.role.indexOf("Captain") >= 0);
+            const role = cc.roles?.findIndex((r) => r.role && r.role.indexOf("Captain") >= 0);
             return role !== undefined && role >= 0;
         }
         return true;
-    }
+    };
 
     const getHeaders = () => {
         const headers = [
@@ -62,41 +63,43 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
     const getData = (): any[] => {
         const contacts: any[] = [];
         reportData.clubs.forEach((club: Club) => {
-            club.clubContacts.filter(cc => applyFilter(cc)).forEach((cc: ClubContact) => {
-                if (filter === "mailings") {
-                    contacts.push({
-                        homeClub: club.name,
-                        firstName: cc.contact?.firstName,
-                        lastName: cc.contact?.lastName,
-                        email: cc.contact?.email,
-                        phone: cc.contact?.primaryPhone,
-                        address: cc.contact?.addressTxt,
-                        city: cc.contact?.city,
-                        state: cc.contact?.state,
-                        zip: cc.contact?.zip,
-                        roles: formatRoles(cc),
-                    });
-                } else if (filter === "captains") {
-                    contacts.push({
-                        homeClub: club.name,
-                        firstName: cc.contact?.firstName,
-                        lastName: cc.contact?.lastName,
-                        email: cc.contact?.email,
-                        phone: cc.contact?.primaryPhone,
-                        roles: formatRoles(cc),
-                        notes: cc.contact?.notes,
-                    });
-                } else {
-                    contacts.push({
-                        homeClub: club.name,
-                        firstName: cc.contact?.firstName,
-                        lastName: cc.contact?.lastName,
-                        email: cc.contact?.email,
-                        phone: cc.contact?.primaryPhone,
-                        roles: formatRoles(cc),
-                    });
-                }
-            });
+            club.clubContacts
+                .filter((cc) => applyFilter(cc))
+                .forEach((cc: ClubContact) => {
+                    if (filter === "mailings") {
+                        contacts.push({
+                            homeClub: club.name,
+                            firstName: cc.contact?.firstName,
+                            lastName: cc.contact?.lastName,
+                            email: cc.contact?.email,
+                            phone: cc.contact?.primaryPhone,
+                            address: cc.contact?.addressTxt,
+                            city: cc.contact?.city,
+                            state: cc.contact?.state,
+                            zip: cc.contact?.zip,
+                            roles: formatRoles(cc),
+                        });
+                    } else if (filter === "captains") {
+                        contacts.push({
+                            homeClub: club.name,
+                            firstName: cc.contact?.firstName,
+                            lastName: cc.contact?.lastName,
+                            email: cc.contact?.email,
+                            phone: cc.contact?.primaryPhone,
+                            roles: formatRoles(cc),
+                            notes: cc.contact?.notes,
+                        });
+                    } else {
+                        contacts.push({
+                            homeClub: club.name,
+                            firstName: cc.contact?.firstName,
+                            lastName: cc.contact?.lastName,
+                            email: cc.contact?.email,
+                            phone: cc.contact?.primaryPhone,
+                            roles: formatRoles(cc),
+                        });
+                    }
+                });
         });
         return contacts;
     };
@@ -111,7 +114,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
         } else {
             return "MpgaClubContacts.csv";
         }
-    }
+    };
 
     return (
         <div>
@@ -135,26 +138,30 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
                         {filter === "mailings" && <th>State</th>}
                         {filter === "mailings" && <th>Zip</th>}
                         <th>Role(s)</th>
+                        <th>Club Page Url</th>
                         {filter === "captains" && <th>Notes</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {reportData.clubs.map((club: Club) =>
-                        club.clubContacts.filter(cc => applyFilter(cc)).map((cc: ClubContact) => (
-                            <tr key={cc.id}>
-                                <td>{club.name}</td>
-                                <td>{cc.contact?.firstName}</td>
-                                <td>{cc.contact?.lastName}</td>
-                                <td>{cc.contact?.email}</td>
-                                <td>{cc.contact?.primaryPhone}</td>
-                                {filter === "mailings" && <td>{cc.contact?.addressTxt}</td>}
-                                {filter === "mailings" && <td>{cc.contact?.city}</td>}
-                                {filter === "mailings" && <td>{cc.contact?.state}</td>}
-                                {filter === "mailings" && <td>{cc.contact?.zip}</td>}
-                                <td>{formatRoles(cc)}</td>
-                                {filter === "captains" && <td>{cc.notes}</td>}
-                            </tr>
-                        ))
+                        club.clubContacts
+                            .filter((cc) => applyFilter(cc))
+                            .map((cc: ClubContact) => (
+                                <tr key={cc.id}>
+                                    <td>{club.name}</td>
+                                    <td>{cc.contact?.firstName}</td>
+                                    <td>{cc.contact?.lastName}</td>
+                                    <td>{cc.contact?.email}</td>
+                                    <td>{cc.contact?.primaryPhone}</td>
+                                    {filter === "mailings" && <td>{cc.contact?.addressTxt}</td>}
+                                    {filter === "mailings" && <td>{cc.contact?.city}</td>}
+                                    {filter === "mailings" && <td>{cc.contact?.state}</td>}
+                                    {filter === "mailings" && <td>{cc.contact?.zip}</td>}
+                                    <td>{formatRoles(cc)}</td>
+                                    <td>https://mpga.net/clubs/{club.systemName}</td>
+                                    {filter === "captains" && <td>{cc.notes}</td>}
+                                </tr>
+                            ))
                     )}
                 </tbody>
             </Table>
