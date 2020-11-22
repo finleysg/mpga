@@ -46,6 +46,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
             { label: "Last Name", key: "lastName" },
             { label: "Email", key: "email" },
             { label: "Phone", key: "phone" },
+            { label: "Club Url", key: "clubUrl" },
         ];
         if (filter === "mailings") {
             headers.push({ label: "Address", key: "address" });
@@ -73,6 +74,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
                             lastName: cc.contact?.lastName,
                             email: cc.contact?.email,
                             phone: cc.contact?.primaryPhone,
+                            clubUrl: `https://mpga.net/clubs/${club.systemName}`,
                             address: cc.contact?.addressTxt,
                             city: cc.contact?.city,
                             state: cc.contact?.state,
@@ -86,6 +88,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
                             lastName: cc.contact?.lastName,
                             email: cc.contact?.email,
                             phone: cc.contact?.primaryPhone,
+                            clubUrl: `https://mpga.net/clubs/${club.systemName}`,
                             roles: formatRoles(cc),
                             notes: cc.contact?.notes,
                         });
@@ -96,6 +99,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
                             lastName: cc.contact?.lastName,
                             email: cc.contact?.email,
                             phone: cc.contact?.primaryPhone,
+                            clubUrl: `https://mpga.net/clubs/${club.systemName}`,
                             roles: formatRoles(cc),
                         });
                     }
