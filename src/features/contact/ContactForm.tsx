@@ -1,15 +1,16 @@
-import { Formik } from "formik";
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Spinner from "react-bootstrap/Spinner";
-import { useDispatch, useSelector } from "react-redux";
-import * as yup from "yup";
+import React from 'react';
 
-import { ContactMessage } from "../../models/ContactMessage";
-import { IApplicationState } from "../../store";
-import MessageActions from "../../store/MessageActions";
-import styled from "styled-components";
+import { Formik } from 'formik';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import * as yup from 'yup';
+
+import { ContactMessage } from '../../models/ContactMessage';
+import { IApplicationState } from '../../store';
+import MessageActions from '../../store/MessageActions';
 
 const ContactFormContainer = styled.div`
     border: 1px solid silver;
@@ -50,7 +51,15 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                         actions.resetForm({ values: new ContactMessage() });
                     }}
                     initialValues={message}>
-                    {({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
+                    {({
+                        handleSubmit,
+                        handleReset,
+                        handleChange,
+                        handleBlur,
+                        values,
+                        touched,
+                        errors,
+                    }) => (
                         <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                             <Form.Group controlId="contactName">
                                 <Form.Control
@@ -62,7 +71,9 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.contactName}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.contactName}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="contactEmail">
                                 <Form.Control
@@ -74,7 +85,9 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.contactEmail}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.contactEmail}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="contactPhone">
                                 <Form.Control
@@ -86,7 +99,9 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.contactPhone}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.contactPhone}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="course">
                                 <Form.Control
@@ -98,13 +113,15 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.course}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.course}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="announcement.Text">
                                 <Form.Control
                                     as="textarea"
                                     placeholder="Enter your message here"
-                                    rows="6"
+                                    rows={6}
                                     name="message"
                                     value={values.message}
                                     isValid={touched.message && !errors.message}
@@ -112,7 +129,9 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.message}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.message}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Button
                                 variant="secondary"
@@ -120,7 +139,11 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
                                 size="sm"
                                 disabled={state.sending || state.sent !== undefined}>
                                 {state.sending && (
-                                    <Spinner as="span" animation="border" variant="secondary" role="status">
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        variant="secondary"
+                                        role="status">
                                         <span className="sr-only">Sending...</span>
                                     </Spinner>
                                 )}
@@ -135,11 +158,13 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
             </ContactFormContainer>
             {state.failed && (
                 <p className="text-danger mt-2">
-                    Something went wrong and your message was not sent. You can try again, or contact the MPGA directly
-                    at info@mpga.net.
+                    Something went wrong and your message was not sent. You can try again, or
+                    contact the MPGA directly at info@mpga.net.
                 </p>
             )}
-            {state.sent !== undefined && <p className="text-success mt-2">Thank you for your message.</p>}
+            {state.sent !== undefined && (
+                <p className="text-success mt-2">Thank you for your message.</p>
+            )}
         </React.Fragment>
     );
 };

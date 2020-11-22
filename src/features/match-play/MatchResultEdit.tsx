@@ -1,12 +1,13 @@
-import { Formik } from "formik";
-import React from "react";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import React from 'react';
 
-import CancelButton from "../../components/CancelButton";
-import { DatePickerField } from "../../components/DatePickerField";
-import SubmitButton from "../../components/SubmitButton";
-import { MatchResult, Team } from "../../models/Clubs";
+import { Formik } from 'formik';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
+
+import CancelButton from '../../components/CancelButton';
+import { DatePickerField } from '../../components/DatePickerField';
+import SubmitButton from '../../components/SubmitButton';
+import { MatchResult, Team } from '../../models/Clubs';
 
 export interface IMatchResultEditProps {
     result: MatchResult;
@@ -40,7 +41,15 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                     props.Save(newModel);
                 }}
                 initialValues={result}>
-                {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
+                {({
+                    handleSubmit,
+                    setFieldValue,
+                    handleChange,
+                    handleBlur,
+                    values,
+                    touched,
+                    errors,
+                }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="matchDate">
                             <Form.Label>Match Date</Form.Label>
@@ -53,7 +62,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                 onBlur={handleBlur}
                                 dateFormat="MMM dd"
                             />
-                            <Form.Control.Feedback type="invalid">{errors.matchDate}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.matchDate}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="groupName">
                             <Form.Label>Group</Form.Label>
@@ -74,7 +85,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                     );
                                 })}
                             </Form.Control>
-                            <Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.groupName}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="homeTeam">
                             <Form.Label>Home Team</Form.Label>
@@ -97,7 +110,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                         );
                                     })}
                             </Form.Control>
-                            <Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.groupName}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="homeTeamScore">
                             <Form.Label>Home Team Score</Form.Label>
@@ -109,7 +124,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.homeTeamScore}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.homeTeamScore}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="awayTeam">
                             <Form.Label>Away Team</Form.Label>
@@ -132,7 +149,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                         );
                                     })}
                             </Form.Control>
-                            <Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.groupName}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="awayTeamScore">
                             <Form.Label>Away Team Score</Form.Label>
@@ -144,7 +163,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.awayTeamScore}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.awayTeamScore}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="forfeit">
                             <Form.Check
@@ -159,7 +180,7 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                             <Form.Label>Notes</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                rows="3"
+                                rows={3}
                                 name="notes"
                                 placeholder="Notes"
                                 value={values.notes}
@@ -168,7 +189,9 @@ const MatchResultEdit: React.FC<IMatchResultEditProps> = (props) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.notes}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <SubmitButton />
                         <CancelButton canCancel={result.id! <= 0} OnCancel={() => props.Cancel()} />
