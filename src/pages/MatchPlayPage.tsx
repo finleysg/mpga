@@ -1,7 +1,8 @@
 import React from 'react';
+
 import SmallLeftLargeRight from '../components/layouts/SmallLeftLargeRight';
+import constants, { PageCodes } from '../constants';
 import PageContentDetail from '../features/content/PageContentDetail';
-import { PageCodes } from '../constants';
 import { TeamList } from '../features/match-play/TeamList';
 
 const MatchPlayPage: React.FC = () => {
@@ -10,12 +11,12 @@ const MatchPlayPage: React.FC = () => {
             LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
             RightColumn={
                 <React.Fragment>
-                    <h3 className="text-primary">2020 Match Play Teams</h3>
+                    <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
                     <TeamList />
                 </React.Fragment>
             }
         />
     );
-}
+};
 
 export default MatchPlayPage;
