@@ -3,6 +3,7 @@ import React from 'react';
 import SmallLeftLargeRight from '../components/layouts/SmallLeftLargeRight';
 import constants, { PageCodes } from '../constants';
 import PageContentDetail from '../features/content/PageContentDetail';
+import { TeamList } from '../features/match-play/TeamList';
 
 const MatchPlayPage: React.FC = () => {
     return (
@@ -24,7 +25,7 @@ const MatchPlayPage: React.FC = () => {
                             Loading…
                         </iframe>
                     </div> */}
-                    {/* <TeamList /> */}
+                    <TeamList />
                 </React.Fragment>
             }
         />
