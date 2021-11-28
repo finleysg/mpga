@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
 
-import constants from "../../constants";
-import { IApplicationState } from "../../store";
-import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
-import DocumentList from "../documents/DocumentList";
-import { DocumentViewType, IDocumentRenderProps } from "../documents/DocumentView";
+import { useDispatch, useSelector } from 'react-redux';
+
+import constants from '../../constants';
+import { IApplicationState } from '../../store';
+import DocumentActions, { IDocumentSearch } from '../../store/DocumentActions';
+import DocumentList from '../documents/DocumentList';
+import {
+    DocumentViewType,
+    IDocumentRenderProps,
+} from '../documents/DocumentView';
 
 const MatchPlayDocuments: React.FC = () => {
     const dispatch = useDispatch();
@@ -17,7 +21,9 @@ const MatchPlayDocuments: React.FC = () => {
         year: constants.MatchPlayYear,
     };
     const documents = () => {
-        return documentState.documents.get(queryKey)?.filter((d) => query.documentTypes!.indexOf(d.documentType) >= 0);
+        return documentState.documents
+            .get(queryKey)
+            ?.filter((d) => query.documentTypes!.indexOf(d.documentType) >= 0);
     };
     const documentRender: IDocumentRenderProps = {
         viewType: DocumentViewType.Button,
@@ -26,13 +32,11 @@ const MatchPlayDocuments: React.FC = () => {
     };
 
     useEffect(() => {
-        dispatch(DocumentActions.Load(query));  
+        dispatch(DocumentActions.Load(query));
         // eslint-disable-next-line
     }, []);
-    
-    return (
-        <DocumentList query={query} documents={documents() || []} render={documentRender} />
-    );
+
+    return <DocumentList query={query} documents={documents() || []} render={documentRender} />;
 };
 
 export default MatchPlayDocuments;

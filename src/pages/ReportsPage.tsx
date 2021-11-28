@@ -1,14 +1,16 @@
-import React from "react";
-import ContactsReport from "../features/reports/ContactsReport";
-import { useParams } from "react-router-dom";
-import ClubContactsReport from "../features/reports/ClubContactsReport";
-import ClubsReport from "../features/reports/ClubsReport";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import ReportMenu from "../features/reports/ReportMenu";
+import React from 'react';
+
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import { useParams } from 'react-router-dom';
+
+import ClubContactsReport from '../features/reports/ClubContactsReport';
+import ClubsReport from '../features/reports/ClubsReport';
+import ContactsReport from '../features/reports/ContactsReport';
+import ReportMenu from '../features/reports/ReportMenu';
 
 const ReportsPage: React.FC = () => {
-    const { name } = useParams();
+    const { name } = useParams<{ name: string }>();
 
     const renderReport = () => {
         switch (name) {

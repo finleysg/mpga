@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from "react";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Carousel, { Modal, ModalGateway } from "react-images";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 
-import Loading from "../../components/Loading";
-import { MpgaPhoto } from "../../models/Documents";
-import { IApplicationState } from "../../store";
-import PhotoActions from "../../store/PhotoActions";
-import GalleryMenu from "../gallery/GalleryMenu";
-import PhotoGallery from "../gallery/PhotoGallery";
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Carousel, { Modal, ModalGateway } from 'react-images';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import Loading from '../../components/Loading';
+import { MpgaPhoto } from '../../models/Documents';
+import { IApplicationState } from '../../store';
+import PhotoActions from '../../store/PhotoActions';
+import GalleryMenu from '../gallery/GalleryMenu';
+import PhotoGallery from '../gallery/PhotoGallery';
 
 const TournamentPhotoList: React.FC = () => {
-    let { year } = useParams();
+    let { year } = useParams<{ year: string }>();
     const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const dispatch = useDispatch();
     const state = useSelector((state: IApplicationState) => state.photos);
-    const tournament = useSelector((state: IApplicationState) => state.tournament?.currentTournament);
+    const tournament = useSelector(
+        (state: IApplicationState) => state.tournament?.currentTournament
+    );
 
     useEffect(() => {
         if (tournament) {
@@ -63,7 +66,10 @@ const TournamentPhotoList: React.FC = () => {
                     <ModalGateway>
                         {lightboxIsOpen ? (
                             <Modal onClose={() => toggleLightbox(selectedIndex)}>
-                                <Carousel views={imageList(state.data)} currentIndex={selectedIndex} />
+                                <Carousel
+                                    views={imageList(state.data)}
+                                    currentIndex={selectedIndex}
+                                />
                             </Modal>
                         ) : null}
                     </ModalGateway>

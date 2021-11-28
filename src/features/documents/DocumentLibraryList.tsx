@@ -1,22 +1,25 @@
-import React, { useCallback, useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import LoadingContainer from "../../components/LoadingContainer";
-import constants from "../../constants";
-import { MpgaDocument } from "../../models/Documents";
-import { IApplicationState } from "../../store";
-import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
-import TournamentActions from "../../store/TournamentActions";
-import DocumentEditModal from "./DocumentEditModal";
-import DocumentLibraryRow from "./DocumentLibraryRow";
-import DocumentLibrarySearch from "./DocumentLibrarySearch";
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+import { useDispatch, useSelector } from 'react-redux';
+
+import LoadingContainer from '../../components/LoadingContainer';
+import { MpgaDocument } from '../../models/Documents';
+import { IApplicationState } from '../../store';
+import DocumentActions, { IDocumentSearch } from '../../store/DocumentActions';
+import TournamentActions from '../../store/TournamentActions';
+import DocumentEditModal from './DocumentEditModal';
+import DocumentLibraryRow from './DocumentLibraryRow';
+import DocumentLibrarySearch from './DocumentLibrarySearch';
 
 const DocumentLibraryList: React.FC = () => {
     const [doEdit, updateDoEdit] = useState(false);
     const [docToEdit, updateDocToEdit] = useState<MpgaDocument>();
-    const [query, updateQuery] = useState<IDocumentSearch>({ key: "library", year: constants.EventCalendarYear });
+    const [query, updateQuery] = useState<IDocumentSearch>({
+        key: "library",
+        // year: new Date().getFullYear(),
+    });
     const dispatch = useDispatch();
     const documentState = useSelector((state: IApplicationState) => state.documents);
     const tournamentState = useSelector((state: IApplicationState) => state.tournament);
@@ -57,7 +60,9 @@ const DocumentLibraryList: React.FC = () => {
 
     const createNewDocument = () => {
         dispatch(DocumentActions.AddNew(query));
-        const doc = documentState.documents.get("library")?.find((d) => d.id === 0) || new MpgaDocument({ id: 0 });
+        const doc =
+            documentState.documents.get("library")?.find((d) => d.id === 0) ||
+            new MpgaDocument({ id: 0 });
         updateDocToEdit(doc);
         updateDoEdit(true);
     };
@@ -69,9 +74,7 @@ const DocumentLibraryList: React.FC = () => {
 
     return (
         <React.Fragment>
-            <h3 className="text-primary mb-2">
-                MPGA Document Library
-            </h3>
+            <h3 className="text-primary mb-2">MPGA Document Library</h3>
             <React.Fragment>
                 <h5 className="text-secondary">Search</h5>
                 <DocumentLibrarySearch
@@ -80,7 +83,10 @@ const DocumentLibraryList: React.FC = () => {
                     OnSearch={(query) => updateQuery(query)}
                 />
             </React.Fragment>
-            <LoadingContainer hasData={!documentState.isBusy && documentState.documents.get("library") !== undefined}>
+            <LoadingContainer
+                hasData={
+                    !documentState.isBusy && documentState.documents.get("library") !== undefined
+                }>
                 <Button variant="link" className="text-warning" onClick={() => createNewDocument()}>
                     Add New Document
                 </Button>
@@ -98,16 +104,25 @@ const DocumentLibraryList: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {documentState.documents.get("library")?.map((doc: MpgaDocument, idx: number) => {
-                            return (
-                                <DocumentLibraryRow
-                                    key={idx}
-                                    document={doc}
-                                    tournaments={new Map(tournamentState.tournaments.map((t) => [t.id!, t.name]))}
-                                    OnEdit={(document) => editExistingDocument(document)}
-                                />
-                            );
-                        })}
+                        {documentState.documents
+                            .get("library")
+                            ?.map((doc: MpgaDocument, idx: number) => {
+                                return (
+                                    <DocumentLibraryRow
+                                        key={idx}
+                                        document={doc}
+                                        tournaments={
+                                            new Map(
+                                                tournamentState.tournaments.map((t) => [
+                                                    t.id!,
+                                                    t.name,
+                                                ])
+                                            )
+                                        }
+                                        OnEdit={(document) => editExistingDocument(document)}
+                                    />
+                                );
+                            })}
                     </tbody>
                 </Table>
                 <DocumentEditModal

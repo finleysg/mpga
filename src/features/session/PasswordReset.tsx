@@ -1,19 +1,19 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import React from 'react';
 
-import Loading from "../../components/Loading";
-import { IApplicationState } from "../../store";
-import UserActions from "../../store/UserActions";
-import PasswordResetForm from "./PasswordResetForm";
-import useNavigation from "../../routes/Navigation";
-import { PasswordResetRequest } from "../../models/User";
-import { IPasswordReset } from "./PasswordResetForm";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import Loading from '../../components/Loading';
+import { PasswordResetRequest } from '../../models/User';
+import useNavigation from '../../routes/Navigation';
+import { IApplicationState } from '../../store';
+import UserActions from '../../store/UserActions';
+import PasswordResetForm, { IPasswordReset } from './PasswordResetForm';
 
 const PasswordReset: React.FC = () => {
-    const { uid, token } = useParams();
+    const { uid, token } = useParams<{ uid: string; token: string }>();
     const navigator = useNavigation();
     const dispatch = useDispatch();
     const session = useSelector((state: IApplicationState) => state.session);
@@ -36,18 +36,24 @@ const PasswordReset: React.FC = () => {
                     <Card.Title>Create or Reset Your Password</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    {!session.flags.passwordResetConfirmed && <p>Enter and confirm your new password.</p>}
+                    {!session.flags.passwordResetConfirmed && (
+                        <p>Enter and confirm your new password.</p>
+                    )}
                     {session.flags.passwordResetConfirmed && (
                         <p className="text-success">
                             Your password has been changed. Log in now with your new password.
                         </p>
                     )}
                     <PasswordResetForm OnReset={(creds) => resetPassword(creds)} />
-                    {session.flags.hasError && <p className="text-danger mt-3">{session.flags.errorMessage}</p>}
+                    {session.flags.hasError && (
+                        <p className="text-danger mt-3">{session.flags.errorMessage}</p>
+                    )}
                 </Card.Body>
                 {session.flags.passwordResetConfirmed && (
                     <Card.Footer>
-                        <Button variant="outline-secondary" onClick={() => navigator.navigate("/account/login")}>
+                        <Button
+                            variant="outline-secondary"
+                            onClick={() => navigator.navigate("/account/login")}>
                             Login
                         </Button>
                     </Card.Footer>

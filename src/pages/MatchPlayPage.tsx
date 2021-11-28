@@ -12,7 +12,6 @@ const MatchPlayPage: React.FC = () => {
             RightColumn={
                 <React.Fragment>
                     <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
-                    <p>2021 team listing coming soon...</p>
                     {/* <div>
                         <iframe
                             title="2021-sign-up"

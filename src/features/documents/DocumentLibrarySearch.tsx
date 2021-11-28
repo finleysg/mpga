@@ -1,13 +1,13 @@
-import { Formik } from "formik";
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import React from 'react';
 
-import MultiSelect from "../../components/MultiSelect";
-import { Tournament } from "../../models/Events";
-import { IDocumentSearch } from "../../store/DocumentActions";
+import { Formik } from 'formik';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
+
+import { Tournament } from '../../models/Events';
+import { IDocumentSearch } from '../../store/DocumentActions';
 
 export interface IDocumentLibrarySearchProps {
     query: IDocumentSearch;
@@ -18,7 +18,7 @@ export interface IDocumentLibrarySearchProps {
 interface IQuery {
     tournamentId?: number;
     year?: number;
-    documentTypes?: string[];
+    documentType?: string;
     tags?: string;
 }
 
@@ -34,9 +34,23 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
     const search: IQuery = {
         tournamentId: query.tournamentId,
         year: query.year,
-        documentTypes: query.documentTypes,
+        documentType: query.documentType,
         tags: query.tags?.join(","),
     };
+    const documentOptions = [
+        { value: "Agenda", label: "Agenda" },
+        { value: "ByLaws", label: "ByLaws" },
+        { value: "Club Registration", label: "Club Registration" },
+        { value: "Financial", label: "Financial" },
+        { value: "Match Play", label: "Match Play" },
+        { value: "Match Play Brackets", label: "Match Play Brackets" },
+        { value: "Minutes", label: "Minutes" },
+        { value: "Other", label: "Other" },
+        { value: "Registration", label: "Registration" },
+        { value: "Results", label: "Results" },
+        { value: "Standing Orders", label: "Standing Orders" },
+        { value: "Tee Times", label: "Tee Times" },
+    ];
 
     return (
         <Formik
@@ -45,19 +59,13 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                 const newQuery = Object.assign({}, query);
                 newQuery.year = values.year;
                 newQuery.tournamentId = values.tournamentId;
-                newQuery.documentTypes = values.documentTypes;
+                newQuery.documentType = values.documentType;
                 newQuery.tags = values.tags?.split(",") || [];
                 OnSearch(newQuery);
             }}
-            onReset={(values, actions) => {
-                actions.resetForm({
-                    values: {},
-                });
-                OnSearch({ key: query.key });
-            }}
             initialValues={search}>
-            {({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
-                <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
+            {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
+                <Form noValidate onSubmit={handleSubmit}>
                     <Form.Row>
                         <Col xs={12} sm={3} md={2} lg={1}>
                             <Form.Control
@@ -71,28 +79,28 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.year}
+                            </Form.Control.Feedback>
                         </Col>
                         <Col xs={12} sm={5} md={2} lg={3}>
-                            <MultiSelect
-                                clearText="Clear"
-                                closeText="Apply"
-                                label="Select..."
-                                initialValues={values.documentTypes}
-                                onChange={(selections) => (values.documentTypes = selections)}>
-                                <option value="Agenda">Agenda</option>
-                                <option value="ByLaws">ByLaws</option>
-                                <option value="Club Registration">Club Registration</option>
-                                <option value="Financial">Financial</option>
-                                <option value="Match Play">Match Play</option>
-                                <option value="Match Play Brackets">Match Play Brackets</option>
-                                <option value="Minutes">Minutes</option>
-                                <option value="Other">Other</option>
-                                <option value="Registration">Registration</option>
-                                <option value="Results">Results</option>
-                                <option value="Standing Orders">Standing Orders</option>
-                                <option value="Tee Times">Tee Times</option>
-                            </MultiSelect>
+                            <Form.Control
+                                as="select"
+                                name="documentType"
+                                value={values.documentType?.toString() || ""}
+                                isValid={touched.documentType && !errors.documentType}
+                                isInvalid={!!errors.documentType}
+                                onChange={handleChange}
+                                onBlur={handleBlur}>
+                                <option value={undefined}></option>
+                                {documentOptions.map((option) => {
+                                    return (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    );
+                                })}
+                            </Form.Control>
                         </Col>
                         <Col xs={12} sm={4} md={3} lg={3}>
                             <Form.Control
@@ -105,7 +113,11 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 onBlur={handleBlur}>
                                 <option value={undefined}></option>
                                 {props.tournaments.map((tournament) => {
-                                    return <option key={tournament.id} value={tournament.id}>{tournament.name}</option>;
+                                    return (
+                                        <option key={tournament.id} value={tournament.id}>
+                                            {tournament.name}
+                                        </option>
+                                    );
                                 })}
                             </Form.Control>
                         </Col>
@@ -123,9 +135,6 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                         <Col xs={12} sm={6} md={2} lg={2}>
                             <Button variant="secondary" type="submit" size="sm">
                                 Search
-                            </Button>
-                            <Button className="ml-2" variant="light" type="reset" size="sm">
-                                Clear
                             </Button>
                         </Col>
                     </Form.Row>

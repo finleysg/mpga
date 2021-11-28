@@ -1,19 +1,22 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import React from 'react';
 
-import Loading from "../components/Loading";
-import EventDetailLoader from "../features/events/EventDetailLoader";
-import EventDetailView from "../features/events/EventDetailView";
-import { IApplicationState } from "../store";
-import EventWinnerList from "../features/events/winners/EventWinnerList";
-import EventGalleryDetail from "../features/events/photos/EventGalleryDetail";
-import { EventInformationLinks } from "../features/events/EventInformationLinks";
-import NineThree from "../components/layouts/NineThree";
+import Container from 'react-bootstrap/Container';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import NineThree from '../components/layouts/NineThree';
+import Loading from '../components/Loading';
+import EventDetailLoader from '../features/events/EventDetailLoader';
+import EventDetailView from '../features/events/EventDetailView';
+import {
+    EventInformationLinks,
+} from '../features/events/EventInformationLinks';
+import EventGalleryDetail from '../features/events/photos/EventGalleryDetail';
+import EventWinnerList from '../features/events/winners/EventWinnerList';
+import { IApplicationState } from '../store';
 
 const EventDetailPage: React.FC = () => {
-    const { name, year } = useParams();
+    const { name, year } = useParams<{ name: string; year: string }>();
     const events = useSelector((state: IApplicationState) => state.events);
 
     const doRender = (): boolean => {

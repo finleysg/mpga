@@ -1,19 +1,24 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import { useParams } from "react-router-dom";
+import React from 'react';
 
-import TournamentHistoryTable from "../features/tournaments/TournamentHistoryTable";
-import TournamentLoader from "../features/tournaments/TournamentLoader";
-import TournamentResultList from "../features/tournaments/TournamentResultList";
-import LargeLeftSmallRight from "../components/layouts/LargeLeftSmallRight";
+import Container from 'react-bootstrap/Container';
+import { useParams } from 'react-router-dom';
+
+import LargeLeftSmallRight from '../components/layouts/LargeLeftSmallRight';
+import TournamentHistoryTable
+    from '../features/tournaments/TournamentHistoryTable';
+import TournamentLoader from '../features/tournaments/TournamentLoader';
+import TournamentResultList from '../features/tournaments/TournamentResultList';
 
 const TournamentHistoryPage: React.FC = () => {
-    const { name } = useParams();
+    const { name } = useParams<{ name: string }>();
 
     return (
         <Container fluid={true}>
             <TournamentLoader name={name || ""} resultDocuments={true} />
-            <LargeLeftSmallRight LeftColumn={<TournamentHistoryTable />} RightColumn={<TournamentResultList />} />
+            <LargeLeftSmallRight
+                LeftColumn={<TournamentHistoryTable />}
+                RightColumn={<TournamentResultList />}
+            />
         </Container>
     );
 };

@@ -1,12 +1,13 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import { useParams } from "react-router-dom";
+import React from 'react';
 
-import TournamentLoader from "../features/tournaments/TournamentLoader";
-import TournamentPhotoList from "../features/tournaments/TournamentPhotoList";
+import Container from 'react-bootstrap/Container';
+import { useParams } from 'react-router-dom';
+
+import TournamentLoader from '../features/tournaments/TournamentLoader';
+import TournamentPhotoList from '../features/tournaments/TournamentPhotoList';
 
 const TournamentGalleryPage: React.FC = () => {
-    const { name } = useParams();
+    const { name } = useParams<{ name: string }>();
 
     return (
         <Container fluid={true}>

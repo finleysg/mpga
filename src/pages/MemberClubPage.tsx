@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import Container from 'react-bootstrap/Container';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -10,7 +11,7 @@ import MemberClubDetail from '../features/members/MemberClubDetail';
 import MemberClubActions from '../store/MemberClubActions';
 
 const MemberClubPage: React.FC = () => {
-    const { name } = useParams();
+    const { name } = useParams<{ name: string }>();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -28,6 +29,6 @@ const MemberClubPage: React.FC = () => {
             />
         </Container>
     );
-}
+};
 
 export default MemberClubPage;

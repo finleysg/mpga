@@ -1,9 +1,9 @@
-import { Api } from "../http";
-import { MpgaDocument } from "../models/Documents";
-import { EventDetail } from "../models/Events";
-import { IApplicationState } from "./";
-import NotificationActions from "./NotificationActions";
-import AppActions from "./AppActions";
+import { Api } from '../http';
+import { MpgaDocument } from '../models/Documents';
+import { EventDetail } from '../models/Events';
+import { IApplicationState } from './';
+import AppActions from './AppActions';
+import NotificationActions from './NotificationActions';
 
 export const DocumentForm: string = "document";
 
@@ -12,6 +12,7 @@ export interface IDocumentSearch {
     event?: EventDetail;
     tournamentId?: number;
     year?: number;
+    documentType?: string;
     documentTypes?: string[];
     tags?: string[];
 }
@@ -56,7 +57,9 @@ const prepareQueryString = (query: IDocumentSearch): string => {
     if (tournamentId > 0) {
         queryString = queryString + `&tournament=${tournamentId}`;
     }
-    if (query.documentTypes) {
+    if (query.documentType) {
+        queryString = queryString + `&type=${query.documentType}`;
+    } else if (query.documentTypes) {
         queryString = queryString + query.documentTypes.map((t) => `&type=${t}`);
     }
     if (query.tags) {
@@ -76,7 +79,10 @@ const DocumentActions = {
 
     Load: (query: IDocumentSearch) => async (dispatch: any) => {
         dispatch(AppActions.Busy());
-        dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_REQUESTED, payload: { key: query.key, query: query } });
+        dispatch({
+            type: DocumentActionTypes.GET_DOCUMENTS_REQUESTED,
+            payload: { key: query.key, query: query },
+        });
         try {
             const queryString = prepareQueryString(query);
             const result = await Api.get(`${url}${queryString}`);
@@ -89,55 +95,59 @@ const DocumentActions = {
             }
             dispatch(AppActions.NotBusy());
         } catch (error) {
-            dispatch({ type: DocumentActionTypes.GET_DOCUMENTS_FAILED, payload: { key: query.key } });
+            dispatch({
+                type: DocumentActionTypes.GET_DOCUMENTS_FAILED,
+                payload: { key: query.key },
+            });
             dispatch(AppActions.NotBusy());
             dispatch(NotificationActions.ToastError(error));
         }
     },
 
-    Save: (key: string, document: MpgaDocument, file?: File) => async (
-        dispatch: any,
-        getState: () => IApplicationState
-    ) => {
-        const queries = getState().documents.queries;
-        const requery = queries.has(key) && queries.get(key);
-        dispatch(AppActions.Busy());
-        try {
-            const payload = prepareFormData(document, file);
-            if (!document.id) {
-                await Api.post(url, payload);
-            } else {
-                await Api.patch(`${url}${document.id}/`, payload);
+    Save:
+        (key: string, document: MpgaDocument, file?: File) =>
+        async (dispatch: any, getState: () => IApplicationState) => {
+            const queries = getState().documents.queries;
+            const requery = queries.has(key) && queries.get(key);
+            dispatch(AppActions.Busy());
+            try {
+                const payload = prepareFormData(document, file);
+                if (!document.id) {
+                    await Api.post(url, payload);
+                } else {
+                    await Api.patch(`${url}${document.id}/`, payload);
+                }
+                if (requery) {
+                    dispatch(DocumentActions.Load(requery));
+                }
+                dispatch(AppActions.NotBusy());
+                dispatch(AppActions.CloseOpenForms(DocumentForm));
+                dispatch(NotificationActions.ToastSuccess(`${document.title} has been saved.`));
+            } catch (error) {
+                dispatch(AppActions.NotBusy());
+                dispatch(NotificationActions.ToastError(error));
             }
-            if (requery) {
-                dispatch(DocumentActions.Load(requery));
-            }
-            dispatch(AppActions.NotBusy());
-            dispatch(AppActions.CloseOpenForms(DocumentForm));
-            dispatch(NotificationActions.ToastSuccess(`${document.title} has been saved.`));
-        } catch (error) {
-            dispatch(AppActions.NotBusy());
-            dispatch(NotificationActions.ToastError(error));
-        }
-    },
+        },
 
-    Delete: (key: string, document: MpgaDocument) => async (dispatch: any, getState: () => IApplicationState) => {
-        const queries = getState().documents.queries;
-        const requery = queries.has(key) && queries.get(key);
-        dispatch(AppActions.Busy());
-        try {
-            await Api.delete(`${url}${document.id}/`);
-            if (requery) {
-                dispatch(DocumentActions.Load(requery));
+    Delete:
+        (key: string, document: MpgaDocument) =>
+        async (dispatch: any, getState: () => IApplicationState) => {
+            const queries = getState().documents.queries;
+            const requery = queries.has(key) && queries.get(key);
+            dispatch(AppActions.Busy());
+            try {
+                await Api.delete(`${url}${document.id}/`);
+                if (requery) {
+                    dispatch(DocumentActions.Load(requery));
+                }
+                dispatch(AppActions.NotBusy());
+                dispatch(AppActions.CloseOpenForms(DocumentForm));
+                dispatch(NotificationActions.ToastSuccess(`${document.title} has been deleted.`));
+            } catch (error) {
+                dispatch(AppActions.NotBusy());
+                dispatch(NotificationActions.ToastError(error));
             }
-            dispatch(AppActions.NotBusy());
-            dispatch(AppActions.CloseOpenForms(DocumentForm));
-            dispatch(NotificationActions.ToastSuccess(`${document.title} has been deleted.`));
-        } catch (error) {
-            dispatch(AppActions.NotBusy());
-            dispatch(NotificationActions.ToastError(error));
-        }
-    },
+        },
 };
 
 export default DocumentActions;
