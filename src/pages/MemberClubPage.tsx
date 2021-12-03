@@ -11,7 +11,7 @@ import MemberClubDetail from '../features/members/MemberClubDetail';
 import MemberClubActions from '../store/MemberClubActions';
 
 const MemberClubPage: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+    const { name } = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {

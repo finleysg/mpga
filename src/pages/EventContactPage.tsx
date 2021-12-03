@@ -11,7 +11,7 @@ import { ContactMessage } from '../models/ContactMessage';
 import { IApplicationState } from '../store';
 
 const EventContactPage: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+    const { name } = useParams();
     const events = useSelector((state: IApplicationState) => state.events);
 
     const doRender = (): boolean => {

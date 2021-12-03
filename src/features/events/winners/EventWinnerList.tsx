@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import React, { useCallback, useEffect } from 'react';
 
-import LoadingContainer from "../../../components/LoadingContainer";
-import { EventDetail, TournamentWinner } from "../../../models/Events";
-import { IApplicationState } from "../../../store";
-import TournamentWinnerActions from "../../../store/TournamentWinnerActions";
-import usePermissions from "../../../utilities/Permissions";
-import EventWinnerDetail from "./EventWinnerDetail";
+import Button from 'react-bootstrap/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+
+import LoadingContainer from '../../../components/LoadingContainer';
+import { EventDetail, TournamentWinner } from '../../../models/Events';
+import { IApplicationState } from '../../../store';
+import TournamentWinnerActions from '../../../store/TournamentWinnerActions';
+import usePermissions from '../../../utilities/Permissions';
+import EventWinnerDetail from './EventWinnerDetail';
 
 interface IEventWinnerListProps {
     eventDetail: EventDetail;
@@ -27,7 +28,8 @@ const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) 
     }, [dispatch, tournament]);
 
     const saveWinner = useCallback(
-        (winner: TournamentWinner) => dispatch(TournamentWinnerActions.SaveTournamentWinner(tournament!, winner)),
+        (winner: TournamentWinner) =>
+            dispatch(TournamentWinnerActions.SaveTournamentWinner(tournament!, winner)),
         [dispatch, tournament]
     );
 
@@ -65,8 +67,7 @@ const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) 
             )}
             <NavLink
                 to={`/tournaments/history/${eventDetail.tournament?.systemName}`}
-                className="nav-link"
-                activeClassName="active">
+                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                 Championship History
             </NavLink>
         </LoadingContainer>

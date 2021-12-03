@@ -16,7 +16,7 @@ import EventWinnerList from '../features/events/winners/EventWinnerList';
 import { IApplicationState } from '../store';
 
 const EventDetailPage: React.FC = () => {
-    const { name, year } = useParams<{ name: string; year: string }>();
+    const { name, year } = useParams();
     const events = useSelector((state: IApplicationState) => state.events);
 
     const doRender = (): boolean => {

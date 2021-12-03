@@ -1,23 +1,23 @@
-import React, { useCallback, useState } from "react";
-import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import React, { useCallback, useState } from 'react';
 
-import EditContainer from "../../components/EditContainer";
-import { MatchResult } from "../../models/Clubs";
-import useNavigation from "../../routes/Navigation";
-import { IApplicationState } from "../../store";
-import AppActions from "../../store/AppActions";
-import MatchPlayActions from "../../store/MatchPlayActions";
-import usePermissions from "../../utilities/Permissions";
-import MatchResultEdit from "./MatchResultEdit";
+import Button from 'react-bootstrap/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router';
+
+import EditContainer from '../../components/EditContainer';
+import { MatchResult } from '../../models/Clubs';
+import { IApplicationState } from '../../store';
+import AppActions from '../../store/AppActions';
+import MatchPlayActions from '../../store/MatchPlayActions';
+import usePermissions from '../../utilities/Permissions';
+import MatchResultEdit from './MatchResultEdit';
 
 const MatchResultEntry: React.FC = () => {
     const [doEdit, setDoEdit] = useState(false);
     const matchPlayState = useSelector((state: IApplicationState) => state.matchPlay);
     const dispatch = useDispatch();
     const permissions = usePermissions();
-    const navigation = useNavigation();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const saveResult = useCallback(
@@ -30,7 +30,7 @@ const MatchResultEntry: React.FC = () => {
 
     const goRegister = () => {
         dispatch(AppActions.SaveLocation(location.pathname));
-        navigation.navigate("/account/register")
+        navigate("/account/register");
     };
 
     return (
@@ -50,8 +50,8 @@ const MatchResultEntry: React.FC = () => {
                         {!permissions.canPostMatchResult() && (
                             <div>
                                 <p>
-                                    To post a match play result, please log in. If you don't have an account, click the
-                                    button below to sign up.
+                                    To post a match play result, please log in. If you don't have an
+                                    account, click the button below to sign up.
                                 </p>
                                 <Button
                                     variant="secondary"

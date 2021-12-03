@@ -1,9 +1,10 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import React from 'react';
 
-import { MpgaPhoto } from "../../../models/Documents";
-import { EventDetail } from "../../../models/Events";
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { MpgaPhoto } from '../../../models/Documents';
+import { EventDetail } from '../../../models/Events';
 
 const RandomPhoto = styled.img`
     max-width: 95%;
@@ -15,7 +16,7 @@ interface IEventGalleryViewProps {
     eventDetail: EventDetail;
 }
 
-const EventGalleryView: React.FunctionComponent<IEventGalleryViewProps> = props => {
+const EventGalleryView: React.FunctionComponent<IEventGalleryViewProps> = (props) => {
     const { samplePhoto, eventDetail } = props;
 
     return (
@@ -28,8 +29,7 @@ const EventGalleryView: React.FunctionComponent<IEventGalleryViewProps> = props 
             <p>{samplePhoto.caption}</p>
             <NavLink
                 to={`/tournaments/gallery/${eventDetail.tournament?.systemName}/${eventDetail.mostRecentYear}`}
-                className="nav-link"
-                activeClassName="active">
+                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                 {eventDetail.mostRecentYear} Tournament Gallery
             </NavLink>
         </React.Fragment>

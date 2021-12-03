@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import ReactMarkdown from "react-markdown";
+
 import moment from 'moment';
+import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 
 const InlineLabel = styled.span`
@@ -12,12 +13,12 @@ InlineLabel.displayName = "InlineLabel";
 const StackedLabel = styled.p`
     font-weight: 600;
     margin: 4px 0 4px 0;
-`
+`;
 StackedLabel.displayName = "StackedLabel";
 
 export enum LabelStyle {
     Inline,
-    Stacked
+    Stacked,
 }
 
 export enum ValueType {
@@ -25,7 +26,7 @@ export enum ValueType {
     ExternalLink,
     Markdown,
     Date,
-    Address
+    Address,
 }
 
 export interface ILabelAndValueProps {
@@ -40,41 +41,46 @@ const LabelAndValue: React.FC<ILabelAndValueProps> = (props) => {
     const { label, value, defaultValue, labelStyle, valueType } = props;
 
     const renderValue = (): ReactNode => {
-        switch (valueType)
-        {
+        switch (valueType) {
             case ValueType.Text:
                 return <span>{value || defaultValue || "n/a"}</span>;
             case ValueType.ExternalLink:
-                return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+                return (
+                    <a href={value} target="_blank" rel="noopener noreferrer">
+                        {value}
+                    </a>
+                );
             case ValueType.Markdown:
-                return <ReactMarkdown source={value} escapeHtml={true} />
+                return <ReactMarkdown children={value} />;
             case ValueType.Date:
                 if (value && moment.isDate(value)) {
-                    return <span>{moment(value).format("YYYY-MM-DD")}</span>
+                    return <span>{moment(value).format("YYYY-MM-DD")}</span>;
                 } else {
-                    return <span>{defaultValue || "n/a"}</span>
+                    return <span>{defaultValue || "n/a"}</span>;
                 }
             case ValueType.Address:
-                return <div>
-                    <p className="mb-1">{value.addressTxt}</p>
-                    <p>{value.city}, {value.state} {value.zip}</p>
-                </div>
+                return (
+                    <div>
+                        <p className="mb-1">{value.addressTxt}</p>
+                        <p>
+                            {value.city}, {value.state} {value.zip}
+                        </p>
+                    </div>
+                );
             default:
-                return <></>
+                return <></>;
         }
-    }
+    };
 
     return (
         <div>
-            {labelStyle === LabelStyle.Inline &&
-                <InlineLabel>{label}:</InlineLabel>
-            }
-            {labelStyle === LabelStyle.Stacked &&
+            {labelStyle === LabelStyle.Inline && <InlineLabel>{label}:</InlineLabel>}
+            {labelStyle === LabelStyle.Stacked && (
                 <StackedLabel className="text-primary">{label}</StackedLabel>
-            }
+            )}
             {renderValue()}
         </div>
     );
-}
+};
 
 export default LabelAndValue;

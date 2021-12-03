@@ -15,7 +15,7 @@ function buildRootReducer(reducers: any) {
 const composeEnhancers = composeWithDevTools({});
 
 const initialState = (window as any).initialReduxState as IApplicationState;
-const history = createBrowserHistory({ basename: "/" });
+const history = createBrowserHistory();
 
 export const store = createStore(
     buildRootReducer(reducers),

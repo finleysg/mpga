@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import React, { useEffect } from 'react';
 
-import constants from "../../../constants";
-import { IApplicationState } from "../../../store";
-import EventCalendarItem from "./EventCalendarItem";
-import EventActions from "../../../store/EventActions";
-import LoadingContainer from "../../../components/LoadingContainer";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import LoadingContainer from '../../../components/LoadingContainer';
+import constants from '../../../constants';
+import { IApplicationState } from '../../../store';
+import EventActions from '../../../store/EventActions';
+import EventCalendarItem from './EventCalendarItem';
 
 const EventCalendar: React.FC = () => {
     const dispatch = useDispatch();
     const state = useSelector((state: IApplicationState) => state.events);
 
-    let history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(EventActions.LoadEvents());
@@ -22,7 +23,7 @@ const EventCalendar: React.FC = () => {
         const location = {
             pathname: `/tournaments/detail/${linkName}/${constants.EventCalendarYear}`,
         };
-        history.push(location);
+        navigate(location);
     };
 
     return (

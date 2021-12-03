@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import EventActions from '../../store/EventActions';
 
 const EventDetailLoader: React.FC = () => {
-    let { name, year } = useParams<{ name: string; year: string }>();
+    const { name, year } = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {

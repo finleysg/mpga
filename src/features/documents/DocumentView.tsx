@@ -1,6 +1,8 @@
-import React from "react";
-import { MpgaDocument } from "../../models/Documents";
-import Button from "react-bootstrap/Button";
+import React from 'react';
+
+import Button from 'react-bootstrap/Button';
+
+import { MpgaDocument } from '../../models/Documents';
 
 export enum DocumentViewType {
     Link,
@@ -38,7 +40,7 @@ export interface IDocumentViewProps {
     render: IDocumentRenderProps;
 }
 
-const DocumentView: React.FC<IDocumentViewProps> = props => {
+const DocumentView: React.FC<IDocumentViewProps> = (props) => {
     const { document, render } = props;
 
     const renderView = () => {
@@ -48,7 +50,8 @@ const DocumentView: React.FC<IDocumentViewProps> = props => {
                     <a
                         href={document.file!}
                         className={render.className || ""}
-                        target={render.external ? "_blank" : "_self"}>
+                        target={render.external ? "_blank" : "_self"}
+                        rel="noreferrer">
                         {document.title}
                     </a>
                 );
@@ -69,7 +72,8 @@ const DocumentView: React.FC<IDocumentViewProps> = props => {
                         <a
                             href={document.file!}
                             className={render.className || ""}
-                            target={render.external ? "_blank" : "_self"}>
+                            target={render.external ? "_blank" : "_self"}
+                            rel="noreferrer">
                             {document.title}
                         </a>
                         <span>{document.year}</span>

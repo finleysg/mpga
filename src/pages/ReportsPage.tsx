@@ -10,7 +10,7 @@ import ContactsReport from '../features/reports/ContactsReport';
 import ReportMenu from '../features/reports/ReportMenu';
 
 const ReportsPage: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+    const { name } = useParams();
 
     const renderReport = () => {
         switch (name) {

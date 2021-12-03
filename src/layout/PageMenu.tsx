@@ -1,13 +1,14 @@
-import React from "react";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { useSelector } from "react-redux";
-import { useRouteMatch } from "react-router";
-import { NavLink } from "react-router-dom";
+import React from 'react';
 
-import constants from "../constants";
-import { IApplicationState } from "../store";
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
+import { NavLink } from 'react-router-dom';
+
+import constants from '../constants';
+import { IApplicationState } from '../store';
 
 export interface IPageMenuProps {
     subMenu: string;
@@ -16,12 +17,15 @@ export interface IPageMenuProps {
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
     const session = useSelector((state: IApplicationState) => state.session);
-    const { url } = useRouteMatch();
+    const location = useLocation();
+    const url = location.pathname;
 
     const renderAccountLink = () => {
         if (session.user.isAuthenticated) {
             return (
-                <NavLink to="/account" className="nav-link" activeClassName="active">
+                <NavLink
+                    to="/account"
+                    className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                     My Account ({session.user.name})
                 </NavLink>
             );
@@ -42,7 +46,9 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                             <NavDropdown.Item href="https://www.minnesotapga.com/" target="_blank">
                                 Minnesota PGA
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="http://www.wirthgolfassociation.org/tcc.html" target="_blank">
+                            <NavDropdown.Item
+                                href="http://www.wirthgolfassociation.org/tcc.html"
+                                target="_blank">
                                 Twin Cities Championship
                             </NavDropdown.Item>
                             <NavDropdown.Item href="https://www.usga.org/" target="_blank">
@@ -63,20 +69,17 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                         <Nav>
                             <NavLink
                                 to={`${url}/history/${tournamentName}`}
-                                className="nav-link"
-                                activeClassName="active">
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 History
                             </NavLink>
                             <NavLink
                                 to={`${url}/gallery/${tournamentName}/${constants.EventCalendarYear}`}
-                                className="nav-link"
-                                activeClassName="active">
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Gallery
                             </NavLink>
                             <NavLink
                                 to={`${url}/contact/${tournamentName}/${constants.EventCalendarYear}`}
-                                className="nav-link"
-                                activeClassName="active">
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Contact
                             </NavLink>
                         </Nav>
@@ -84,16 +87,24 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                 } else {
                     return (
                         <Nav>
-                            <NavLink to={`${url}/hard-card`} className="nav-link" activeClassName="active">
+                            <NavLink
+                                to={`${url}/hard-card`}
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Hard Card
                             </NavLink>
-                            <NavLink to={`${url}/code-of-conduct`} className="nav-link" activeClassName="active">
+                            <NavLink
+                                to={`${url}/code-of-conduct`}
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Code of Conduct
                             </NavLink>
-                            <NavLink to={`${url}/pace-of-play`} className="nav-link" activeClassName="active">
+                            <NavLink
+                                to={`${url}/pace-of-play`}
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Pace of Play
                             </NavLink>
-                            <NavLink to={`${url}/bid`} className="nav-link" activeClassName="active">
+                            <NavLink
+                                to={`${url}/bid`}
+                                className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                                 Tournament Bid
                             </NavLink>
                         </Nav>
@@ -102,13 +113,19 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
             case "match-play":
                 return (
                     <Nav>
-                        <NavLink to={`${url}/rules`} className="nav-link" activeClassName="active">
+                        <NavLink
+                            to={`${url}/rules`}
+                            className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                             Rules
                         </NavLink>
-                        <NavLink to={`${url}/results`} className="nav-link" activeClassName="active">
+                        <NavLink
+                            to={`${url}/results`}
+                            className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                             Schedule and Results
                         </NavLink>
-                        <NavLink to={`${url}/history`} className="nav-link" activeClassName="active">
+                        <NavLink
+                            to={`${url}/history`}
+                            className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                             History
                         </NavLink>
                     </Nav>
@@ -118,13 +135,16 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
             case "about":
                 return (
                     <Nav>
-                        <NavLink to={`${url}/committee`} className="nav-link" activeClassName="active">
+                        <NavLink
+                            to={`${url}/committee`}
+                            className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                             Executive Committee
                         </NavLink>
-                        <NavLink to={`${url}/awards`} className="nav-link" activeClassName="active">
+                        <NavLink
+                            to={`${url}/awards`}
+                            className={(isActive) => ("nav-link" + isActive ? "active" : "")}>
                             Awards
                         </NavLink>
-                        
                     </Nav>
                 );
             default:
@@ -134,7 +154,10 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
 
     return (
         <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-            <Nav id="topnav">{selectMenu()}{renderAccountLink()}</Nav>
+            <Nav id="topnav">
+                {selectMenu()}
+                {renderAccountLink()}
+            </Nav>
         </Navbar.Collapse>
     );
 };

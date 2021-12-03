@@ -1,22 +1,23 @@
-import "./layout.scss";
-import 'codemirror/lib/codemirror.css';
+import './layout.scss';
 import '@toast-ui/editor/dist/toastui-editor.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
-import React, { useEffect } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import { useSelector, useDispatch } from "react-redux";
-import useResizeAware from "react-resize-aware";
-import { useLocation } from "react-router";
+import { useEffect } from 'react';
 
-import ErrorBoundary from "../components/ErrorBoundary";
-import { Toaster } from "../components/Toaster";
-import { IApplicationState } from "../store";
-import { LayoutActions } from "../store/LayoutActions";
-import PageMenu from "./PageMenu";
-import Sidenav from "./Sidenav";
-import SidenavToggle from "./SidenavToggle";
+import Navbar from 'react-bootstrap/Navbar';
+import { useDispatch, useSelector } from 'react-redux';
+import useResizeAware from 'react-resize-aware';
+import { Outlet, useLocation } from 'react-router';
 
-const ConnectedLayout: React.FC<any> = (props) => {
+import ErrorBoundary from '../components/ErrorBoundary';
+import { Toaster } from '../components/Toaster';
+import { IApplicationState } from '../store';
+import { LayoutActions } from '../store/LayoutActions';
+import PageMenu from './PageMenu';
+import Sidenav from './Sidenav';
+import SidenavToggle from './SidenavToggle';
+
+export default function Layout() {
     const dispatch = useDispatch();
     const location = useLocation();
     const [resizeListener, sizes] = useResizeAware();
@@ -41,16 +42,18 @@ const ConnectedLayout: React.FC<any> = (props) => {
                         MPGA
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    {layoutState.subMenu && <PageMenu subMenu={layoutState.subMenu} segments={layoutState.segments} />}
+                    {layoutState.subMenu && (
+                        <PageMenu subMenu={layoutState.subMenu} segments={layoutState.segments} />
+                    )}
                 </Navbar>
                 <div id="page">
                     {resizeListener}
                     <Toaster />
-                    <ErrorBoundary>{props.children}</ErrorBoundary>
+                    <ErrorBoundary>
+                        <Outlet />
+                    </ErrorBoundary>
                 </div>
             </div>
         </div>
     );
-};
-
-export default ConnectedLayout;
+}

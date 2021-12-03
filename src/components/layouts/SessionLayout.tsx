@@ -1,19 +1,17 @@
-import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import { Outlet } from 'react-router';
 
-const SessionLayout: React.FC<any> = (props) => {
+export default function SessionLayout() {
     return (
         <Row>
-            <Col 
-                xs={{ span: 12 }} 
-                sm={{ span: 10, offset: 1 }} 
-                md={{ span: 8, offset: 2 }} 
+            <Col
+                xs={{ span: 12 }}
+                sm={{ span: 10, offset: 1 }}
+                md={{ span: 8, offset: 2 }}
                 lg={{ span: 4, offset: 4 }}>
-                {props.children}
+                <Outlet />
             </Col>
         </Row>
     );
-};
-
-export default SessionLayout;
+}

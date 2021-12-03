@@ -14,7 +14,7 @@ import GalleryMenu from '../gallery/GalleryMenu';
 import PhotoGallery from '../gallery/PhotoGallery';
 
 const TournamentPhotoList: React.FC = () => {
-    let { year } = useParams<{ year: string }>();
+    const { year } = useParams();
     const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const dispatch = useDispatch();

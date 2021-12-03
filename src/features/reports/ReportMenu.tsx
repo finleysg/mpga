@@ -1,21 +1,20 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import React from 'react';
 
-interface IReportMenuProps {}
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const ReportMenu: React.FunctionComponent<IReportMenuProps> = (props) => {
-    const { url } = useRouteMatch();
-    const history = useHistory();
+export default function ReportMenu() {
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const openReport = (name: string) => {
-        if (url.endsWith("reports")) {
-            history.push(`${url}/${name}`);
+        if (location.pathname.endsWith("reports")) {
+            navigate(`${location.pathname}/${name}`);
         } else {
-            const lastSegment = url.lastIndexOf("/");
-            const newUrl = `${url.substring(0, lastSegment)}/${name}`;
-            history.push(newUrl);
+            const lastSegment = location.pathname.lastIndexOf("/");
+            const newUrl = `${location.pathname.substring(0, lastSegment)}/${name}`;
+            navigate(newUrl);
         }
     };
 
@@ -49,6 +48,4 @@ const ReportMenu: React.FunctionComponent<IReportMenuProps> = (props) => {
             </ButtonGroup>
         </div>
     );
-};
-
-export default ReportMenu;
+}

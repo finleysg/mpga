@@ -3,16 +3,15 @@ import React, { useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Loading from '../../components/Loading';
-import useNavigation from '../../routes/Navigation';
 import { IApplicationState } from '../../store';
 import UserActions from '../../store/UserActions';
 
 const AccountActivation: React.FC = () => {
-    const { uid, token } = useParams<{ uid: string; token: string }>();
-    const navigator = useNavigation();
+    const { uid, token } = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const session = useSelector((state: IApplicationState) => state.session);
 
@@ -44,7 +43,7 @@ const AccountActivation: React.FC = () => {
                     <Card.Footer>
                         <Button
                             variant="outline-secondary"
-                            onClick={() => navigator.navigate("/account/login")}>
+                            onClick={() => navigate("/account/login")}>
                             Login
                         </Button>
                     </Card.Footer>

@@ -7,7 +7,7 @@ import TournamentLoader from '../features/tournaments/TournamentLoader';
 import TournamentPhotoList from '../features/tournaments/TournamentPhotoList';
 
 const TournamentGalleryPage: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+    const { name } = useParams();
 
     return (
         <Container fluid={true}>

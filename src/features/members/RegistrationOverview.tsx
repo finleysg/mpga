@@ -1,17 +1,18 @@
-import * as React from "react";
-import Button from "react-bootstrap/Button";
+import * as React from 'react';
 
-import { PageCodes } from "../../constants";
-import useNavigation from "../../routes/Navigation";
-import { IDocumentSearch } from "../../store/DocumentActions";
-import PageContentDetail from "../content/PageContentDetail";
-import DocumentLoader from "../documents/DocumentLoader";
-import LatestOnly from "../documents/LatestOnly";
+import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router';
+
+import { PageCodes } from '../../constants';
+import { IDocumentSearch } from '../../store/DocumentActions';
+import PageContentDetail from '../content/PageContentDetail';
+import DocumentLoader from '../documents/DocumentLoader';
+import LatestOnly from '../documents/LatestOnly';
 
 interface IRegistrationOverviewProps {}
 
 const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> = () => {
-    const navigator = useNavigation();
+    const navigate = useNavigate();
     const query: IDocumentSearch = {
         key: "dues",
         documentTypes: ["Club Registration"],
@@ -23,7 +24,11 @@ const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> 
             <PageContentDetail pageCode={PageCodes.ClubRegistration} />
             <LatestOnly query={query} />
             <PageContentDetail pageCode={PageCodes.IndividualRegistration} />
-            <Button variant="secondary" size="sm" className="ml-2" onClick={() => navigator.navigate("/account/register")}>
+            <Button
+                variant="secondary"
+                size="sm"
+                className="ml-2"
+                onClick={() => navigate("/account/register")}>
                 Create an Account
             </Button>
         </React.Fragment>

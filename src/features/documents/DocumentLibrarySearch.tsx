@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Formik } from 'formik';
+import { Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -66,7 +67,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
             initialValues={search}>
             {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Row>
+                    <Row>
                         <Col xs={12} sm={3} md={2} lg={1}>
                             <Form.Control
                                 name="year"
@@ -137,7 +138,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                                 Search
                             </Button>
                         </Col>
-                    </Form.Row>
+                    </Row>
                 </Form>
             )}
         </Formik>

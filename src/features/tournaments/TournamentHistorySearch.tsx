@@ -1,10 +1,11 @@
-import { Formik } from "formik";
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import React from 'react';
 
-import Col from "react-bootstrap/Col";
+import { Formik } from 'formik';
+import { Row } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
 
 export interface ITournamentHistorySearch {
     year?: number;
@@ -40,13 +41,13 @@ const TournamentHistorySearch: React.FC<ITournamentHistorySearchProps> = (props)
                 OnSearch(values);
             }}
             onReset={(values, actions) => {
-                actions.resetForm({values: {}});
+                actions.resetForm({ values: {} });
                 OnSearch({});
             }}
             initialValues={search}>
             {({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
                 <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
-                    <Form.Row>
+                    <Row>
                         <Form.Group as={Col} controlId="year">
                             <Form.Control
                                 name="year"
@@ -58,7 +59,9 @@ const TournamentHistorySearch: React.FC<ITournamentHistorySearchProps> = (props)
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                             />
-                            <Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.year}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         {!props.hideLocation && (
                             <Form.Group as={Col} controlId="location">
@@ -103,7 +106,7 @@ const TournamentHistorySearch: React.FC<ITournamentHistorySearchProps> = (props)
                                 Clear
                             </Button>
                         </Col>
-                    </Form.Row>
+                    </Row>
                 </Form>
             )}
         </Formik>

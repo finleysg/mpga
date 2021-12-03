@@ -1,9 +1,16 @@
-import React from "react";
-import Badge from "react-bootstrap/Badge";
-import { FaPencilAlt, FaRegFileWord, FaRegFileExcel, FaRegFile, FaRegFilePdf } from "react-icons/fa";
+import React from 'react';
 
-import { MpgaDocument } from "../../models/Documents";
-import moment from "moment";
+import moment from 'moment';
+import Badge from 'react-bootstrap/Badge';
+import {
+    FaPencilAlt,
+    FaRegFile,
+    FaRegFileExcel,
+    FaRegFilePdf,
+    FaRegFileWord,
+} from 'react-icons/fa';
+
+import { MpgaDocument } from '../../models/Documents';
 
 export interface IDocumentLibraryRowProps {
     document: MpgaDocument;
@@ -19,20 +26,32 @@ const DocumentLibraryRow: React.FC<IDocumentLibraryRowProps> = (props) => {
             case "doc":
             case "docx":
                 return (
-                    <a href={document.file} target="_blank" className="text-info" rel="noopener noreferrer">
+                    <a
+                        href={document.file}
+                        target="_blank"
+                        className="text-info"
+                        rel="noopener noreferrer">
                         <FaRegFileWord size={24} />
                     </a>
                 );
             case "xls":
             case "xlsx":
                 return (
-                    <a href={document.file} target="_blank" className="text-success" rel="noopener noreferrer">
+                    <a
+                        href={document.file}
+                        target="_blank"
+                        className="text-success"
+                        rel="noopener noreferrer">
                         <FaRegFileExcel size={24} />
                     </a>
                 );
             case "pdf":
                 return (
-                    <a href={document.file} target="_blank" className="text-danger" rel="noopener noreferrer">
+                    <a
+                        href={document.file}
+                        target="_blank"
+                        className="text-danger"
+                        rel="noopener noreferrer">
                         <FaRegFilePdf size={24} />
                     </a>
                 );

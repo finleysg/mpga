@@ -1,14 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import SessionLayout from "../components/layouts/SessionLayout";
-import Login from "../features/session/Login";
+import Login from '../features/session/Login';
 
 const LoginPage: React.FC = () => {
-    return (
-        <SessionLayout>
-            <Login />
-        </SessionLayout>
-    );
+    return <Login />;
 };
 
 export default LoginPage;

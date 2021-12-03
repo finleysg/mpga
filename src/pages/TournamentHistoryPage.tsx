@@ -10,7 +10,7 @@ import TournamentLoader from '../features/tournaments/TournamentLoader';
 import TournamentResultList from '../features/tournaments/TournamentResultList';
 
 const TournamentHistoryPage: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+    const { name } = useParams();
 
     return (
         <Container fluid={true}>

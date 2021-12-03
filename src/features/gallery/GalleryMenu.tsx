@@ -1,8 +1,9 @@
-import React from "react";
-import Badge from "react-bootstrap/Badge";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import React from 'react';
 
-import constants from "../../constants";
+import Badge from 'react-bootstrap/Badge';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import constants from '../../constants';
 
 export interface IGalleryMenuProps {
     currentYear: string;
@@ -10,8 +11,8 @@ export interface IGalleryMenuProps {
 
 const GalleryMenu: React.FC<IGalleryMenuProps> = (props) => {
     const { currentYear } = props;
-    const { url } = useRouteMatch();
-    const history = useHistory();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const renderBadges = () => {
         const years = [];
@@ -20,7 +21,11 @@ const GalleryMenu: React.FC<IGalleryMenuProps> = (props) => {
         }
         return years.map((year) => {
             return (
-                <Badge key={year} variant="secondary" className="clickable mr-2 mb-2" onClick={() => reload(year)}>
+                <Badge
+                    key={year}
+                    variant="secondary"
+                    className="clickable mr-2 mb-2"
+                    onClick={() => reload(year)}>
                     {year}
                 </Badge>
             );
@@ -28,8 +33,8 @@ const GalleryMenu: React.FC<IGalleryMenuProps> = (props) => {
     };
 
     const reload = (year: number) => {
-        const newUrl = url.replace(currentYear, year.toString());
-        history.push(newUrl);
+        const newUrl = location.pathname.replace(currentYear, year.toString());
+        navigate(newUrl);
     };
 
     return <div>{renderBadges()}</div>;
