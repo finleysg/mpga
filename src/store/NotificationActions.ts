@@ -1,9 +1,9 @@
-import { NotificationType } from "./NotificationStore";
+import { NotificationType } from './NotificationStore';
 
 export enum NotificationActionTypes {
     APPEND_NOTIFICATION = "APPEND_NOTIFICATION",
     REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION",
-};
+}
 
 const generateId = () => {
     return Math.floor(Math.random() * Math.floor(100000));
@@ -18,7 +18,7 @@ const toast = (title: string, message: string, type: NotificationType) => (dispa
             title: title,
             body: message,
             visible: true,
-        }
+        },
     });
 };
 
@@ -63,9 +63,9 @@ const NotificationActions = {
     RemoveToast: (id: number) => (dispatch: any) => {
         dispatch({
             type: NotificationActionTypes.REMOVE_NOTIFICATION,
-            payload: id
+            payload: id,
         });
-    }
+    },
 };
 
 export default NotificationActions;

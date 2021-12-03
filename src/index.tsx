@@ -1,45 +1,23 @@
-import "react-app-polyfill/ie11";
-import "react-app-polyfill/stable";
-import * as Sentry from "@sentry/browser";
-import { createBrowserHistory } from "history";
-import React from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
-import { routerMiddleware, routerReducer } from "react-router-redux";
-import { applyMiddleware, combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunk from "redux-thunk";
-import { AxiosResponse } from "axios";
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import * as Sentry from '@sentry/browser';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
-import constants from "./constants";
-import { AppRoutes } from "./routes/AppRoutes";
-import * as serviceWorker from "./serviceWorker";
-import { IApplicationState, reducers } from "./store";
-import { UserActionTypes } from "./store/UserActions";
-import { Api } from "./http";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-function buildRootReducer(reducers: any) {
-    return combineReducers<IApplicationState>(Object.assign({}, reducers, { routing: routerReducer }));
-}
+import { AxiosResponse } from 'axios';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-const composeEnhancers = composeWithDevTools({
-    // Specify name here, actionsBlacklist, actionsCreators and other options if needed
-});
-
-const initialState = (window as any).initialReduxState as IApplicationState;
-const history = createBrowserHistory({ basename: "/" });
-const store = createStore(
-    buildRootReducer(reducers),
-    initialState,
-    composeEnhancers(
-        applyMiddleware(thunk, routerMiddleware(history))
-        // other store enhancers if any
-    )
-);
+import { store } from './app-store';
+import constants from './constants';
+import { Api } from './http';
+import { AppRoutes } from './routes/AppRoutes';
+import * as serviceWorker from './serviceWorker';
+import { UserActionTypes } from './store/UserActions';
 
 Api.interceptors.response.use(
     (response: AxiosResponse) => {
@@ -59,17 +37,17 @@ Api.interceptors.response.use(
 
 const stripePromise = loadStripe(constants.StripePublicKey);
 
-Sentry.init({dsn: "https://73c06439a90442629476cfcb5d92f0c3@o59115.ingest.sentry.io/5214360"});
+Sentry.init({ dsn: "https://73c06439a90442629476cfcb5d92f0c3@o59115.ingest.sentry.io/5214360" });
 
 function renderApp() {
     ReactDOM.render(
-        <Provider store={store}>
-            <Elements stripe={stripePromise}>
+        <Elements stripe={stripePromise}>
+            <Provider store={store}>
                 <Router>
                     <AppRoutes />
                 </Router>
-            </Elements>
-        </Provider>,
+            </Provider>
+        </Elements>,
         document.getElementById("root")
     );
 }
