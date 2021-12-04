@@ -58,7 +58,6 @@ export const AppRoutes = () => {
                 <Route path="match-play/rules" element={<MatchPlayRulesPage />} />
                 <Route path="match-play/results" element={<MatchPlayResultsPage />} />
                 <Route path="match-play/history" element={<MatchPlayHistoryPage />} />
-
                 <Route path="clubs" element={<MemberClubsPage />} />
                 <Route path="clubs/:name" element={<MemberClubPage />} />
                 <Route path="about" element={<AboutUsPage />} />
@@ -73,7 +72,7 @@ export const AppRoutes = () => {
                     <Route path="forgot" element={<ForgotPassword />} />
                     <Route path="register" element={<Register />} />
                     <Route path="reset-password/:uid/:token" element={<PasswordReset />} />
-                    <Route path="activate/:uid/:token`" element={<AccountActivation />} />
+                    <Route path="activate/:uid/:token" element={<AccountActivation />} />
                 </Route>
             </Route>
         </Routes>

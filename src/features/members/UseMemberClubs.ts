@@ -1,16 +1,15 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from 'react';
 
-import { IApplicationState } from "../../store";
-import MemberClubActions from "../../store/MemberClubActions";
+import { useAppDispatch, useAppSelector } from '../../app-store';
+import { loadMemberClubs } from '../../store/MemberClubSlice';
 
 const useMemberClubs = () => {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(MemberClubActions.LoadMemberClubs());
-    }, [dispatch]);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(loadMemberClubs());
+  }, [dispatch]);
 
-    return useSelector((state: IApplicationState) => state.memberClubs.clubs);
+  return useAppSelector((state) => state.memberClubs);
 };
 
 export default useMemberClubs;

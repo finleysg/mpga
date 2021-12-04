@@ -1,28 +1,18 @@
-import { createBrowserHistory } from 'history';
-import { routerMiddleware, routerReducer } from 'react-router-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 
-import { IApplicationState, reducers } from './store/index';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-function buildRootReducer(reducers: any) {
-    return combineReducers<IApplicationState>(
-        Object.assign({}, reducers, { routing: routerReducer })
-    );
-}
+import { reducers } from './store/index';
+import { memberClubSlice } from './store/MemberClubSlice';
 
-const composeEnhancers = composeWithDevTools({});
-
-const initialState = (window as any).initialReduxState as IApplicationState;
-const history = createBrowserHistory();
-
-export const store = createStore(
-    buildRootReducer(reducers),
-    initialState,
-    composeEnhancers(applyMiddleware(thunk, routerMiddleware(history)))
-);
+export const store = configureStore({
+  reducer: { ...reducers, memberClubs: memberClubSlice.reducer },
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
