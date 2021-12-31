@@ -1,24 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import Button from "react-bootstrap/Button";
+import { useDispatch, useSelector } from "react-redux";
 
-import LoadingContainer from '../../components/LoadingContainer';
-import { ExecutiveCommittee } from '../../models/Clubs';
-import { IApplicationState } from '../../store';
-import CommitteeActions from '../../store/CommitteeActions';
-import usePermissions from '../../utilities/Permissions';
-import { IContactData } from '../contacts/ContactApi';
-import ContactSearch from '../contacts/ContactSearch';
-import useMemberClubs from '../members/UseMemberClubs';
-import CommitteeMemberDetail from './CommitteeMemberDetail';
+import LoadingContainer from "../../components/LoadingContainer";
+import { Contact, ExecutiveCommittee } from "../../models/Clubs";
+import { useGetClubsQuery } from "../../services/MpgaApi";
+import { IApplicationState } from "../../store";
+import CommitteeActions from "../../store/CommitteeActions";
+import usePermissions from "../../utilities/Permissions";
+import ContactSearch from "../contacts/ContactSearch";
+import CommitteeMemberDetail from "./CommitteeMemberDetail";
 
 const CommitteeList: React.FC = () => {
   const [findContact, setFindContact] = useState(false);
   const dispatch = useDispatch();
   const permissions = usePermissions();
   const committeeState = useSelector((state: IApplicationState) => state.committee);
-  const memberState = useMemberClubs();
+  const { data: clubs } = useGetClubsQuery();
   const canAdd = committeeState.members.findIndex((ec) => ec.id === 0) < 0; // no pending add
 
   useEffect(() => {
@@ -27,15 +26,15 @@ const CommitteeList: React.FC = () => {
 
   const saveCommitteeMember = useCallback(
     (committeeMember: ExecutiveCommittee) => dispatch(CommitteeActions.SaveCommitteeMember(committeeMember)),
-    [dispatch]
+    [dispatch],
   );
 
   const removeCommitteeMember = useCallback(
     (committeeMember: ExecutiveCommittee) => dispatch(CommitteeActions.DeleteCommitteeMember(committeeMember)),
-    [dispatch]
+    [dispatch],
   );
 
-  const addCommitteeMember = (contact: IContactData) => {
+  const addCommitteeMember = (contact: Contact) => {
     if (contact) {
       dispatch(CommitteeActions.AddNewMember(contact));
     } else {
@@ -61,7 +60,7 @@ const CommitteeList: React.FC = () => {
             <CommitteeMemberDetail
               key={ec.id}
               committeeMember={ec}
-              clubs={memberState.clubs}
+              clubs={clubs}
               edit={ec.id === 0}
               Cancel={() => dispatch(CommitteeActions.CancelNewMember())}
               Remove={removeCommitteeMember}

@@ -1,33 +1,52 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import WithEdit from "../../components/WithEdit";
+import { toast } from "react-toastify";
+
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import { AwardWinner } from "../../models/Events";
+import { useAddWinnerMutation, useUpdateWinnerMutation } from "../../services/MpgaApi";
 import usePermissions from "../../utilities/Permissions";
-import AwardWinnerEdit, { IAwardWinnerEditProps } from "./AwardWinnerEdit";
+import { AwardWinnerDetailProps } from "./AwardPropTypes";
+import AwardWinnerEdit from "./AwardWinnerEdit";
 import AwardWinnerView from "./AwardWinnerView";
-import { AwardWinnerForm } from "../../store/AwardActions";
 
-export interface IAwardWinnerDetailProps extends IAwardWinnerEditProps {
-    edit: boolean;
-}
+const AwardWinnerDetail: React.FC<AwardWinnerDetailProps> = (props) => {
+  const { edit, award, winner, onClose: clear } = props;
+  const permissions = usePermissions();
+  const [updateWinner] = useUpdateWinnerMutation();
+  const [addWinner] = useAddWinnerMutation();
+  const closeRef = useRef<CloseHandle>();
 
-const AwardWinnerDetail: React.FC<IAwardWinnerDetailProps> = (props) => {
-    const { edit, winner, Cancel, Save } = props;
-    const permissions = usePermissions();
+  const handleSave = async (winner: AwardWinner) => {
+    const data = winner.prepJson();
+    const mutation = winner.id > 0 ? updateWinner(data) : addWinner(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${winner.winner} has been saved for ${award.name}.`);
+        closeRef.current.close();
+        clear();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
-    const saveWinner = (winner: AwardWinner) => {
-        Save(winner);
-    };
+  const handleCancel = () => {
+    closeRef.current.close();
+    clear();
+  };
 
-    return (
-        <WithEdit
-            formName={AwardWinnerForm}
-            initEdit={edit}
-            canEdit={permissions.canEditAwards()}
-            viewComponent={<AwardWinnerView winner={winner} />}
-            editComponent={<AwardWinnerEdit winner={winner} Cancel={Cancel} Save={saveWinner} />}
-        />
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      onClose={() => clear()}
+      initEdit={edit}
+      canEdit={permissions.canEditAwards()}
+      viewComponent={<AwardWinnerView winner={winner} />}
+      editComponent={<AwardWinnerEdit winner={winner} Cancel={handleCancel} Save={handleSave} />}
+    />
+  );
 };
 
 export default AwardWinnerDetail;

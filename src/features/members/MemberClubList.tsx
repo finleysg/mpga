@@ -1,19 +1,38 @@
-import React from 'react';
+import React from "react";
 
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
-import Processing from '../../components/Processing';
-import constants from '../../constants';
-import { IClub } from '../../models/Clubs';
-import MemberClubRow from './MemberClubRow';
-import useMemberClubs from './UseMemberClubs';
+import Processing from "../../components/Processing";
+import constants from "../../constants";
+import { IClub } from "../../models/Clubs";
+import { useGetClubsQuery, useGetMembershipsForYearQuery } from "../../services/MpgaApi";
+import MemberClubRow from "./MemberClubRow";
 
 const MemberClubList: React.FC = () => {
-  const { clubs, status } = useMemberClubs();
+  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
+  const { data: clubs, isLoading: clubsLoading } = useGetClubsQuery();
+
+  const getClubList = (): IClub[] => {
+    if (!clubsLoading && !membershipsLoading) {
+      return clubs.map((club) => {
+        const isCurrent = memberships.findIndex((m) => m.club === club.id) >= 0;
+        return {
+          id: club.id,
+          name: club.name,
+          systemName: club.system_name,
+          isCurrent: isCurrent,
+          website: club.website,
+          location: club.golf_course?.name || "unaffiliated",
+          size: club.size,
+        };
+      });
+    }
+    return [];
+  };
 
   return (
     <div>
-      {status === "busy" ? (
+      {membershipsLoading || clubsLoading ? (
         <Processing message="Loading member clubs..." />
       ) : (
         <Table striped size="sm">
@@ -27,7 +46,7 @@ const MemberClubList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {clubs.map((club: IClub) => (
+            {getClubList().map((club) => (
               <MemberClubRow key={club.id} club={club} />
             ))}
           </tbody>

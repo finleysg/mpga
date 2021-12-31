@@ -1,53 +1,44 @@
-import React, { useCallback } from "react";
-import Button from "react-bootstrap/Button";
-import { useDispatch } from "react-redux";
+import React from "react";
 
-import { Award, AwardWinner } from "../../models/Events";
-import AwardActions from "../../store/AwardActions";
+import Button from "react-bootstrap/Button";
+
+import { AwardWinner } from "../../models/Events";
 import usePermissions from "../../utilities/Permissions";
+import { AwardViewProps } from "./AwardPropTypes";
 import AwardWinnerDetail from "./AwardWinnerDetail";
 
-export interface IAwardWinnerListProps {
-    award: Award;
-}
+const AwardWinnerList: React.FC<AwardViewProps> = (props) => {
+  const { award } = props;
+  const [addNew, setAddNew] = React.useState(false);
+  const permissions = usePermissions();
 
-const AwardWinnerList: React.FC<IAwardWinnerListProps> = (props) => {
-    const { award } = props;
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
-
-    const addNewAwardWinner = () => {
-        dispatch(AwardActions.AddNewAwardWinner(award.name));
-    }
-
-    const saveAwardWinner = useCallback(
-        (winner: AwardWinner) => {
-            dispatch(AwardActions.SaveAwardWinner(award, winner));
-        },
-        [dispatch, award]
-    );
-
-    return (
-        <div>
-            {permissions.canEditAwards() && (
-                <Button
-                    variant="link"
-                    className="text-warning"
-                    onClick={() => addNewAwardWinner()}>
-                    Add New
-                </Button>
-            )}
-            {award.winners.map((winner: AwardWinner) => (
-                <AwardWinnerDetail
-                    key={winner.id}
-                    edit={winner.id === 0}
-                    winner={winner}
-                    Cancel={() => dispatch(AwardActions.CancelNewAwardWinner(award.name))}
-                    Save={saveAwardWinner}
-                />
-            ))}
-        </div>
-    );
+  return (
+    <div>
+      {permissions.canEditAwards() && (
+        <Button variant="link" className="text-warning" onClick={() => setAddNew(true)}>
+          Add New
+        </Button>
+      )}
+      {addNew && (
+        <AwardWinnerDetail
+          key={0}
+          edit={true}
+          winner={new AwardWinner({ id: 0, award: award.id })}
+          award={award}
+          onClose={() => setAddNew(false)}
+        />
+      )}
+      {award.winners.map((winner: AwardWinner) => (
+        <AwardWinnerDetail
+          key={winner.id}
+          edit={false}
+          winner={winner}
+          award={award}
+          onClose={() => setAddNew(false)}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default AwardWinnerList;

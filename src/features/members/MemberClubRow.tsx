@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import { FaLink } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
+import { FaLink } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
-import constants from '../../constants';
-import { IClub } from '../../models/Clubs';
+import constants from "../../constants";
+import { IClub } from "../../models/Clubs";
 
-export interface IMemberClubRowProps {
+type MemberClubRowProps = {
   club: IClub;
-}
+};
 
-const MemberClubRow: React.FC<IMemberClubRowProps> = (props) => {
+const MemberClubRow: React.FC<MemberClubRowProps> = (props) => {
   const { club } = props;
 
   return (

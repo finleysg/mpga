@@ -1,27 +1,27 @@
-import * as AnnouncementStore from './AnnouncementStore';
-import * as AppStore from './AppStore';
-import * as AwardStore from './AwardStore';
-import * as CommitteeStore from './CommitteeStore';
-import * as ContentStore from './ContentStore';
-import * as DocumentStore from './DocumentStore';
-import * as EventStore from './EventStore';
-import * as LayoutStore from './LayoutStore';
-import * as MatchPlayStore from './MatchPlayStore';
-import { IMemberClubState } from './MemberClubSlice';
-import * as MessageStore from './MessageStore';
-import * as NotificationStore from './NotificationStore';
-import * as PaymentStore from './PaymentStore';
-import * as PhotoStore from './PhotoStore';
-import * as ReportStore from './ReportStore';
-import * as TournamentStore from './TournamentStore';
-import * as TournamentWinnerStore from './TournamentWinnerStore';
-import * as UserStore from './UserStore';
+import * as AnnouncementStore from "./AnnouncementStore";
+import * as AppStore from "./AppStore";
+import { IAwardState } from "./AwardSlice";
+import * as CommitteeStore from "./CommitteeStore";
+import * as ContentStore from "./ContentStore";
+import * as DocumentStore from "./DocumentStore";
+import * as EventStore from "./EventStore";
+import * as LayoutStore from "./LayoutStore";
+import * as MatchPlayStore from "./MatchPlayStore";
+import { IMemberClubState } from "./MemberClubSlice";
+import * as MessageStore from "./MessageStore";
+import * as NotificationStore from "./NotificationStore";
+import * as PaymentStore from "./PaymentStore";
+import * as PhotoStore from "./PhotoStore";
+import * as ReportStore from "./ReportStore";
+import * as TournamentStore from "./TournamentStore";
+import * as TournamentWinnerStore from "./TournamentWinnerStore";
+import * as UserStore from "./UserStore";
 
 // The top-level state object
 export interface IApplicationState {
   announcements: AnnouncementStore.IAnnouncementState;
   app: AppStore.IAppState;
-  awards: AwardStore.IAwardState;
+  awards: IAwardState;
   committee: CommitteeStore.ICommitteeState;
   content: ContentStore.IContentState;
   documents: DocumentStore.IDocumentState;
@@ -45,7 +45,6 @@ export interface IApplicationState {
 export const reducers = {
   announcements: AnnouncementStore.AnnouncementsReducer,
   app: AppStore.AppReducer,
-  awards: AwardStore.AwardReducer,
   committee: CommitteeStore.CommitteeReducer,
   content: ContentStore.ContentReducer,
   documents: DocumentStore.DocumentsReducer,

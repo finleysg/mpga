@@ -1,20 +1,22 @@
-import React from 'react';
+import React from "react";
 
-import { Formik } from 'formik';
-import Form from 'react-bootstrap/Form';
-import * as yup from 'yup';
+import { Formik } from "formik";
+import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 
-import CancelButton from '../../components/CancelButton';
-import { DatePickerField } from '../../components/DatePickerField';
-import SubmitButton from '../../components/SubmitButton';
-import constants from '../../constants';
-import { Club, Membership } from '../../models/Clubs';
+import CancelButton from "../../components/CancelButton";
+import { DatePickerField } from "../../components/DatePickerField";
+import SubmitButton from "../../components/SubmitButton";
+import constants from "../../constants";
+import { Club, Membership } from "../../models/Clubs";
+import { useAddMembershipForClubMutation } from "../../services/MpgaApi";
 
-export interface IMembershipEditProps {
+type MembershipEditProps = {
   club: Club;
-  Cancel: () => void;
-  Save: (data: Membership) => void;
-}
+  onCancel: () => void;
+  onSave: (data: Membership) => void;
+};
 
 const schema = yup.object({
   paymentDate: yup.date().required(),
@@ -23,22 +25,31 @@ const schema = yup.object({
   notes: yup.string().max(150).nullable(),
 });
 
-const MembershipEdit: React.FC<IMembershipEditProps> = (props) => {
-  const { club, Cancel, Save } = props;
+const MembershipEdit: React.FC<MembershipEditProps> = (props) => {
+  const { club, onCancel, onSave } = props;
+  const [addMembershipForClub, { isLoading }] = useAddMembershipForClubMutation();
+
   const membership = new Membership({
     year: constants.MemberClubYear,
     club: club.id,
     payment_type: "CK",
   });
 
+  const handleSave = async (values: Membership) => {
+    await addMembershipForClub(values)
+      .unwrap()
+      .then(() => {
+        toast.success("Your changes have been saved.");
+        onSave(values);
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
+
   return (
     <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          Save(values);
-        }}
-        initialValues={membership}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={membership}>
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="paymentDate">
@@ -61,7 +72,8 @@ const MembershipEdit: React.FC<IMembershipEditProps> = (props) => {
                 isValid={touched.paymentType && !errors.paymentType}
                 isInvalid={!!errors.paymentType}
                 onChange={handleChange}
-                onBlur={handleBlur}>
+                onBlur={handleBlur}
+              >
                 <option value="CK">Check</option>
                 <option value="CA">Waived</option>
               </Form.Control>
@@ -91,8 +103,8 @@ const MembershipEdit: React.FC<IMembershipEditProps> = (props) => {
               />
               <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
             </Form.Group>
-            <SubmitButton />
-            <CancelButton canCancel={true} OnCancel={() => Cancel()} />
+            <SubmitButton busy={isLoading} />
+            <CancelButton canCancel={true} OnCancel={onCancel} />
           </Form>
         )}
       </Formik>

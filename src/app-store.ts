@@ -1,12 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { reducers } from './store/index';
-import { memberClubSlice } from './store/MemberClubSlice';
+import { mpgaApi } from "./services/MpgaApi";
+import { reducers } from "./store/index";
 
 export const store = configureStore({
-  reducer: { ...reducers, memberClubs: memberClubSlice.reducer },
+  reducer: {
+    ...reducers,
+    [mpgaApi.reducerPath]: mpgaApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mpgaApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

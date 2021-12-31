@@ -1,26 +1,30 @@
-import React from 'react';
+import React from "react";
 
-import Container from 'react-bootstrap/Container';
-import { useParams } from 'react-router-dom';
+import Container from "react-bootstrap/Container";
+import { useParams } from "react-router-dom";
 
-import { useAppDispatch } from '../app-store';
-import ThreeEvenColumns from '../components/layouts/ThreeEvenColumns';
-import ClubContactList from '../features/members/ClubContactList';
-import GolfCourseView from '../features/members/GolfCourseView';
-import MemberClubDetail from '../features/members/MemberClubDetail';
-import { getMemberClub } from '../store/MemberClubSlice';
+import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
+import ClubContactList from "../features/members/ClubContactList";
+import GolfCourseView from "../features/members/GolfCourseView";
+import MemberClubDetail from "../features/members/MemberClubDetail";
+import { Club } from "../models/Clubs";
+import { useGetClubQuery, useGetClubsQuery } from "../services/MpgaApi";
 
 const MemberClubPage: React.FC = () => {
   const { name } = useParams();
-  const dispatch = useAppDispatch();
-
-  React.useEffect(() => {
-    dispatch(getMemberClub(name));
-  }, [dispatch, name]);
+  const { data: clubs } = useGetClubsQuery();
+  const { data, isLoading } = useGetClubQuery(clubs?.find((c) => c.system_name === name).id);
+  const selectedClub = new Club(data);
 
   return (
     <Container fluid={true}>
-      <ThreeEvenColumns Column1={<MemberClubDetail />} Column2={<ClubContactList />} Column3={<GolfCourseView />} />
+      {!isLoading && (
+        <ThreeEvenColumns
+          Column1={<MemberClubDetail club={selectedClub} />}
+          Column2={<ClubContactList club={selectedClub} />}
+          Column3={<GolfCourseView club={selectedClub} />}
+        />
+      )}
     </Container>
   );
 };

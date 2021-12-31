@@ -1,51 +1,48 @@
-import React, { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef } from "react";
+
+import { toast } from "react-toastify";
 
 import LoadingContainer from "../../components/LoadingContainer";
-import WithEdit from "../../components/WithEdit";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import { Award } from "../../models/Events";
-import { IApplicationState } from "../../store";
-import AwardActions, { AwardForm } from "../../store/AwardActions";
+import { useGetAwardQuery, useUpdateAwardMutation } from "../../services/MpgaApi";
 import usePermissions from "../../utilities/Permissions";
 import AwardEdit from "./AwardEdit";
+import { AwardDetailProps } from "./AwardPropTypes";
 import AwardView from "./AwardView";
 
-export interface IAwardDetailProps {
-    awardName: string;
-}
+const AwardDetail: React.FC<AwardDetailProps> = (props) => {
+  const { awardId } = props;
+  const { data, isLoading } = useGetAwardQuery(awardId);
+  const [updateAward, { isLoading: isUpdating }] = useUpdateAwardMutation();
+  const permissions = usePermissions();
+  const closeRef = useRef<CloseHandle>();
 
-const AwardDetail: React.FC<IAwardDetailProps> = (props) => {
-    const { awardName } = props;
-    const awardState = useSelector((state: IApplicationState) => state.awards);
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
+  const award = new Award(data);
 
-    const getAward = (): Award => {
-        return awardState.data.get(awardName) || new Award({});
-    };
+  const handleSave = async (award: Award) => {
+    await updateAward(award.prepJson())
+      .unwrap()
+      .then(() => {
+        toast.success(`Changes to ${award.name} have been saved.`);
+        closeRef.current.close();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
-    const saveContent = useCallback(
-        (award: Award) => {
-            dispatch(AwardActions.SaveAward(award));
-        },
-        [dispatch]
-    );
-
-    useEffect(() => {
-        dispatch(AwardActions.LoadAward(awardName));
-    }, [dispatch, awardName]);
-
-    return (
-        <LoadingContainer hasData={getAward().id !== undefined}>
-            <WithEdit
-                formName={AwardForm}
-                initEdit={false}
-                canEdit={permissions.canEditPageContent()}
-                viewComponent={<AwardView award={getAward()} />}
-                editComponent={<AwardEdit award={getAward()} Save={saveContent} />}
-            />
-        </LoadingContainer>
-    );
+  return (
+    <LoadingContainer hasData={!isLoading && !isUpdating}>
+      <CloseableEditContainer
+        ref={closeRef}
+        initEdit={false}
+        canEdit={permissions.canEditPageContent()}
+        viewComponent={<AwardView award={award} />}
+        editComponent={<AwardEdit award={award} Save={handleSave} />}
+      />
+    </LoadingContainer>
+  );
 };
 
 export default AwardDetail;

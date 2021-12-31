@@ -1,22 +1,13 @@
-import {
-  createAction,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import axios from 'axios';
+import axios from "axios";
 
-import { RootState } from '../app-store';
-import Constants from '../constants';
-import { IContactData } from '../features/contacts/ContactApi';
-import { IClubContactData } from '../features/members/ClubContactEdit';
-import { Api } from '../http';
-import { Club, ClubContact, Contact, IClub, Membership } from '../models/Clubs';
-
-export const ClubForm: string = "club";
-export const ClubContactForm: string = "club-contact";
-export const MembershipForm: string = "membership";
+import { RootState } from "../app-store";
+import Constants from "../constants";
+import { Api } from "../http";
+import { IClub } from "../models/Clubs";
+import { IClubContactData, IClubData, IContactData, IMembershipData } from "../models/Data";
+import { ActionStatus } from "./Utilities";
 
 const clubsUrl = "/clubs/";
 const membershipsUrl = "/memberships/";
@@ -24,102 +15,73 @@ const clubContactsUrl = "/club-contacts/";
 
 export interface IMemberClubState {
   clubs: IClub[];
-  selectedClub: Club;
-  mostRecentMembership?: Membership;
-  status: string;
+  selectedClub?: IClubData;
+  mostRecentMembership?: IMembershipData;
+  status: ActionStatus;
   error?: string;
 }
 
 const defaultState: IMemberClubState = {
   clubs: [],
-  selectedClub: new Club({}),
-  status: "idle",
-};
-
-const convertPayment = (mem: Membership): any => {
-  const payment = {
-    year: mem.year,
-    club: mem.club,
-    payment_date: mem.paymentDate.toISOString().substring(0, 10),
-    payment_code: mem.paymentCode,
-    payment_type: mem.paymentType,
-    notes: mem.notes,
-  };
-  return payment;
+  status: ActionStatus.Idle,
 };
 
 const addNewClubContact = createAction<IContactData>("clubContact/add");
-const appendNewClubContact = createAction<void>("clubContact/append");
+const createNewClubContact = createAction<void>("clubContact/create");
 const cancelNewClubContact = createAction<void>("clubContact/cancel");
 
-const loadMemberClubs = createAsyncThunk<{ clubs: IClub[]; memberships: Membership[] }, void, { state: RootState }>(
-  "members/load",
-  async () => {
-    const requests = [Api.get(clubsUrl), Api.get(membershipsUrl + "?year=" + Constants.MemberClubYear)];
-    const responses = await axios.all(requests);
-    return {
-      clubs: responses[0].data.map((json: any) => {
-        return {
-          id: json.id,
-          name: json.name,
-          systemName: json.system_name,
-          website: json.website || "",
-          location: json.golf_course?.city || "",
-          size: json.size,
-          isCurrent: false,
-        } as IClub;
-      }),
-      memberships: responses[1].data.map((json: any) => new Membership(json)),
-    };
-  }
-);
+const loadMemberClubs = createAsyncThunk<
+  { clubs: IClubData[]; memberships: IMembershipData[] },
+  void,
+  { state: RootState }
+>("members/load", async () => {
+  const requests = [Api.get(clubsUrl), Api.get(membershipsUrl + "?year=" + Constants.MemberClubYear)];
+  const responses = await axios.all(requests);
+  return {
+    clubs: responses[0].data as IClubData[],
+    memberships: responses[1].data as IMembershipData[],
+  };
+});
 
-const getMemberClub = createAsyncThunk<Club, string, { state: RootState }>("member/get", async (systemName) => {
+const getMemberClub = createAsyncThunk<IClubData, string, { state: RootState }>("member/get", async (systemName) => {
   const response = await Api.get(clubsUrl + "?name=" + systemName);
-  return new Club(response.data[0]);
+  return response.data[0] as IClubData;
 });
 
-const getMembership = createAsyncThunk<Membership, number, { state: RootState }>("membership/get", async (clubId) => {
-  const response = await Api.get(membershipsUrl + "?club=" + clubId.toString());
-  const memberships: Membership[] = response.data.map((json: any) => new Membership(json));
-  return memberships && memberships.length > 0 ? memberships[0] : undefined;
+const getMembership = createAsyncThunk<IMembershipData, number, { state: RootState }>(
+  "membership/get",
+  async (clubId) => {
+    const response = await Api.get(membershipsUrl + "?club=" + clubId.toString());
+    const memberships = response.data as IMembershipData[];
+    return memberships?.shift();
+  },
+);
+
+const saveMemberClub = createAsyncThunk<void, IClubData, { state: RootState }>("member/save", async (clubData) => {
+  await Api.put(`${clubsUrl}${clubData.id}/`, clubData);
 });
 
-const saveMemberClub = createAsyncThunk<void, Club, { state: RootState }>("member/save", async (club, { dispatch }) => {
-  await Api.put(`${clubsUrl}${club.id}/`, club.prepJson());
-  dispatch(getMemberClub(club.systemName));
-});
-
-const createMembership = createAsyncThunk<void, Membership, { state: RootState }>(
+const createMembership = createAsyncThunk<void, IMembershipData, { state: RootState }>(
   "membership/create",
-  async (membership, { dispatch, getState }) => {
-    await Api.post(membershipsUrl, convertPayment(membership));
-    dispatch(getMemberClub(getState().memberClubs.selectedClub.systemName));
-  }
+  async (membershipData) => {
+    await Api.post(membershipsUrl, membershipData);
+  },
 );
 
-const saveClubContact = createAsyncThunk<void, { clubContactId: number; contact: IClubContactData }, { state: RootState }>(
+const saveClubContact = createAsyncThunk<void, IClubContactData, { state: RootState }>(
   "clubContact/save",
-  async ({ clubContactId, contact }, { dispatch, getState }) => {
-    const currentClub = getState().memberClubs.selectedClub;
-    const payload = ClubContact.Create(currentClub.id!, contact).prepJson();
-    if (!clubContactId) {
-      await Api.post(clubContactsUrl, payload);
+  async (clubContactData) => {
+    if (!clubContactData.id) {
+      await Api.post(clubContactsUrl, clubContactData);
     } else {
-      await Api.put(`${clubContactsUrl}${clubContactId}/`, payload);
+      await Api.put(`${clubContactsUrl}${clubContactData.id}/`, clubContactData);
     }
-    dispatch(getMemberClub(currentClub.systemName));
-  }
+  },
 );
 
-const removeClubContact = createAsyncThunk<void, ClubContact, { state: RootState }>(
-  "clubContact/remove",
-  async (clubContact, { dispatch, getState }) => {
-    const currentClub = getState().memberClubs.selectedClub;
-    await Api.delete(`${clubContactsUrl}${clubContact.id}/`);
-    dispatch(getMemberClub(currentClub.systemName));
-  }
-);
+const removeClubContact = createAsyncThunk<void, number>("clubContact/remove", async (clubContactId) => {
+  await Api.delete(`${clubContactsUrl}${clubContactId}/`);
+});
 
 const memberClubSlice = createSlice({
   name: "members",
@@ -127,96 +89,85 @@ const memberClubSlice = createSlice({
   reducers: {
     addNewClubContact(state, action: PayloadAction<IContactData>) {
       const club = state.selectedClub;
-      const clubContacts = club.clubContacts.slice(0);
-      const newClubContact = new ClubContact({ id: 0 });
-      newClubContact.contact = new Contact(action.payload);
+      const clubContacts = club.club_contacts.slice(0);
+      const newClubContact = { id: 0 } as IClubContactData;
+      newClubContact.contact = action.payload;
       newClubContact.club = club.id;
       clubContacts.unshift(newClubContact);
-      club.clubContacts = clubContacts;
+      club.club_contacts = clubContacts;
       state.selectedClub = club;
     },
-    appendNewClubContact(state) {
+    createNewClubContact(state) {
       const club = state.selectedClub;
-      const clubContacts = club.clubContacts.slice(0);
-      const newClubContact = new ClubContact({ id: 0 });
-      newClubContact.contact = new Contact({ id: 0 });
+      const clubContacts = club.club_contacts.slice(0);
+      const newClubContact = { id: 0 } as IClubContactData;
+      newClubContact.contact = { id: 0 } as IContactData;
       newClubContact.club = club.id;
       clubContacts.unshift(newClubContact);
-      club.clubContacts = clubContacts;
+      club.club_contacts = clubContacts;
       state.selectedClub = club;
     },
     cancelNewClubContact(state) {
-      const idx = state.selectedClub.clubContacts.findIndex((cc) => cc.id === 0);
+      const idx = state.selectedClub.club_contacts.findIndex((cc) => cc.id === 0);
       if (idx >= 0) {
         const club = state.selectedClub;
-        club.clubContacts.splice(idx, 1);
+        club.club_contacts.splice(idx, 1);
         state.selectedClub = club;
       }
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadMemberClubs.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(getMemberClub.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(getMembership.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(saveMemberClub.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(createMembership.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(saveClubContact.pending, (state) => {
-        state.status = "busy";
-      })
-      .addCase(removeClubContact.pending, (state) => {
-        state.status = "busy";
-      })
       .addCase(loadMemberClubs.fulfilled, (state, action) => {
-        state.clubs = action.payload.clubs.map((club: IClub) => {
-          const membershipId = action.payload.memberships.findIndex((m) => m.club === club.id);
-          club.isCurrent = membershipId >= 0;
-          return club;
+        state.clubs = action.payload.clubs.map((club) => {
+          const isCurrent =
+            action.payload.memberships.findIndex((m) => m.club === club.id && m.year === Constants.MemberClubYear) >= 0;
+          return {
+            id: club.id,
+            name: club.name,
+            systemName: club.system_name,
+            isCurrent: isCurrent,
+            website: club.website,
+            location: club.golf_course?.name || "unaffiliated",
+            size: club.size,
+          } as IClub;
         });
-        state.status = "idle";
       })
       .addCase(getMemberClub.fulfilled, (state, action) => {
         state.selectedClub = action.payload;
-        state.status = "idle";
       })
       .addCase(getMembership.fulfilled, (state, action) => {
         state.mostRecentMembership = action.payload;
-        state.status = "idle";
       })
-      .addCase(saveMemberClub.rejected, (state, action) => {
-        state.error = action.payload.toString();
-        state.status = "idle";
-      })
-      .addCase(createMembership.rejected, (state, action) => {
-        state.error = action.payload.toString();
-        state.status = "idle";
-      })
-      .addCase(saveClubContact.rejected, (state, action) => {
-        state.error = action.payload.toString();
-        state.status = "idle";
-      })
-      .addCase(removeClubContact.rejected, (state, action) => {
-        state.error = action.payload.toString();
-        state.status = "idle";
-      });
+      .addMatcher(
+        (action) => action.type.endsWith("/pending"),
+        (state) => {
+          state.error = "";
+          state.status = ActionStatus.Busy;
+        },
+      )
+      .addMatcher(
+        (action) => action.type.endsWith("/fulfilled"),
+        (state) => {
+          state.error = "";
+          state.status = ActionStatus.Idle;
+        },
+      )
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.error = action.error.message;
+          state.status = ActionStatus.Error;
+        },
+      );
   },
 });
 
 export {
   addNewClubContact,
-  appendNewClubContact,
   cancelNewClubContact,
   createMembership,
+  createNewClubContact as appendNewClubContact,
   getMemberClub,
   getMembership,
   loadMemberClubs,

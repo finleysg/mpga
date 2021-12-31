@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from "react";
 
-import Button from 'react-bootstrap/Button';
-import styled from 'styled-components';
+import Button from "react-bootstrap/Button";
+import styled from "styled-components";
 
-import { useAppDispatch, useAppSelector } from '../../app-store';
-import LoadingContainer from '../../components/LoadingContainer';
-import WithEdit from '../../components/WithEdit';
-import constants from '../../constants';
-import { Club, Membership } from '../../models/Clubs';
-import {
-  ClubForm,
-  createMembership,
-  saveMemberClub,
-} from '../../store/MemberClubSlice';
-import usePermissions from '../../utilities/Permissions';
-import ClubDuesPayment from '../payments/ClubDuesPayment';
-import MemberClubEdit from './MemberClubEdit';
-import MemberClubView from './MemberClubView';
-import MembershipEdit from './MembershipEdit';
+import LoadingContainer from "../../components/LoadingContainer";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
+import constants from "../../constants";
+import { Club, Membership } from "../../models/Clubs";
+import { useGetMembershipsForClubQuery } from "../../services/MpgaApi";
+import usePermissions from "../../utilities/Permissions";
+import ClubDuesPayment from "../payments/ClubDuesPayment";
+import MemberClubEdit from "./MemberClubEdit";
+import MemberClubView from "./MemberClubView";
+import { ClubProps } from "./MemberPropTypes";
+import MembershipEdit from "./MembershipEdit";
 
 export const CreateMembershipContainer = styled.div`
   border-width: 1px;
@@ -28,26 +24,37 @@ export const CreateMembershipContainer = styled.div`
 `;
 CreateMembershipContainer.displayName = "CreateMembershipContainer";
 
-const MemberClubDetail = () => {
+function MemberClubDetail(props: ClubProps) {
+  const { club } = props;
+
   const [makePayment, setMakePayment] = useState(false);
   const [addMembership, setAddMembership] = useState(false);
-  const clubState = useAppSelector((state) => state.memberClubs);
   const permissions = usePermissions();
-  const dispatch = useAppDispatch();
+  const { data: memberships, isLoading } = useGetMembershipsForClubQuery(club.id);
+  const closeRef = useRef<CloseHandle>();
 
-  const handleSaveClub = (club: Club) => dispatch(saveMemberClub(club));
+  const getMostRecentMembership = () => {
+    const membership = memberships?.length > 0 ? memberships[0] : null;
+    if (membership) {
+      return new Membership(membership);
+    }
+    return null;
+  };
 
-  const handleCreateMembership = (membership: Membership) => {
-    dispatch(createMembership(membership));
+  const handleSaveClub = (_club: Club) => {
+    closeRef.current.close();
+  };
+
+  const handleCreateMembership = (_membership: Membership) => {
     setAddMembership(false);
   };
 
   const renderDuesPayment = () => {
-    if ((clubState.mostRecentMembership?.year || 0) < constants.MemberClubYear) {
+    if ((getMostRecentMembership()?.year || 0) < constants.MemberClubYear) {
       if (makePayment) {
         return (
           <ClubDuesPayment
-            club={clubState.selectedClub}
+            club={club}
             amountDue={constants.MembershipDues}
             title={`Pay ${constants.MemberClubYear} Dues Online`}
             Cancel={() => setMakePayment(false)}
@@ -55,7 +62,13 @@ const MemberClubDetail = () => {
         );
       } else {
         return (
-          <Button variant="outline-secondary" type="submit" size="lg" className="mt-3" onClick={() => setMakePayment(true)}>
+          <Button
+            variant="outline-secondary"
+            type="submit"
+            size="lg"
+            className="mt-3"
+            onClick={() => setMakePayment(true)}
+          >
             Pay Dues Now
           </Button>
         );
@@ -64,14 +77,14 @@ const MemberClubDetail = () => {
   };
 
   const renderMembershipEdit = () => {
-    if ((clubState.mostRecentMembership?.year || 0) < constants.MemberClubYear) {
+    if ((getMostRecentMembership()?.year || 0) < constants.MemberClubYear) {
       if (addMembership) {
         return (
           <CreateMembershipContainer>
             <MembershipEdit
-              club={clubState.selectedClub}
-              Save={(membershipData) => handleCreateMembership(membershipData)}
-              Cancel={() => setAddMembership(false)}
+              club={club}
+              onSave={(membershipData) => handleCreateMembership(membershipData)}
+              onCancel={() => setAddMembership(false)}
             />
           </CreateMembershipContainer>
         );
@@ -88,18 +101,18 @@ const MemberClubDetail = () => {
   };
 
   return (
-    <LoadingContainer hasData={clubState.selectedClub !== undefined}>
+    <LoadingContainer hasData={!isLoading}>
       {renderMembershipEdit()}
-      <WithEdit
-        formName={ClubForm}
+      <CloseableEditContainer
+        ref={closeRef}
         initEdit={false}
         canEdit={permissions.canEditClubPage()}
-        viewComponent={<MemberClubView club={clubState.selectedClub} membership={clubState.mostRecentMembership} />}
-        editComponent={<MemberClubEdit club={clubState.selectedClub} Save={handleSaveClub} />}
+        viewComponent={<MemberClubView club={club} membership={getMostRecentMembership()} />}
+        editComponent={<MemberClubEdit club={club} onSave={handleSaveClub} onCancel={() => closeRef.current.close()} />}
       />
       {renderDuesPayment()}
     </LoadingContainer>
   );
-};
+}
 
 export default MemberClubDetail;

@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import Loading from '../../components/Loading';
-import { IApplicationState } from '../../store';
-import UserActions from '../../store/UserActions';
-import useMemberClubs from '../members/UseMemberClubs';
-import AccountContact from './AccountContact';
-import AccountEmail from './AccountEmail';
-import AccountName from './AccountName';
-import AccountPassword from './AccountPassword';
-import HomeClub from './HomeClub';
+import Loading from "../../components/Loading";
+import { useGetClubsQuery } from "../../services/MpgaApi";
+import { IApplicationState } from "../../store";
+import UserActions from "../../store/UserActions";
+import AccountContact from "./AccountContact";
+import AccountEmail from "./AccountEmail";
+import AccountName from "./AccountName";
+import AccountPassword from "./AccountPassword";
+import HomeClub from "./HomeClub";
 
 const AccountDetail: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const session = useSelector((state: IApplicationState) => state.session);
-  const clubState = useMemberClubs();
+  const { data: clubs } = useGetClubsQuery();
 
   if (!session.user.isAuthenticated) {
     navigate("/");
@@ -36,7 +36,7 @@ const AccountDetail: React.FC = () => {
           <AccountEmail />
           <AccountPassword />
           <AccountName />
-          <HomeClub clubs={clubState.clubs} />
+          <HomeClub clubs={clubs} />
           <AccountContact />
         </React.Fragment>
       )}
