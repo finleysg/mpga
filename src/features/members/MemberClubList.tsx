@@ -5,7 +5,8 @@ import Table from "react-bootstrap/Table";
 import Processing from "../../components/Processing";
 import constants from "../../constants";
 import { IClub } from "../../models/Clubs";
-import { useGetClubsQuery, useGetMembershipsForYearQuery } from "../../services/MpgaApi";
+import { useGetClubsQuery } from "../../services/ClubEndpoints";
+import { useGetMembershipsForYearQuery } from "../../services/MembershipEndpoints";
 import MemberClubRow from "./MemberClubRow";
 
 const MemberClubList: React.FC = () => {

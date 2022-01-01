@@ -7,7 +7,7 @@ import LoadingContainer from "../../components/LoadingContainer";
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import constants from "../../constants";
 import { Club, Membership } from "../../models/Clubs";
-import { useGetMembershipsForClubQuery } from "../../services/MpgaApi";
+import { useGetMembershipsForClubQuery } from "../../services/MembershipEndpoints";
 import usePermissions from "../../utilities/Permissions";
 import ClubDuesPayment from "../payments/ClubDuesPayment";
 import MemberClubEdit from "./MemberClubEdit";

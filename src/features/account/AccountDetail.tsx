@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Loading from "../../components/Loading";
-import { useGetClubsQuery } from "../../services/MpgaApi";
+import { useGetClubsQuery } from "../../services/ClubEndpoints";
 import { IApplicationState } from "../../store";
 import UserActions from "../../store/UserActions";
 import AccountContact from "./AccountContact";

@@ -9,7 +9,7 @@ import {
   useAddClubContactMutation,
   useRemoveClubContactMutation,
   useUpdateClubContactMutation,
-} from "../../services/MpgaApi";
+} from "../../services/ClubEndpoints";
 import usePermissions from "../../utilities/Permissions";
 import ClubContactEdit from "./ClubContactEdit";
 import ClubContactView from "./ClubContactView";

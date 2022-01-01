@@ -1,51 +1,40 @@
-import "codemirror/lib/codemirror.css";
-import "@toast-ui/editor/dist/toastui-editor.css";
+import React, { useState } from "react";
 
-import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import { Editor } from "@toast-ui/react-editor";
+import { MarkdownEditor } from "./MarkdownEditor";
 
-export interface IMarkdownProps {
-    show: boolean;
-    text: string;
-    Cancel: () => void;
-    Close: (markdown: string) => void;
-}
+type MarkdownProps = {
+  show: boolean;
+  text: string;
+  Cancel: () => void;
+  Close: (markdown: string) => void;
+};
 
-const EditorModal: React.FC<IMarkdownProps> = (props) => {
-    const { text, show, Cancel, Close } = props;
-    const editorRef = React.createRef<Editor>();
+const EditorModal: React.FC<MarkdownProps> = (props) => {
+  const { text, show, Cancel, Close } = props;
+  const [modalText, setModalText] = useState(text);
 
-    const saveAndClose = () => {
-        const markdown = editorRef?.current?.getInstance().getMarkdown();
-        Close(markdown || "");
-    }
+  const saveAndClose = () => {
+    Close(modalText || "");
+  };
 
-    return (
-        <Modal centered size="lg" show={show} onHide={() => Cancel()}>
-            <Modal.Body>
-                <Editor
-                    initialValue={text}
-                    previewStyle="vertical"
-                    height="600px"
-                    initialEditType="wysiwyg"
-                    useCommandShortcut={true}
-                    useDefaultHTMLSanitizer={true}
-                    ref={editorRef}
-                />
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={() => saveAndClose()}>
-                    Save and Close
-                </Button>
-                <Button variant="light" onClick={Cancel}>
-                    Cancel
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    );
+  return (
+    <Modal centered size="lg" show={show} onHide={() => Cancel()}>
+      <Modal.Body>
+        <MarkdownEditor text={text} previewStyle="vertical" height="600px" onSubmit={(text) => setModalText(text)} />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => saveAndClose()}>
+          Save and Close
+        </Button>
+        <Button variant="light" onClick={Cancel}>
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 };
 
 export default EditorModal;

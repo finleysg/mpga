@@ -1,16 +1,15 @@
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "codemirror/lib/codemirror.css";
+import React from "react";
 
-import { Editor } from "@toast-ui/react-editor";
-
-import React, { useRef } from "react";
-
+import CancelButton from "components/CancelButton";
+import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
+import { Award } from "models/Events";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
-import { useUpdateAwardMutation } from "../../services/MpgaApi";
+import { useUpdateAwardMutation } from "../../services/AwardEndpoints";
 import { AwardEditProps } from "./AwardPropTypes";
 
 const schema = yup.object({
@@ -18,38 +17,32 @@ const schema = yup.object({
 });
 
 const AwardEdit: React.FC<AwardEditProps> = (props) => {
-  const editorRef = useRef<Editor>();
-  const { award } = props;
-  const [, { isLoading: isUpdating }] = useUpdateAwardMutation();
+  const { award, onSave, onCancel } = props;
+  const [updateAward, { isLoading: isUpdating }] = useUpdateAwardMutation();
+
+  const handleSave = async (award: Award) => {
+    await updateAward(award.prepJson())
+      .unwrap()
+      .then(() => {
+        toast.success(`Changes to ${award.name} have been saved.`);
+        onSave(award);
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
   return (
     <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          const newModel = values;
-          newModel.id = award.id;
-          newModel.description = editorRef.current?.getInstance().getMarkdown() || award.description;
-          props.Save(newModel);
-        }}
-        initialValues={award}
-      >
-        {({ handleSubmit, values }) => (
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={award}>
+        {({ handleSubmit, handleChange, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="awardDescription">
               <Form.Label>Description</Form.Label>
-              <Editor
-                initialValue={values.description}
-                previewStyle="tab"
-                height="300px"
-                initialEditType="wysiwyg"
-                useCommandShortcut={true}
-                useDefaultHTMLSanitizer={true}
-                hideModeSwitch={true}
-                ref={editorRef}
-              />
+              <MarkdownField name="description" value={values.description} height="300px" />
             </Form.Group>
             <SubmitButton busy={isUpdating} />
+            <CancelButton canCancel={true} OnCancel={onCancel} />
           </Form>
         )}
       </Formik>

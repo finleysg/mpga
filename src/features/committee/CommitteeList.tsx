@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import LoadingContainer from "../../components/LoadingContainer";
 import { Contact, ExecutiveCommittee } from "../../models/Clubs";
-import { useGetClubsQuery } from "../../services/MpgaApi";
+import { useGetClubsQuery } from "../../services/ClubEndpoints";
 import { IApplicationState } from "../../store";
 import CommitteeActions from "../../store/CommitteeActions";
 import usePermissions from "../../utilities/Permissions";

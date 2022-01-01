@@ -10,7 +10,7 @@ import { DatePickerField } from "../../components/DatePickerField";
 import SubmitButton from "../../components/SubmitButton";
 import constants from "../../constants";
 import { Club, Membership } from "../../models/Clubs";
-import { useAddMembershipForClubMutation } from "../../services/MpgaApi";
+import { useAddMembershipForClubMutation } from "../../services/MembershipEndpoints";
 
 type MembershipEditProps = {
   club: Club;

@@ -9,7 +9,7 @@ import Confirm from "../../components/Confirm";
 import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
 import { ClubContact, ClubContactRole, Contact, IClubContact, IRole } from "../../models/Clubs";
-import { useAddClubContactMutation, useUpdateClubContactMutation } from "../../services/MpgaApi";
+import { useAddClubContactMutation, useUpdateClubContactMutation } from "../../services/ClubEndpoints";
 import RolePicker from "../roles/RolePicker";
 import { ClubContactEditProps } from "./MemberPropTypes";
 

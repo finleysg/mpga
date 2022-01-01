@@ -8,7 +8,7 @@ import ClubContactList from "../features/members/ClubContactList";
 import GolfCourseView from "../features/members/GolfCourseView";
 import MemberClubDetail from "../features/members/MemberClubDetail";
 import { Club } from "../models/Clubs";
-import { useGetClubQuery, useGetClubsQuery } from "../services/MpgaApi";
+import { useGetClubQuery, useGetClubsQuery } from "../services/ClubEndpoints";
 
 const MemberClubPage: React.FC = () => {
   const { name } = useParams();

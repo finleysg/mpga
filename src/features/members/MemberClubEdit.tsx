@@ -1,15 +1,15 @@
 import React from "react";
 
+import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
-import { MarkdownEditor } from "../../components/MarkdownEditor";
 import SubmitButton from "../../components/SubmitButton";
 import { Club } from "../../models/Clubs";
-import { useUpdateClubMutation } from "../../services/MpgaApi";
+import { useUpdateClubMutation } from "../../services/ClubEndpoints";
 import { MemberClubEditProps } from "./MemberPropTypes";
 
 const schema = yup.object({
@@ -84,7 +84,7 @@ const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
             </Form.Group>
             <Form.Group controlId="club.Notes">
               <Form.Label>Notes</Form.Label>
-              <MarkdownEditor text={values.notes} height="360px" onChange={(data) => (values.notes = data.text)} />
+              <MarkdownField name="notes" value={values.notes} height="360px" />
             </Form.Group>
             <SubmitButton busy={isLoading} />
             <CancelButton OnCancel={onCancel} canCancel={true} />

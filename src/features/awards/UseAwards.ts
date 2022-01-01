@@ -1,4 +1,4 @@
-import { useGetAwardsQuery } from "../../services/MpgaApi";
+import { useGetAwardsQuery } from "../../services/AwardEndpoints";
 
 const useAwards = () => {
   const awards = useGetAwardsQuery();
