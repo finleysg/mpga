@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import LoadingContainer from "../../../components/LoadingContainer";
@@ -11,25 +12,26 @@ import EventRegistrationDatesEdit from "./EventRegistrationDatesEdit";
 import EventRegisrationDatesView from "./EventRegistrationDatesView";
 
 const EventRegistrationDatesDetail: React.FC = () => {
-    const state = useSelector((state: IApplicationState) => state.events);
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
+  const state = useSelector((state: IApplicationState) => state.events);
+  const dispatch = useDispatch();
+  const permissions = usePermissions();
 
-    const saveEventDetail = useCallback((eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)), [
-        dispatch,
-    ]);
+  const saveEventDetail = useCallback(
+    (eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)),
+    [dispatch],
+  );
 
-    return (
-        <LoadingContainer hasData={state.currentEvent !== undefined}>
-            <WithEdit
-                formName={EventForm}
-                initEdit={false}
-                canEdit={permissions.canManageEvent()}
-                viewComponent={<EventRegisrationDatesView eventDetail={state.currentEvent} />}
-                editComponent={<EventRegistrationDatesEdit eventDetail={state.currentEvent} Save={saveEventDetail} />}
-            />
-        </LoadingContainer>
-    );
+  return (
+    <LoadingContainer loading={state.currentEvent === undefined}>
+      <WithEdit
+        formName={EventForm}
+        initEdit={false}
+        canEdit={permissions.canManageEvent()}
+        viewComponent={<EventRegisrationDatesView eventDetail={state.currentEvent} />}
+        editComponent={<EventRegistrationDatesEdit eventDetail={state.currentEvent} Save={saveEventDetail} />}
+      />
+    </LoadingContainer>
+  );
 };
 
 export default EventRegistrationDatesDetail;

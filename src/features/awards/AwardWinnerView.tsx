@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import { TiDocumentText } from "react-icons/ti";
 
 import Notes from "../../components/Notes";
-import { AwardWinnerViewProps } from "./AwardPropTypes";
+import { AwardWinnerViewProps } from "./awardPropTypes";
 
 const AwardWinnerView: React.FC<AwardWinnerViewProps> = (props) => {
   const { winner } = props;

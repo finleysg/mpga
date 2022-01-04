@@ -1,37 +1,44 @@
 import React from "react";
 
 import { MarkdownField } from "components/MarkdownField";
+import { OverlaySpinner } from "components/Spinner";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
 import { PageContent } from "../../models/Policies";
-import { IPageContentViewProps } from "./PageContentView";
-
-export interface IPageContentEditProps extends IPageContentViewProps {
-  Save: (policy: PageContent) => void;
-}
+import { useUpdatePageContentMutation } from "./contentApi";
+import { PageContentEditProps } from "./contentPropTypes";
 
 const schema = yup.object({
   title: yup.string().max(120).required(),
   // content: yup.string().required(),
 });
 
-const PageContentEdit: React.FC<IPageContentEditProps> = (props) => {
-  const pageContent = props.pageContent;
+const PageContentEdit: React.FC<PageContentEditProps> = (props) => {
+  const { pageContent, onClose } = props;
+
+  const [updatePageContent, { isLoading }] = useUpdatePageContentMutation();
+
+  const handleSave = async (value: PageContent) => {
+    const data = value.prepJson();
+    await updatePageContent(data)
+      .unwrap()
+      .then(() => {
+        toast.success(`${pageContent.title} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
   return (
     <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          const newModel = new PageContent(values);
-          newModel.id = pageContent.id;
-          props.Save(newModel);
-        }}
-        initialValues={pageContent}
-      >
+      <OverlaySpinner loading={isLoading} />
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={pageContent}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="title">

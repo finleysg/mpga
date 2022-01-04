@@ -7,12 +7,12 @@ import PageContentDetail from "../features/content/PageContentDetail";
 import { ContactMessage } from "../models/ContactMessage";
 
 const TournamentBidPage: React.FC = () => {
-    return (
-        <ContactLayout>
-            <PageContentDetail pageCode={PageCodes.TournamentBids} />
-            <ContactForm message={new ContactMessage("Bid")} />
-        </ContactLayout>
-    );
+  return (
+    <ContactLayout>
+      <PageContentDetail pageCode={PageCodes.TournamentBids} />
+      <ContactForm message={new ContactMessage("Bid")} />
+    </ContactLayout>
+  );
 };
 
 export default TournamentBidPage;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import LabelAndValue, { LabelStyle, ValueType } from "../../components/LabelAndValue";
-import { ExecutiveCommitteeProps } from "./CommitteePropTypes";
+import { ExecutiveCommitteeProps } from "./committeePropTypes";
 
 const CommitteeMemberView: React.FC<ExecutiveCommitteeProps> = (props) => {
   const { committeeMember } = props;

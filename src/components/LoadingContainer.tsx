@@ -1,22 +1,18 @@
-import React from 'react';
-import Loading from './Loading';
+import React from "react";
 
-export interface ILoadingContainerProps {
-    hasData: boolean,
-}
+import { OverlaySpinner } from "./Spinner";
 
-const LoadingContainer: React.FC<ILoadingContainerProps> = (props) => {
-    return (
-        <div>
-            {props.hasData ? (
-                <React.Fragment>
-                    {props.children}
-                </React.Fragment>
-            ) : (
-                <Loading />
-            )}
-        </div>
-    );
-}
+type LoadingContainerProps = {
+  loading: boolean;
+};
+
+const LoadingContainer: React.FC<LoadingContainerProps> = (props) => {
+  return (
+    <div style={{ position: "relative" }}>
+      <OverlaySpinner loading={props.loading} />
+      {props.children}
+    </div>
+  );
+};
 
 export default LoadingContainer;

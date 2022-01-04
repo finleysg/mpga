@@ -1,34 +1,29 @@
-import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { useRef } from "react";
 
-import WithEdit from "../../components/WithEdit";
-import { Tournament } from "../../models/Events";
-import TournamentActions, { TournamentDetailForm } from "../../store/TournamentActions";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import usePermissions from "../../utilities/Permissions";
 import TournamentEdit from "./TournamentEdit";
-import TournamentView, { ITournamentViewProps } from "./TournamentView";
+import { TournamentDetailProps } from "./tournamentPropTypes";
+import TournamentView from "./TournamentView";
 
-const TournamentDetail: React.FC<ITournamentViewProps> = (props) => {
-    const { tournament } = props;
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
+const TournamentDetail: React.FC<TournamentDetailProps> = (props) => {
+  const { tournament } = props;
+  const permissions = usePermissions();
+  const closeRef = useRef<CloseHandle>();
 
-    const saveTournament = useCallback(
-        (tournament: Tournament) => dispatch(TournamentActions.SaveTournament(tournament)),
-        [dispatch]
-    );
+  const handleClose = () => {
+    closeRef.current.close();
+  };
 
-    return (
-        <React.Fragment>
-            <WithEdit
-                formName={TournamentDetailForm}
-                initEdit={false}
-                canEdit={permissions.canEditPageContent()}
-                viewComponent={<TournamentView tournament={tournament} />}
-                editComponent={<TournamentEdit tournament={tournament} Save={saveTournament} />}
-            />
-        </React.Fragment>
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={false}
+      canEdit={permissions.canEditPageContent()}
+      viewComponent={<TournamentView tournament={tournament} />}
+      editComponent={<TournamentEdit tournament={tournament} onClose={handleClose} />}
+    />
+  );
 };
 
 export default TournamentDetail;

@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
-import { AwardWinner } from "../../models/Events";
 import usePermissions from "../../utilities/Permissions";
-import { AwardWinnerDetailProps } from "./AwardPropTypes";
+import { AwardWinnerDetailProps } from "./awardPropTypes";
 import AwardWinnerEdit from "./AwardWinnerEdit";
 import AwardWinnerView from "./AwardWinnerView";
 
@@ -12,12 +11,7 @@ const AwardWinnerDetail: React.FC<AwardWinnerDetailProps> = (props) => {
   const permissions = usePermissions();
   const closeRef = useRef<CloseHandle>();
 
-  const handleSave = (_winner: AwardWinner) => {
-    closeRef.current.close();
-    onClose();
-  };
-
-  const handleCancel = () => {
+  const handleClose = () => {
     closeRef.current.close();
     onClose();
   };
@@ -29,7 +23,7 @@ const AwardWinnerDetail: React.FC<AwardWinnerDetailProps> = (props) => {
       initEdit={edit}
       canEdit={permissions.canEditAwards()}
       viewComponent={<AwardWinnerView winner={winner} />}
-      editComponent={<AwardWinnerEdit winner={winner} onCancel={handleCancel} onSave={handleSave} />}
+      editComponent={<AwardWinnerEdit winner={winner} onClose={handleClose} />}
     />
   );
 };

@@ -4,11 +4,11 @@ import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom";
 
 import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
-import ClubContactList from "../features/members/ClubContactList";
-import GolfCourseView from "../features/members/GolfCourseView";
-import MemberClubDetail from "../features/members/MemberClubDetail";
+import ClubContactList from "../features/member-clubs/ClubContactList";
+import GolfCourseView from "../features/member-clubs/GolfCourseView";
+import { useGetClubQuery, useGetClubsQuery } from "../features/member-clubs/memberClubApi";
+import MemberClubDetail from "../features/member-clubs/MemberClubDetail";
 import { Club } from "../models/Clubs";
-import { useGetClubQuery, useGetClubsQuery } from "../services/ClubEndpoints";
 
 const MemberClubPage: React.FC = () => {
   const { name } = useParams();

@@ -1,7 +1,7 @@
 import moment from "moment";
 
+import { IAwardWinnerData } from "../services/Data";
 import { Contact, GolfCourse } from "./Clubs";
-import { IAwardWinnerData } from "./Data";
 import { BaseModel } from "./Model";
 import { Policy } from "./Policies";
 
@@ -149,7 +149,6 @@ export class EventDetail extends BaseModel {
   location?: GolfCourse;
   tournament?: Tournament;
   name: string = "";
-  shortName: string = "";
   description: string = "";
   rounds: number = 0;
   notes?: string;

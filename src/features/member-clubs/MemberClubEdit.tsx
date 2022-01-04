@@ -1,5 +1,6 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
@@ -9,8 +10,8 @@ import * as yup from "yup";
 import CancelButton from "../../components/CancelButton";
 import SubmitButton from "../../components/SubmitButton";
 import { Club } from "../../models/Clubs";
-import { useUpdateClubMutation } from "../../services/ClubEndpoints";
-import { MemberClubEditProps } from "./MemberPropTypes";
+import { useUpdateClubMutation } from "./memberClubApi";
+import { MemberClubEditProps } from "./memberClubPropTypes";
 
 const schema = yup.object({
   name: yup.string().max(200).required(),
@@ -20,7 +21,7 @@ const schema = yup.object({
 });
 
 const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
-  const { club, onCancel, onSave } = props;
+  const { club, onClose } = props;
 
   const [updateClub, { isLoading }] = useUpdateClubMutation();
 
@@ -30,7 +31,7 @@ const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
       .unwrap()
       .then(() => {
         toast.success("Your changes have been saved.");
-        onSave(newModel);
+        onClose();
       })
       .catch((error) => {
         toast.error("💣 " + error);
@@ -38,7 +39,7 @@ const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isLoading}>
       <Formik validationSchema={schema} onSubmit={handleSave} initialValues={club}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
@@ -86,12 +87,12 @@ const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
               <Form.Label>Notes</Form.Label>
               <MarkdownField name="notes" value={values.notes} height="360px" />
             </Form.Group>
-            <SubmitButton busy={isLoading} />
-            <CancelButton OnCancel={onCancel} canCancel={true} />
+            <SubmitButton />
+            <CancelButton OnCancel={onClose} canCancel={true} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -3,7 +3,7 @@ import { useEffect, useReducer, useState } from "react";
 import constants from "../../constants";
 import { Api } from "../../http";
 import { Contact } from "../../models/Clubs";
-import { IContactData } from "../../models/Data";
+import { IContactData } from "../../services/Data";
 
 export interface IContactSearchState {
   isLoading: boolean;

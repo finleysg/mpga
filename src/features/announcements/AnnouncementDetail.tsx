@@ -1,40 +1,30 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import WithEdit from "../../components/WithEdit";
-import { Announcement } from "../../models/Announcement";
-import { AnnouncementForm } from "../../store/AnnouncementActions";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import usePermissions from "../../utilities/Permissions";
-import AnnouncementEdit, { IAnnouncementEdit } from "./AnnouncementEdit";
+import AnnouncementEdit from "./AnnouncementEdit";
+import { AnnouncementDetailProps } from "./announcementPropTypes";
 import AnnouncementView from "./AnnouncementView";
 
-export interface IAnnouncementDetail extends IAnnouncementEdit {
-    edit: boolean;
-}
+const AnnouncementDetail: React.FC<AnnouncementDetailProps> = (props) => {
+  const { announcement, documents, edit, onClose } = props;
+  const permissions = usePermissions();
+  const closeRef = useRef<CloseHandle>();
 
-const AnnouncementDetail: React.FC<IAnnouncementDetail> = (props) => {
-    const { announcement, currentDocuments, edit, Cancel, Save } = props;
-    const permissions = usePermissions();
+  const handleClose = () => {
+    closeRef.current.close();
+    onClose();
+  };
 
-    const saveAnnouncement = (announcement: Announcement) => {
-        Save(announcement);
-    };
-
-    return (
-        <WithEdit
-            formName={AnnouncementForm}
-            initEdit={edit}
-            canEdit={permissions.canEditAnnouncements()}
-            viewComponent={<AnnouncementView announcement={announcement} />}
-            editComponent={
-                <AnnouncementEdit
-                    announcement={announcement}
-                    currentDocuments={currentDocuments}
-                    Cancel={Cancel}
-                    Save={saveAnnouncement}
-                />
-            }
-        />
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={edit}
+      canEdit={permissions.canEditAnnouncements()}
+      viewComponent={<AnnouncementView announcement={announcement} />}
+      editComponent={<AnnouncementEdit announcement={announcement} documents={documents} onClose={handleClose} />}
+    />
+  );
 };
 
 export default AnnouncementDetail;

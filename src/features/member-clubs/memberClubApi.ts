@@ -1,5 +1,5 @@
-import { IClubContactData, IClubData } from "../models/Data";
-import { mpgaApi } from "./MpgaApi";
+import { IClubContactData, IClubData, IContactData } from "../../services/Data";
+import { mpgaApi } from "../../services/MpgaApi";
 
 const clubApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
@@ -56,12 +56,32 @@ const clubApi = mpgaApi.injectEndpoints({
       },
       invalidatesTags: (_result, _error, { club }) => [{ type: "Clubs", id: club }],
     }),
+    getClubContacts: build.query<IClubContactData[], void>({
+      query() {
+        return {
+          url: "/club-contacts/",
+          method: "GET",
+        };
+      },
+      providesTags: ["ClubContacts"],
+    }),
+    getContacts: build.query<IContactData[], void>({
+      query() {
+        return {
+          url: "/contacts/",
+          method: "GET",
+        };
+      },
+      providesTags: ["Contacts"],
+    }),
   }),
 });
 
 export const {
+  useGetClubContactsQuery,
   useGetClubQuery,
   useGetClubsQuery,
+  useGetContactsQuery,
   useUpdateClubMutation,
   useAddClubContactMutation,
   useUpdateClubContactMutation,

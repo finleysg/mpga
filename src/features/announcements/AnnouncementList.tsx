@@ -1,71 +1,82 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
+
+import { useAppDispatch, useAppSelector } from "app-store";
+import { MpgaDocument } from "models/Documents";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
 
 import LoadingContainer from "../../components/LoadingContainer";
-import { Announcement } from "../../models/Announcement";
-import { IApplicationState } from "../../store";
-import AnnouncementActions from "../../store/AnnouncementActions";
-import usePermissions from "../../utilities/Permissions";
-import AnnouncementDetail from "./AnnouncementDetail";
-import { IDocumentSearch } from "../../store/DocumentActions";
 import Constants from "../../constants";
+import { Announcement } from "../../models/Announcement";
 import DocumentActions from "../../store/DocumentActions";
+import usePermissions from "../../utilities/Permissions";
+import { useGetAnnouncementsQuery } from "./announcementApi";
+import AnnouncementDetail from "./AnnouncementDetail";
 
 const AnnouncementList: React.FC = () => {
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
-    const state = useSelector((state: IApplicationState) => state.announcements);
-    const documentState = useSelector((state: IApplicationState) => state.documents);
-    const canAdd = state.data.findIndex((a) => a.id === 0) < 0; // no pending add
-    const query = {
-        key: "current-documents",
+  const dispatch = useAppDispatch();
+  const permissions = usePermissions();
+  const documentState = useAppSelector((state) => state.documents);
+  const { data: announcements, isLoading } = useGetAnnouncementsQuery();
+  const [addNew, setAddNew] = React.useState(false);
+
+  const queryKey = "current-documents";
+
+  useEffect(() => {
+    dispatch(
+      DocumentActions.Load({
+        key: queryKey,
         year: Constants.EventCalendarYear,
-    } as IDocumentSearch;
-
-    // Info on why we memoize the callback passed to a child component
-    // https://react-redux.js.org/next/api/hooks#usedispatch
-    const saveAnnouncement = useCallback(
-        (announcement: Announcement) => dispatch(AnnouncementActions.Save(announcement)),
-        [dispatch]
+      }),
     );
+  }, [dispatch]);
 
-    // TODO: Why, when I provide dispatch and query in the dependency array,
-    // does the component go into an endless load loop?
-    useEffect(() => {
-        dispatch(AnnouncementActions.Load());
-        dispatch(DocumentActions.Load(query));
-        // eslint-disable-next-line
-    }, []);
+  const emptyAnnouncement = () => {
+    return new Announcement({
+      id: 0,
+      starts: new Date().toISOString(),
+      expires: new Date().toISOString(),
+    });
+  };
 
-    return (
-        <div>
-            <h3 className="text-primary">MPGA News</h3>
-            {permissions.canEditAnnouncements() && canAdd && (
-                <Button
-                    variant="link"
-                    className="text-warning"
-                    disabled={!canAdd}
-                    onClick={() => dispatch(AnnouncementActions.AddNew())}>
-                    Add Announcement
-                </Button>
-            )}
-            <LoadingContainer hasData={state.data !== undefined}>
-                {state.data.map((announcement: Announcement) => {
-                    return (
-                        <AnnouncementDetail
-                            key={announcement.id}
-                            announcement={announcement}
-                            edit={announcement.id === 0}
-                            currentDocuments={documentState.documents.get(query.key) || []}
-                            Cancel={() => dispatch(AnnouncementActions.CancelNew())}
-                            Save={saveAnnouncement}
-                        />
-                    );
-                })}
-            </LoadingContainer>
-        </div>
-    );
+  const getDocuments = () => {
+    if (Object.prototype.hasOwnProperty.call(documentState.documents, queryKey)) {
+      return documentState.documents[queryKey].map((doc) => new MpgaDocument(doc));
+    }
+    return [];
+  };
+
+  return (
+    <div>
+      <h3 className="text-primary">MPGA News</h3>
+      {permissions.canEditAnnouncements() && !addNew && (
+        <Button variant="link" className="text-warning" disabled={addNew} onClick={() => setAddNew(true)}>
+          Add Announcement
+        </Button>
+      )}
+      {addNew && (
+        <AnnouncementDetail
+          key={0}
+          announcement={emptyAnnouncement()}
+          edit={true}
+          documents={getDocuments()}
+          onClose={() => setAddNew(false)}
+        />
+      )}
+      <LoadingContainer loading={isLoading}>
+        {announcements?.map((announcement) => {
+          return (
+            <AnnouncementDetail
+              key={announcement.id}
+              announcement={new Announcement(announcement)}
+              edit={false}
+              documents={getDocuments()}
+              onClose={() => setAddNew(false)}
+            />
+          );
+        })}
+      </LoadingContainer>
+    </div>
+  );
 };
 
 export default AnnouncementList;

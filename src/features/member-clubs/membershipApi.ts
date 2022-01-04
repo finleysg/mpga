@@ -1,5 +1,5 @@
-import { IMembershipData } from "../models/Data";
-import { mpgaApi } from "./MpgaApi";
+import { IMembershipData } from "../../services/Data";
+import { mpgaApi } from "../../services/MpgaApi";
 
 const extendedApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({

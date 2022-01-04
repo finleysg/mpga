@@ -1,13 +1,8 @@
-import * as AnnouncementStore from "./AnnouncementStore";
 import * as AppStore from "./AppStore";
-import { IAwardState } from "./AwardSlice";
-import * as CommitteeStore from "./CommitteeStore";
-import * as ContentStore from "./ContentStore";
 import * as DocumentStore from "./DocumentStore";
 import * as EventStore from "./EventStore";
 import * as LayoutStore from "./LayoutStore";
 import * as MatchPlayStore from "./MatchPlayStore";
-import { IMemberClubState } from "./MemberClubSlice";
 import * as MessageStore from "./MessageStore";
 import * as NotificationStore from "./NotificationStore";
 import * as PaymentStore from "./PaymentStore";
@@ -19,16 +14,11 @@ import * as UserStore from "./UserStore";
 
 // The top-level state object
 export interface IApplicationState {
-  announcements: AnnouncementStore.IAnnouncementState;
   app: AppStore.IAppState;
-  awards: IAwardState;
-  committee: CommitteeStore.ICommitteeState;
-  content: ContentStore.IContentState;
   documents: DocumentStore.IDocumentState;
   events: EventStore.IEventState;
   layout: LayoutStore.ILayoutState;
   matchPlay: MatchPlayStore.IMatchPlayState;
-  memberClubs: IMemberClubState;
   messaging: MessageStore.IMessageState;
   notifications: NotificationStore.INotificationState;
   payments: PaymentStore.IPaymentState;
@@ -43,10 +33,7 @@ export interface IApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
-  announcements: AnnouncementStore.AnnouncementsReducer,
   app: AppStore.AppReducer,
-  committee: CommitteeStore.CommitteeReducer,
-  content: ContentStore.ContentReducer,
   documents: DocumentStore.DocumentsReducer,
   events: EventStore.EventsReducer,
   layout: LayoutStore.reducer,

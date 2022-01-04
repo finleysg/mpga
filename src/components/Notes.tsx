@@ -1,18 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import ReactMarkdown from 'react-markdown';
-import styled from 'styled-components';
+import styled from "styled-components";
+
+import MarkdownRender from "./MarkdownRender";
 
 export const NotesContainer = styled.div`
-    background-color: #fff;
+  background-color: #fff;
 `;
 
 const Notes: React.FC<any> = (props) => {
-    return (
-        <NotesContainer>
-            <ReactMarkdown children={props.children} />
-        </NotesContainer>
-    );
+  return (
+    <NotesContainer>
+      <MarkdownRender text={props.children} />
+    </NotesContainer>
+  );
 };
 
 export default Notes;

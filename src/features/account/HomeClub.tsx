@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
+import { useAppDispatch } from "app-store";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { useDispatch, useSelector } from "react-redux";
+import useSession from "utilities/SessionHooks";
 
-import { IClubData } from "../../models/Data";
-import { IApplicationState } from "../../store";
+import { IClubData } from "../../services/Data";
 import UserActions from "../../store/UserActions";
 import HomeClubForm from "./HomeClubForm";
 
@@ -16,11 +16,11 @@ type HomeClubProps = {
 
 const HomeClub: React.FC<HomeClubProps> = (props) => {
   const [doEdit, setDoEdit] = useState(false);
-  const dispatch = useDispatch();
-  const session = useSelector((state: IApplicationState) => state.session);
+  const dispatch = useAppDispatch();
+  const { contact } = useSession();
 
   const updateHomeClub = (homeClub: string) => {
-    dispatch(UserActions.UpdateContact(session.contact?.id!, { home_club: homeClub }));
+    dispatch(UserActions.UpdateContact(contact?.id!, { home_club: homeClub }));
     setDoEdit(false);
   };
 
@@ -28,7 +28,7 @@ const HomeClub: React.FC<HomeClubProps> = (props) => {
     <div>
       <Row>
         <Col xs={3}>Home Club</Col>
-        <Col xs={8}>{session.contact?.homeClub || "Click 'change' to update your home club."}</Col>
+        <Col xs={8}>{contact?.homeClub || "Click 'change' to update your home club."}</Col>
         <Col xs={1}>
           <Button variant="link" className="text-info" onClick={() => setDoEdit(!doEdit)}>
             {doEdit ? "cancel" : "change"}
@@ -38,11 +38,7 @@ const HomeClub: React.FC<HomeClubProps> = (props) => {
       {doEdit && (
         <Row>
           <Col xs={12}>
-            <HomeClubForm
-              clubs={props.clubs}
-              homeClub={session.contact?.homeClub}
-              OnChange={(club) => updateHomeClub(club)}
-            />
+            <HomeClubForm clubs={props.clubs} homeClub={contact?.homeClub} OnChange={(club) => updateHomeClub(club)} />
           </Col>
         </Row>
       )}

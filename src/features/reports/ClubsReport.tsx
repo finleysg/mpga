@@ -1,13 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 
+import { useGetClubsQuery } from "features/member-clubs/memberClubApi";
+import { useGetMembershipsForYearQuery } from "features/member-clubs/membershipApi";
 import Table from "react-bootstrap/Table";
 import { CSVLink } from "react-csv";
-import { useDispatch, useSelector } from "react-redux";
+import { IMembershipData } from "services/Data";
 
 import constants from "../../constants";
-import { Club, Membership } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
-import ReportActions from "../../store/ReportActions";
 
 interface IClubReportProps {
   current: boolean;
@@ -15,24 +14,33 @@ interface IClubReportProps {
 
 const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
   const { current } = props;
-  const dispatch = useDispatch();
-  const reportData = useSelector((state: IApplicationState) => state.reports);
-  const clubList = current ? reportData.memberClubs : reportData.clubs;
+  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
+  const { data: clubs, isLoading: clubsLoading } = useGetClubsQuery();
 
-  useEffect(() => {
-    if (!clubList || clubList.length === 0) {
-      if (current) {
-        dispatch(ReportActions.GetMemberships(constants.MemberClubYear));
-      } else {
-        dispatch(ReportActions.GetClubs());
-      }
+  const getClubList = (): any[] => {
+    if (!clubsLoading && !membershipsLoading) {
+      return clubs.map((club) => {
+        const membership = memberships.find((m) => m.club === club.id && m.year === constants.MemberClubYear);
+        return {
+          id: club.id,
+          name: club.name,
+          systemName: club.system_name,
+          isCurrent: membership?.id > 0,
+          website: club.website,
+          location: club.golf_course?.name || "unaffiliated",
+          size: club.size,
+          paymentDate: membership?.payment_date,
+          paymentMethod: paymentMethod(membership),
+        };
+      });
     }
-  }, [dispatch, clubList, current]);
+    return [];
+  };
 
-  const paymentMethod = (membership: Membership): string => {
-    if (membership.paymentType === "CK") {
-      return `Check (${membership.paymentCode})`;
-    } else if (membership.paymentType === "OL") {
+  const paymentMethod = (membership: IMembershipData): string => {
+    if (membership.payment_type === "CK") {
+      return `Check (${membership.payment_code})`;
+    } else if (membership.payment_type === "OL") {
       return "Online";
     } else {
       return "Other";
@@ -55,22 +63,24 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
 
   const getData = () => {
     if (current) {
-      return clubList.map((club: Club) => {
-        return {
-          name: club.name,
-          systemName: club.systemName,
-          homeCourse: club.golfCourse?.name,
-          members: club.size,
-          paymentDate: club.membershipData?.paymentDate,
-          paymentMethod: paymentMethod(club.membershipData!),
-        };
-      });
+      return getClubList()
+        .filter((c) => c.isCurrent)
+        .map((club: any) => {
+          return {
+            name: club.name,
+            systemName: club.systemName,
+            homeCourse: club.location,
+            members: club.size,
+            paymentDate: club.paymentDate,
+            paymentMethod: club.paymentMethod,
+          };
+        });
     }
-    return clubList.map((club: Club) => {
+    return getClubList().map((club: any) => {
       return {
         name: club.name,
         systemName: club.systemName,
-        homeCourse: club.golfCourse?.name,
+        homeCourse: club.location,
         members: club.size,
       };
     });
@@ -98,14 +108,14 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {clubList.map((club: Club) => (
+          {getData().map((club: any) => (
             <tr key={club.id}>
               <td>{club.name}</td>
               <td>{club.systemName}</td>
               <td>{club.golfCourse?.name}</td>
               <td>{club.size}</td>
-              {current && <td>{club.membershipData?.paymentDate}</td>}
-              {current && <td>{paymentMethod(club.membershipData!)}</td>}
+              {current && <td>{club.paymentDate}</td>}
+              {current && <td>{club.paymentMethod}</td>}
             </tr>
           ))}
         </tbody>

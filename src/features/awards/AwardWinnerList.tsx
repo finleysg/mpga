@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 
 import { AwardWinner } from "../../models/Events";
 import usePermissions from "../../utilities/Permissions";
-import { AwardViewProps } from "./AwardPropTypes";
+import { AwardViewProps } from "./awardPropTypes";
 import AwardWinnerDetail from "./AwardWinnerDetail";
 
 const AwardWinnerList: React.FC<AwardViewProps> = (props) => {

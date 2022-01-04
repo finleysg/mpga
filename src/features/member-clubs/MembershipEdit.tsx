@@ -1,5 +1,6 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
@@ -10,7 +11,7 @@ import { DatePickerField } from "../../components/DatePickerField";
 import SubmitButton from "../../components/SubmitButton";
 import constants from "../../constants";
 import { Club, Membership } from "../../models/Clubs";
-import { useAddMembershipForClubMutation } from "../../services/MembershipEndpoints";
+import { useAddMembershipForClubMutation } from "./membershipApi";
 
 type MembershipEditProps = {
   club: Club;
@@ -48,7 +49,7 @@ const MembershipEdit: React.FC<MembershipEditProps> = (props) => {
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isLoading}>
       <Formik validationSchema={schema} onSubmit={handleSave} initialValues={membership}>
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
@@ -103,12 +104,12 @@ const MembershipEdit: React.FC<MembershipEditProps> = (props) => {
               />
               <Form.Control.Feedback type="invalid">{errors.notes}</Form.Control.Feedback>
             </Form.Group>
-            <SubmitButton busy={isLoading} />
+            <SubmitButton />
             <CancelButton canCancel={true} OnCancel={onCancel} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

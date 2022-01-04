@@ -1,6 +1,7 @@
 import React from "react";
 
 import CancelButton from "components/CancelButton";
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import { Award } from "models/Events";
@@ -9,15 +10,15 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
-import { useUpdateAwardMutation } from "../../services/AwardEndpoints";
-import { AwardEditProps } from "./AwardPropTypes";
+import { useUpdateAwardMutation } from "./awardApi";
+import { AwardEditProps } from "./awardPropTypes";
 
 const schema = yup.object({
   description: yup.string().required(),
 });
 
 const AwardEdit: React.FC<AwardEditProps> = (props) => {
-  const { award, onSave, onCancel } = props;
+  const { award, onClose } = props;
   const [updateAward, { isLoading: isUpdating }] = useUpdateAwardMutation();
 
   const handleSave = async (award: Award) => {
@@ -25,7 +26,7 @@ const AwardEdit: React.FC<AwardEditProps> = (props) => {
       .unwrap()
       .then(() => {
         toast.success(`Changes to ${award.name} have been saved.`);
-        onSave(award);
+        onClose();
       })
       .catch((error) => {
         toast.error("💣 " + error);
@@ -33,20 +34,20 @@ const AwardEdit: React.FC<AwardEditProps> = (props) => {
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isUpdating}>
       <Formik validationSchema={schema} onSubmit={handleSave} initialValues={award}>
-        {({ handleSubmit, handleChange, values }) => (
+        {({ handleSubmit, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="awardDescription">
               <Form.Label>Description</Form.Label>
               <MarkdownField name="description" value={values.description} height="300px" />
             </Form.Group>
-            <SubmitButton busy={isUpdating} />
-            <CancelButton canCancel={true} OnCancel={onCancel} />
+            <SubmitButton />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

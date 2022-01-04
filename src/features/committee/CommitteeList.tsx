@@ -1,74 +1,61 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
+import { OverlaySpinner } from "components/Spinner";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
 
-import LoadingContainer from "../../components/LoadingContainer";
 import { Contact, ExecutiveCommittee } from "../../models/Clubs";
-import { useGetClubsQuery } from "../../services/ClubEndpoints";
-import { IApplicationState } from "../../store";
-import CommitteeActions from "../../store/CommitteeActions";
 import usePermissions from "../../utilities/Permissions";
 import ContactSearch from "../contacts/ContactSearch";
+import { useGetCommitteeQuery } from "./committeeApi";
 import CommitteeMemberDetail from "./CommitteeMemberDetail";
 
 const CommitteeList: React.FC = () => {
+  const [addNew, setAddNew] = useState(false);
   const [findContact, setFindContact] = useState(false);
-  const dispatch = useDispatch();
+  const [newContact, setNewContact] = useState(new Contact({ id: 0 }));
+  const { data: committeeMembers, isLoading, isFetching } = useGetCommitteeQuery();
   const permissions = usePermissions();
-  const committeeState = useSelector((state: IApplicationState) => state.committee);
-  const { data: clubs } = useGetClubsQuery();
-  const canAdd = committeeState.members.findIndex((ec) => ec.id === 0) < 0; // no pending add
-
-  useEffect(() => {
-    dispatch(CommitteeActions.LoadCommittee());
-  }, [dispatch]);
-
-  const saveCommitteeMember = useCallback(
-    (committeeMember: ExecutiveCommittee) => dispatch(CommitteeActions.SaveCommitteeMember(committeeMember)),
-    [dispatch],
-  );
-
-  const removeCommitteeMember = useCallback(
-    (committeeMember: ExecutiveCommittee) => dispatch(CommitteeActions.DeleteCommitteeMember(committeeMember)),
-    [dispatch],
-  );
 
   const addCommitteeMember = (contact: Contact) => {
     if (contact) {
-      dispatch(CommitteeActions.AddNewMember(contact));
+      setNewContact(contact);
     } else {
-      dispatch(CommitteeActions.AppendNewMember());
+      setNewContact(new Contact({ id: 0 }));
     }
     setFindContact(false);
+    setAddNew(true);
   };
 
   return (
     <div>
+      <OverlaySpinner loading={isLoading || isFetching} />
       <div>
         <h3 className="text-primary">Executive Committee Members</h3>
-        {permissions.canAddCommittee() && canAdd && (
+        {permissions.canAddCommittee() && !addNew && (
           <Button variant="link" className="text-warning" onClick={() => setFindContact(true)}>
             Add New
           </Button>
         )}
       </div>
       {findContact && <ContactSearch allowNew={true} OnSelect={addCommitteeMember} />}
-      <LoadingContainer hasData={committeeState.members && committeeState.members.length > 0}>
-        {committeeState.members.map((ec: ExecutiveCommittee) => {
-          return (
-            <CommitteeMemberDetail
-              key={ec.id}
-              committeeMember={ec}
-              clubs={clubs}
-              edit={ec.id === 0}
-              Cancel={() => dispatch(CommitteeActions.CancelNewMember())}
-              Remove={removeCommitteeMember}
-              Save={saveCommitteeMember}
-            />
-          );
-        })}
-      </LoadingContainer>
+      {addNew && (
+        <CommitteeMemberDetail
+          key={0}
+          committeeMember={new ExecutiveCommittee({ id: 0, contact: newContact.prepJson() })}
+          edit={true}
+          onClose={() => setAddNew(false)}
+        />
+      )}
+      {committeeMembers?.map((ec) => {
+        return (
+          <CommitteeMemberDetail
+            key={ec.id}
+            committeeMember={new ExecutiveCommittee(ec)}
+            edit={false}
+            onClose={() => setAddNew(false)}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -1,15 +1,14 @@
 import React from "react";
 
 import LabelAndValue, { LabelStyle, ValueType } from "../../components/LabelAndValue";
-import LoadingContainer from "../../components/LoadingContainer";
-import { ClubProps } from "./MemberPropTypes";
+import { ClubProps } from "./memberClubPropTypes";
 
 const GolfCourseView: React.FC<ClubProps> = (props) => {
   const { club } = props;
   const course = club.golfCourse;
 
   return (
-    <LoadingContainer hasData={true}>
+    <>
       {!course?.name && <h3 className="text-primary mb-3">No Home Course</h3>}
       {course?.name && (
         <div>
@@ -40,7 +39,7 @@ const GolfCourseView: React.FC<ClubProps> = (props) => {
           />
         </div>
       )}
-    </LoadingContainer>
+    </>
   );
 };
 

@@ -1,27 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import ReactMarkdown from 'react-markdown';
+import MarkdownRender from "components/MarkdownRender";
 
-import { Announcement } from '../../models/Announcement';
+import { AnnouncementViewProps } from "./announcementPropTypes";
 
-export interface IAnnouncementView {
-    announcement: Announcement;
-}
-
-const AnnouncementView: React.FC<IAnnouncementView> = (props) => {
-    const announcement = props.announcement;
-    return (
-        <div>
-            <h5 className="text-secondary">{announcement.title}</h5>
-            <ReactMarkdown children={announcement.text} />
-            {announcement.externalUrl && (
-                <a href={announcement.externalUrl}>{announcement.externalName}</a>
-            )}
-            {announcement.document && (
-                <a href={announcement.document.file}>{announcement.document.title}</a>
-            )}
-        </div>
-    );
+const AnnouncementView: React.FC<AnnouncementViewProps> = (props) => {
+  const announcement = props.announcement;
+  return (
+    <div>
+      <h5 className="text-secondary">{announcement.title}</h5>
+      <MarkdownRender text={announcement.text} />
+      {announcement.externalUrl && <a href={announcement.externalUrl}>{announcement.externalName}</a>}
+      {announcement.document && <a href={announcement.document.file}>{announcement.document.title}</a>}
+    </div>
+  );
 };
 
 export default AnnouncementView;

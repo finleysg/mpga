@@ -36,7 +36,7 @@ const EventGalleryDetail: React.FC<IEventGalleryDetailProps> = (props) => {
   );
 
   return (
-    <LoadingContainer hasData={photoState.randomPhoto !== undefined}>
+    <LoadingContainer loading={photoState.randomPhoto === undefined}>
       <EditOrView doEdit={doUpload}>
         {permissions.canManageEvent() && (
           <ToggleEditButton

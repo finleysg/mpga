@@ -1,21 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import ReactMarkdown from 'react-markdown';
+import MarkdownRender from "components/MarkdownRender";
 
-import { PageContent } from '../../models/Policies';
+import { PageContentViewProps } from "./contentPropTypes";
 
-export interface IPageContentViewProps {
-    pageContent: PageContent;
-}
-
-const PageContentView: React.FC<IPageContentViewProps> = (props) => {
-    const { pageContent } = props;
-    return (
-        <div>
-            <h3 className="text-primary mb-3">{pageContent.title}</h3>
-            <ReactMarkdown children={pageContent.content} />
-        </div>
-    );
+const PageContentView: React.FC<PageContentViewProps> = (props) => {
+  const { pageContent } = props;
+  return (
+    <div>
+      <h3 className="text-primary mb-3">{pageContent.title}</h3>
+      <MarkdownRender text={pageContent.content} />
+    </div>
+  );
 };
 
 export default PageContentView;

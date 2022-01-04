@@ -1,28 +1,30 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import WithEdit from "../../components/WithEdit";
-import { PolicyForm } from "../../store/ContentActions";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import usePermissions from "../../utilities/Permissions";
-import PolicyEdit, { IPolicyEditProps } from "./PolicyEdit";
+import { PolicyDetailProps } from "./contentPropTypes";
+import PolicyEdit from "./PolicyEdit";
 import PolicyView from "./PolicyView";
 
-export interface IPolicyDetailProps extends IPolicyEditProps {
-    edit: boolean;
-}
+const PolicyDetail: React.FC<PolicyDetailProps> = (props) => {
+  const { policy, edit, onClose } = props;
+  const permissions = usePermissions();
+  const closeRef = useRef<CloseHandle>();
 
-const PolicyDetail: React.FC<IPolicyDetailProps> = (props) => {
-    const { policy, edit, Cancel, Delete, Save } = props;
-    const permissions = usePermissions();
+  const handleClose = () => {
+    closeRef.current?.close();
+    onClose();
+  };
 
-    return (
-        <WithEdit
-            formName={PolicyForm}
-            initEdit={edit}
-            canEdit={permissions.canEditPolicies()}
-            viewComponent={<PolicyView policy={policy} />}
-            editComponent={<PolicyEdit policy={policy} Cancel={Cancel} Delete={Delete} Save={Save} />}
-        />
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={edit}
+      canEdit={permissions.canEditPolicies()}
+      viewComponent={<PolicyView policy={policy} />}
+      editComponent={<PolicyEdit policy={policy} onClose={handleClose} />}
+    />
+  );
 };
 
 export default PolicyDetail;

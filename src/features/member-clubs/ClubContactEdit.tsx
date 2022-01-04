@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
+import { IClubContactData } from "services/Data";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
@@ -9,9 +12,9 @@ import Confirm from "../../components/Confirm";
 import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
 import { ClubContact, ClubContactRole, Contact, IClubContact, IRole } from "../../models/Clubs";
-import { useAddClubContactMutation, useUpdateClubContactMutation } from "../../services/ClubEndpoints";
 import RolePicker from "../roles/RolePicker";
-import { ClubContactEditProps } from "./MemberPropTypes";
+import { useAddClubContactMutation, useRemoveClubContactMutation, useUpdateClubContactMutation } from "./memberClubApi";
+import { ClubContactEditProps } from "./memberClubPropTypes";
 
 const schema = yup.object({
   firstName: yup.string().max(30).required(),
@@ -65,30 +68,51 @@ const translateClubContact = (cc: ClubContact): IClubContact => {
 };
 
 const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
-  const cc = translateClubContact(props.clubContact);
+  const { clubContact, onClose } = props;
+
+  const cc = translateClubContact(clubContact);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showAddress, setShowAddress] = useState(cc.useForMailings);
-  const [, { isLoading: isUpdating }] = useUpdateClubContactMutation();
-  const [, { isLoading: isCreating }] = useAddClubContactMutation();
+  const [updateClubContact, { isLoading: isUpdating }] = useUpdateClubContactMutation();
+  const [addClubContact, { isLoading: isSaving }] = useAddClubContactMutation();
+  const [removeClubContact, { isLoading: isDeleting }] = useRemoveClubContactMutation();
+
+  const isBusy = isUpdating || isSaving || isDeleting;
 
   const handleConfirmDeleteCancel = () => {
     setShowConfirmation(false);
   };
 
-  const handleConfirmDeleteContinue = () => {
+  const handleSave = async (updatedContact: IClubContact) => {
+    const data = ClubContact.Create(clubContact.club, updatedContact).prepJson() as IClubContactData;
+    const mutation = data.id > 0 ? updateClubContact(data) : addClubContact(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${updatedContact.firstName + " " + updatedContact.lastName} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
+
+  const handleDelete = async () => {
     setShowConfirmation(false);
-    props.onRemove(props.clubContact);
+    await removeClubContact(clubContact.prepJson())
+      .unwrap()
+      .then(() => {
+        toast.success(`${clubContact.contact.firstName + " " + clubContact.contact.lastName} has been removed.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
   return (
-    <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          props.onSave(values);
-        }}
-        initialValues={cc}
-      >
+    <LoadingContainer loading={isBusy}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={cc}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="cc.firstName">
@@ -241,13 +265,13 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
                 </Form.Group>
               </>
             )}
-            <SubmitButton busy={isCreating || isUpdating} />
+            <SubmitButton />
             <DeleteButton
               canDelete={props.clubContact.id !== 0}
               title="Remove"
               OnDelete={() => setShowConfirmation(true)}
             />
-            <CancelButton canCancel={props.clubContact.id === 0} OnCancel={() => props.onCancel()} />
+            <CancelButton canCancel={props.clubContact.id === 0} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
@@ -257,9 +281,9 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
         messageText="Please confirm that we should remove this contact from your club."
         confirmText="Remove Contact"
         DoCancel={handleConfirmDeleteCancel}
-        DoConfirm={handleConfirmDeleteContinue}
+        DoConfirm={handleDelete}
       />
-    </div>
+    </LoadingContainer>
   );
 };
 

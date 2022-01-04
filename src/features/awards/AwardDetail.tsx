@@ -3,10 +3,10 @@ import React, { useRef } from "react";
 import LoadingContainer from "../../components/LoadingContainer";
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import { Award } from "../../models/Events";
-import { useGetAwardQuery } from "../../services/AwardEndpoints";
 import usePermissions from "../../utilities/Permissions";
+import { useGetAwardQuery } from "./awardApi";
 import AwardEdit from "./AwardEdit";
-import { AwardDetailProps } from "./AwardPropTypes";
+import { AwardDetailProps } from "./awardPropTypes";
 import AwardView from "./AwardView";
 
 const AwardDetail: React.FC<AwardDetailProps> = (props) => {
@@ -17,22 +17,18 @@ const AwardDetail: React.FC<AwardDetailProps> = (props) => {
 
   const award = new Award(data);
 
-  const handleCancel = () => {
-    closeRef.current.close();
-  };
-
-  const handleSave = (_award: Award) => {
+  const handleClose = () => {
     closeRef.current.close();
   };
 
   return (
-    <LoadingContainer hasData={!isLoading}>
+    <LoadingContainer loading={isLoading}>
       <CloseableEditContainer
         ref={closeRef}
         initEdit={false}
         canEdit={permissions.canEditPageContent()}
         viewComponent={<AwardView award={award} />}
-        editComponent={<AwardEdit award={award} onSave={handleSave} onCancel={handleCancel} />}
+        editComponent={<AwardEdit award={award} onClose={handleClose} />}
       />
     </LoadingContainer>
   );

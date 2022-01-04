@@ -1,36 +1,27 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import WithEdit from "../../components/WithEdit";
-import { ExecutiveCommittee } from "../../models/Clubs";
-import { CommitteeForm } from "../../store/CommitteeActions";
+import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import usePermissions from "../../utilities/Permissions";
 import CommitteeMemberEdit from "./CommitteeMemberEdit";
 import CommitteeMemberView from "./CommitteeMemberView";
-import { ExecutiveCommitteeDetail } from "./CommitteePropTypes";
+import { ExecutiveCommitteeDetail } from "./committeePropTypes";
 
 const CommitteeMemberDetail: React.FC<ExecutiveCommitteeDetail> = (props) => {
-  const { committeeMember, clubs, edit, Cancel, Save, Remove } = props;
+  const { committeeMember, edit } = props;
   const permissions = usePermissions();
+  const closeRef = useRef<CloseHandle>();
 
-  const saveCommitteeMember = (member: ExecutiveCommittee) => {
-    Save(member);
+  const handleClose = () => {
+    closeRef.current?.close();
   };
 
   return (
-    <WithEdit
-      formName={CommitteeForm}
+    <CloseableEditContainer
+      ref={closeRef}
       initEdit={edit}
       canEdit={permissions.canEditCommittee()}
       viewComponent={<CommitteeMemberView committeeMember={committeeMember} />}
-      editComponent={
-        <CommitteeMemberEdit
-          committeeMember={committeeMember}
-          clubs={clubs}
-          Cancel={Cancel}
-          Save={saveCommitteeMember}
-          Remove={Remove}
-        />
-      }
+      editComponent={<CommitteeMemberEdit committeeMember={committeeMember} onClose={handleClose} />}
     />
   );
 };

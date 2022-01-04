@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
@@ -9,7 +11,9 @@ import Confirm from "../../components/Confirm";
 import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
 import { Contact, ExecutiveCommittee } from "../../models/Clubs";
-import { ExecutiveCommitteeEditProps } from "./CommitteePropTypes";
+import { useGetClubsQuery } from "../member-clubs/memberClubApi";
+import { useAddCommitteeMutation, useDeleteCommitteeMutation, useUpdateCommitteeMutation } from "./committeeApi";
+import { ExecutiveCommitteeEditProps } from "./committeePropTypes";
 
 export interface IExecutiveCommitteeData {
   firstName: string;
@@ -59,31 +63,58 @@ const translateExecutiveCommittee = (ec: ExecutiveCommittee): IExecutiveCommitte
 };
 
 const CommitteeMemberEdit: React.FC<ExecutiveCommitteeEditProps> = (props) => {
-  const ec = translateExecutiveCommittee(props.committeeMember);
+  const { committeeMember, onClose } = props;
+
+  const { data: clubs, isLoading } = useGetClubsQuery();
+  const [addCommittee, { isLoading: isSaving }] = useAddCommitteeMutation();
+  const [updateCommittee, { isLoading: isUpdating }] = useUpdateCommitteeMutation();
+  const [deleteCommittee, { isLoading: isDeleting }] = useDeleteCommitteeMutation();
+  const ec = translateExecutiveCommittee(committeeMember);
   const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const isBusy = isLoading || isSaving || isUpdating || isDeleting;
 
   const handleConfirmDeleteCancel = () => {
     setShowConfirmation(false);
   };
 
-  const handleConfirmDeleteContinue = () => {
+  const handleConfirmDeleteContinue = async () => {
     setShowConfirmation(false);
-    props.Remove(props.committeeMember);
+    const data = committeeMember.prepJson();
+    await deleteCommittee(data)
+      .unwrap()
+      .then(() => {
+        toast.success(`${committeeMember.contact.name} has been removed.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
-  const saveMember = (id: number, data: IExecutiveCommitteeData) => {
-    const member = ExecutiveCommittee.Create(data);
+  const handleSave = async (id: number, updatedMember: IExecutiveCommitteeData) => {
+    const member = ExecutiveCommittee.Create(updatedMember);
     member.id = id;
-    props.Save(member);
+    const data = member.prepJson();
+    const mutation = data.id > 0 ? updateCommittee(data) : addCommittee(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${updatedMember.firstName} ${updatedMember.lastName} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isBusy}>
       <Formik
         validationSchema={schema}
         onSubmit={(values, actions) => {
           actions.setSubmitting(false);
-          saveMember(props.committeeMember.id || 0, values);
+          handleSave(committeeMember.id || 0, values);
         }}
         initialValues={ec}
       >
@@ -176,7 +207,7 @@ const CommitteeMemberEdit: React.FC<ExecutiveCommitteeEditProps> = (props) => {
                 onBlur={handleBlur}
               >
                 <option value={undefined}>--Select a Home Club--</option>
-                {props.clubs.map((c) => {
+                {clubs?.map((c) => {
                   return (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -241,11 +272,11 @@ const CommitteeMemberEdit: React.FC<ExecutiveCommitteeEditProps> = (props) => {
             </Form.Group>
             <SubmitButton />
             <DeleteButton
-              canDelete={props.committeeMember.id! > 0}
+              canDelete={committeeMember.id! > 0}
               title="Remove"
               OnDelete={() => setShowConfirmation(true)}
             />
-            <CancelButton canCancel={props.committeeMember.id === 0} OnCancel={() => props.Cancel()} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
@@ -257,7 +288,7 @@ const CommitteeMemberEdit: React.FC<ExecutiveCommitteeEditProps> = (props) => {
         DoCancel={handleConfirmDeleteCancel}
         DoConfirm={handleConfirmDeleteContinue}
       />
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
-import { IClubData } from "../../models/Data";
+import { IClubData } from "../../services/Data";
 
 type IHomeClubFormProps = {
   clubs: IClubData[];

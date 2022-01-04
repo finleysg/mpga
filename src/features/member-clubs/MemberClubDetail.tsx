@@ -6,13 +6,13 @@ import styled from "styled-components";
 import LoadingContainer from "../../components/LoadingContainer";
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
 import constants from "../../constants";
-import { Club, Membership } from "../../models/Clubs";
-import { useGetMembershipsForClubQuery } from "../../services/MembershipEndpoints";
+import { Membership } from "../../models/Clubs";
 import usePermissions from "../../utilities/Permissions";
 import ClubDuesPayment from "../payments/ClubDuesPayment";
 import MemberClubEdit from "./MemberClubEdit";
+import { ClubProps } from "./memberClubPropTypes";
 import MemberClubView from "./MemberClubView";
-import { ClubProps } from "./MemberPropTypes";
+import { useGetMembershipsForClubQuery } from "./membershipApi";
 import MembershipEdit from "./MembershipEdit";
 
 export const CreateMembershipContainer = styled.div`
@@ -41,7 +41,7 @@ function MemberClubDetail(props: ClubProps) {
     return null;
   };
 
-  const handleSaveClub = (_club: Club) => {
+  const handleClose = () => {
     closeRef.current.close();
   };
 
@@ -101,14 +101,14 @@ function MemberClubDetail(props: ClubProps) {
   };
 
   return (
-    <LoadingContainer hasData={!isLoading}>
+    <LoadingContainer loading={isLoading}>
       {renderMembershipEdit()}
       <CloseableEditContainer
         ref={closeRef}
         initEdit={false}
         canEdit={permissions.canEditClubPage()}
         viewComponent={<MemberClubView club={club} membership={getMostRecentMembership()} />}
-        editComponent={<MemberClubEdit club={club} onSave={handleSaveClub} onCancel={() => closeRef.current.close()} />}
+        editComponent={<MemberClubEdit club={club} onClose={handleClose} />}
       />
       {renderDuesPayment()}
     </LoadingContainer>

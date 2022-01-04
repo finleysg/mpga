@@ -1,37 +1,43 @@
 import React from "react";
 
+import CancelButton from "components/CancelButton";
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
 import { Tournament } from "../../models/Events";
-import { ITournamentViewProps } from "./TournamentView";
-
-export interface ITournamentEditProps extends ITournamentViewProps {
-  Save: (tournament: Tournament) => void;
-}
+import { useUpdateTournamentMutation } from "./tournamentApi";
+import { TournamentEditProps } from "./tournamentPropTypes";
 
 const schema = yup.object({
   name: yup.string().max(120).required(),
   description: yup.string().required(),
 });
 
-const TournamentEdit: React.FC<ITournamentEditProps> = (props) => {
-  const tournament = props.tournament;
+const TournamentEdit: React.FC<TournamentEditProps> = (props) => {
+  const { tournament, onClose } = props;
+  const [updateTournament, { isLoading }] = useUpdateTournamentMutation();
+
+  const handleSave = async (value: Tournament) => {
+    const data = value.prepJson();
+    await updateTournament(data)
+      .unwrap()
+      .then(() => {
+        toast.success(`Your changes to ${value.name} have been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
   return (
-    <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          const newModel = new Tournament(values);
-          newModel.id = tournament.id;
-          props.Save(newModel);
-        }}
-        initialValues={tournament}
-      >
+    <LoadingContainer loading={isLoading}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={tournament}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="tournament.Name">
@@ -52,10 +58,11 @@ const TournamentEdit: React.FC<ITournamentEditProps> = (props) => {
               <MarkdownField name="description" value={values.description} height="400px" />
             </Form.Group>
             <SubmitButton />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useGetAwardsQuery } from "../../services/AwardEndpoints";
+import { useGetAwardsQuery } from "./awardApi";
 
 const useAwards = () => {
   const awards = useGetAwardsQuery();

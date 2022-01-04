@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { IClubContactData, IClubData, IContactData, IGolfCourseData, IMembershipData } from "./Data";
+import { IClubContactData, IClubData, IContactData, IGolfCourseData, IMembershipData } from "../services/Data";
 import { BaseModel } from "./Model";
 
 export interface IRole {

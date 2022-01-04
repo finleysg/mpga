@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import SmallLeftLargeRight from '../components/layouts/SmallLeftLargeRight';
-import constants, { PageCodes } from '../constants';
-import PageContentDetail from '../features/content/PageContentDetail';
-import { TeamList } from '../features/match-play/TeamList';
+import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
+import constants, { PageCodes } from "../constants";
+import PageContentDetail from "../features/content/PageContentDetail";
 
 const MatchPlayPage: React.FC = () => {
-    return (
-        <SmallLeftLargeRight
-            LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
-            RightColumn={
-                <React.Fragment>
-                    <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
-                    {/* <div>
+  return (
+    <SmallLeftLargeRight
+      LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
+      RightColumn={
+        <React.Fragment>
+          <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
+          <p>Team sign up should be available soon.</p>
+          {/* <div>
                         <iframe
                             title="2021-sign-up"
                             src="https://docs.google.com/forms/d/e/1FAIpQLSfISGwD9LJepombufKhw4l0wBZj2EkfP2RnlbbSRn_YeeIHeQ/viewform?embedded=true"
@@ -24,11 +24,11 @@ const MatchPlayPage: React.FC = () => {
                             Loading…
                         </iframe>
                     </div> */}
-                    <TeamList />
-                </React.Fragment>
-            }
-        />
-    );
+          {/* <TeamList /> */}
+        </React.Fragment>
+      }
+    />
+  );
 };
 
 export default MatchPlayPage;

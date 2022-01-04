@@ -1,13 +1,13 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import Table from "react-bootstrap/Table";
 
-import Processing from "../../components/Processing";
 import constants from "../../constants";
 import { IClub } from "../../models/Clubs";
-import { useGetClubsQuery } from "../../services/ClubEndpoints";
-import { useGetMembershipsForYearQuery } from "../../services/MembershipEndpoints";
+import { useGetClubsQuery } from "./memberClubApi";
 import MemberClubRow from "./MemberClubRow";
+import { useGetMembershipsForYearQuery } from "./membershipApi";
 
 const MemberClubList: React.FC = () => {
   const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
@@ -16,7 +16,7 @@ const MemberClubList: React.FC = () => {
   const getClubList = (): IClub[] => {
     if (!clubsLoading && !membershipsLoading) {
       return clubs.map((club) => {
-        const isCurrent = memberships.findIndex((m) => m.club === club.id) >= 0;
+        const isCurrent = memberships.findIndex((m) => m.club === club.id && m.year === constants.MemberClubYear) >= 0;
         return {
           id: club.id,
           name: club.name,
@@ -32,28 +32,24 @@ const MemberClubList: React.FC = () => {
   };
 
   return (
-    <div>
-      {membershipsLoading || clubsLoading ? (
-        <Processing message="Loading member clubs..." />
-      ) : (
-        <Table striped size="sm">
-          <thead>
-            <tr>
-              <th>{constants.MemberClubYear}</th>
-              <th>Club</th>
-              <th>Website</th>
-              <th>Location</th>
-              <th>Size</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getClubList().map((club) => (
-              <MemberClubRow key={club.id} club={club} />
-            ))}
-          </tbody>
-        </Table>
-      )}
-    </div>
+    <LoadingContainer loading={membershipsLoading || clubsLoading}>
+      <Table striped size="sm">
+        <thead>
+          <tr>
+            <th>{constants.MemberClubYear}</th>
+            <th>Club</th>
+            <th>Website</th>
+            <th>Location</th>
+            <th>Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          {getClubList()?.map((club) => (
+            <MemberClubRow key={club.id} club={club} />
+          ))}
+        </tbody>
+      </Table>
+    </LoadingContainer>
   );
 };
 

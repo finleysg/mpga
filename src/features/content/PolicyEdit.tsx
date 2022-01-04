@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 
 import { MarkdownField } from "components/MarkdownField";
+import { OverlaySpinner } from "components/Spinner";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
@@ -10,13 +12,8 @@ import Confirm from "../../components/Confirm";
 import DeleteButton from "../../components/DeleteButton";
 import SubmitButton from "../../components/SubmitButton";
 import { Policy } from "../../models/Policies";
-import { IPolicyViewProps } from "./PolicyView";
-
-export interface IPolicyEditProps extends IPolicyViewProps {
-  Cancel: () => void;
-  Save: (policy: Policy) => void;
-  Delete: (policy: Policy) => void;
-}
+import { useAddPolicyMutation, useDeletePolicyMutation, useUpdatePolicyMutation } from "./contentApi";
+import { PolicyEditProps } from "./contentPropTypes";
 
 const schema = yup.object({
   name: yup.string().max(30).required(),
@@ -24,30 +21,51 @@ const schema = yup.object({
   // description: yup.string().required(),
 });
 
-const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
+const PolicyEdit: React.FC<PolicyEditProps> = (props) => {
+  const { policy, onClose } = props;
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const policy = props.policy;
+  const [addPolicy, { isLoading: isSaving }] = useAddPolicyMutation();
+  const [updatePolicy, { isLoading: isUpdating }] = useUpdatePolicyMutation();
+  const [deletePolicy, { isLoading: isDeleting }] = useDeletePolicyMutation();
+
+  const isBusy = isSaving || isUpdating || isDeleting;
 
   const handleConfirmDeleteCancel = () => {
     setShowConfirmation(false);
   };
 
-  const handleConfirmDeleteContinue = () => {
+  const handleConfirmDeleteContinue = async () => {
     setShowConfirmation(false);
-    props.Delete(policy);
+    const data = policy.prepJson();
+    await deletePolicy(data)
+      .unwrap()
+      .then(() => {
+        toast.success(`${policy.name} has been removed.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
+
+  const handleSave = async (policy: Policy) => {
+    const data = policy.prepJson();
+    const mutation = data.id > 0 ? updatePolicy(data) : addPolicy(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${policy.name} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
   return (
     <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          const newModel = new Policy(values);
-          newModel.id = props.policy.id;
-          props.Save(newModel);
-        }}
-        initialValues={policy}
-      >
+      <OverlaySpinner loading={isBusy} />
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={policy}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="policy.Name">
@@ -83,7 +101,7 @@ const PolicyEdit: React.FC<IPolicyEditProps> = (props) => {
             </Form.Group>
             <SubmitButton />
             <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />
-            <CancelButton canCancel={policy.id === 0} OnCancel={() => props.Cancel()} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>

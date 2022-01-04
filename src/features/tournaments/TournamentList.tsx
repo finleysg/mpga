@@ -1,29 +1,25 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 
 import LoadingContainer from "../../components/LoadingContainer";
 import { Tournament } from "../../models/Events";
-import { IApplicationState } from "../../store";
-import TournamentActions from "../../store/TournamentActions";
+import { useGetTournamentsQuery } from "./tournamentApi";
 import TournamentDetail from "./TournamentDetail";
 
 const TournamentList: React.FC = () => {
-    const dispatch = useDispatch();
-    const tournamentState = useSelector((state: IApplicationState) => state.tournament);
+  const { tournaments, isLoading } = useGetTournamentsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      tournaments: data?.find((t) => t.system_name !== "match-play"),
+      isLoading,
+    }),
+  });
 
-    useEffect(() => {
-        dispatch(TournamentActions.LoadTournaments());
-    }, [dispatch]);
-
-    return (
-        <LoadingContainer hasData={tournamentState.currentTournament !== undefined}>
-            {tournamentState.tournaments
-                .filter((t) => t.systemName !== "match-play")
-                .map((t: Tournament) => (
-                    <TournamentDetail key={t.id} tournament={t} />
-                ))}
-        </LoadingContainer>
-    );
+  return (
+    <LoadingContainer loading={isLoading}>
+      {tournaments.map((tournament) => (
+        <TournamentDetail key={tournament.id} tournament={new Tournament(tournament)} />
+      ))}
+    </LoadingContainer>
+  );
 };
 
 export default TournamentList;

@@ -11,6 +11,7 @@ export type MarkdownEditorProps = EditorProps & {
   onSubmit: (content: string) => void;
 };
 
+// TODO: the color button needs to be customized
 function MarkdownEditor(props: MarkdownEditorProps) {
   const { text, onSubmit, ...rest } = props;
   const editorRef = React.useRef<Editor>();

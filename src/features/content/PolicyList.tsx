@@ -1,62 +1,36 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState } from "react";
+
+import { OverlaySpinner } from "components/Spinner";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
 
 import { Policy } from "../../models/Policies";
-import { IApplicationState } from "../../store";
-import ContentActions from "../../store/ContentActions";
-import PolicyDetail from "./PolicyDetail";
 import usePermissions from "../../utilities/Permissions";
-import LoadingContainer from "../../components/LoadingContainer";
+import { useGetPoliciesQuery } from "./contentApi";
+import { PolicyListProps } from "./contentPropTypes";
+import PolicyDetail from "./PolicyDetail";
 
-export interface IPolicyListProps {
-    policyCode: string;
-}
+const PolicyList: React.FC<PolicyListProps> = (props) => {
+  const { policyCode } = props;
+  const [addNew, setAddNew] = useState(false);
+  const permissions = usePermissions();
+  const { data: policies, isLoading } = useGetPoliciesQuery(policyCode);
 
-const PolicyList: React.FC<IPolicyListProps> = (props) => {
-    const { policyCode } = props;
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
-    const state = useSelector((state: IApplicationState) => state.content);
-
-    const getPolicies = () => {
-        return state.policies.get(policyCode);
-    };
-
-    const cancelPolicy = useCallback(() => dispatch(ContentActions.CancelNewPolicy(policyCode)), [dispatch, policyCode])
-    const savePolicy = useCallback((policy: Policy) => dispatch(ContentActions.SavePolicy(policy)), [dispatch]);
-    const deletePolicy = useCallback((policy: Policy) => dispatch(ContentActions.DeletePolicy(policy)), [dispatch]);
-
-    useEffect(() => {
-        dispatch(ContentActions.LoadPolicies(policyCode));
-    }, [dispatch, policyCode]);
-
-    return (
-        <div>
-            {permissions.canEditPolicies() && (
-                <Button
-                    variant="link"
-                    className="text-warning"
-                    onClick={() => dispatch(ContentActions.AddNewPolicy(props.policyCode))}>
-                    Add New
-                </Button>
-            )}
-            <LoadingContainer hasData={getPolicies() !== undefined}>
-                {getPolicies()?.map((policy) => {
-                    return (
-                        <PolicyDetail
-                            key={policy.id}
-                            policy={policy}
-                            edit={policy.id === 0}
-                            Cancel={cancelPolicy}
-                            Delete={deletePolicy}
-                            Save={savePolicy}
-                        />
-                    );
-                })}
-            </LoadingContainer>
-        </div>
-    );
+  return (
+    <div>
+      <OverlaySpinner loading={isLoading} />
+      {permissions.canEditPolicies() && (
+        <Button variant="link" className="text-warning" onClick={() => setAddNew(true)}>
+          Add New
+        </Button>
+      )}
+      {addNew && <PolicyDetail key={0} policy={new Policy({ id: 0 })} edit={true} onClose={() => setAddNew(false)} />}
+      {policies?.map((policy) => {
+        return (
+          <PolicyDetail key={policy.id} policy={new Policy(policy)} edit={false} onClose={() => setAddNew(false)} />
+        );
+      })}
+    </div>
+  );
 };
 
 export default PolicyList;

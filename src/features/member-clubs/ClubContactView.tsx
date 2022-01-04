@@ -3,7 +3,7 @@ import React from "react";
 import { FaEnvelope, FaStar } from "react-icons/fa";
 
 import LabelAndValue, { LabelStyle, ValueType } from "../../components/LabelAndValue";
-import { ClubContactProps } from "./MemberPropTypes";
+import { ClubContactProps } from "./memberClubPropTypes";
 
 const ClubContactView: React.FC<ClubContactProps> = (props) => {
   const { clubContact } = props;

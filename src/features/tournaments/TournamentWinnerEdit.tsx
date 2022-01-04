@@ -1,18 +1,17 @@
 import React from "react";
 
+import CancelButton from "components/CancelButton";
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import SubmitButton from "../../components/SubmitButton";
 import { TournamentWinner } from "../../models/Events";
-
-export interface ITournamentWinnerEditProps {
-  winner: TournamentWinner;
-  Save: (winner: TournamentWinner) => void;
-  Cancel: () => void;
-}
+import { useAddTournamentWinnerMutation, useUpdateTournamentWinnerMutation } from "./tournamentApi";
+import { TournamentWinnerEditProps } from "./tournamentPropTypes";
 
 const schema = yup.object({
   year: yup.number().required(),
@@ -28,20 +27,29 @@ const schema = yup.object({
   notes: yup.string().nullable(),
 });
 
-const TournamentWinnerEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
-  const { winner } = props;
+const TournamentWinnerEdit: React.FC<TournamentWinnerEditProps> = (props) => {
+  const { winner, onClose } = props;
+
+  const [updateTournamentWinner, { isLoading: isUpdating }] = useUpdateTournamentWinnerMutation();
+  const [addTournamentWinner, { isLoading: isSaving }] = useAddTournamentWinnerMutation();
+
+  const handleSave = async (winner: TournamentWinner) => {
+    const data = winner.prepJson();
+    const mutation = winner.id > 0 ? updateTournamentWinner(data) : addTournamentWinner(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`A tournament winner (${winner.winner}) has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
 
   return (
-    <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values) => {
-          const newModel = new TournamentWinner(values);
-          newModel.id = winner.id;
-          props.Save(newModel);
-        }}
-        initialValues={winner}
-      >
+    <LoadingContainer loading={isSaving || isUpdating}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={winner}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="winner.year">
@@ -172,15 +180,11 @@ const TournamentWinnerEdit: React.FC<ITournamentWinnerEditProps> = (props) => {
               <MarkdownField name="notes" value={values.notes} height="240px" />
             </Form.Group>
             <SubmitButton />
-            {/* {winner.id! <= 0 && (
-                            <Button className="ml-1" variant="light" size="sm" onClick={props.Cancel}>
-                                Cancel
-                            </Button>
-                        )} */}
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

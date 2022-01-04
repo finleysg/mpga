@@ -1,5 +1,6 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
@@ -9,8 +10,8 @@ import * as yup from "yup";
 import CancelButton from "../../components/CancelButton";
 import SubmitButton from "../../components/SubmitButton";
 import { AwardWinner } from "../../models/Events";
-import { useAddWinnerMutation, useUpdateWinnerMutation } from "../../services/AwardEndpoints";
-import { AwardWinnerEditProps } from "./AwardPropTypes";
+import { useAddWinnerMutation, useUpdateWinnerMutation } from "./awardApi";
+import { AwardWinnerEditProps } from "./awardPropTypes";
 
 const schema = yup.object({
   year: yup.number().required(),
@@ -19,7 +20,7 @@ const schema = yup.object({
 });
 
 const AwardWinnerEdit: React.FC<AwardWinnerEditProps> = (props) => {
-  const { winner, onCancel, onSave } = props;
+  const { winner, onClose } = props;
 
   const [updateWinner, { isLoading: isUpdating }] = useUpdateWinnerMutation();
   const [addWinner, { isLoading: isSaving }] = useAddWinnerMutation();
@@ -31,7 +32,7 @@ const AwardWinnerEdit: React.FC<AwardWinnerEditProps> = (props) => {
       .unwrap()
       .then(() => {
         toast.success(`${winner.winner} has been saved.`);
-        onSave(winner);
+        onClose();
       })
       .catch((error) => {
         toast.error("💣 " + error);
@@ -39,7 +40,7 @@ const AwardWinnerEdit: React.FC<AwardWinnerEditProps> = (props) => {
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isSaving || isUpdating}>
       <Formik validationSchema={schema} onSubmit={handleSave} initialValues={winner}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
@@ -73,12 +74,12 @@ const AwardWinnerEdit: React.FC<AwardWinnerEditProps> = (props) => {
               <Form.Label>Notes</Form.Label>
               <MarkdownField name="notes" value={values.notes} height="200px" />
             </Form.Group>
-            <SubmitButton busy={isSaving || isUpdating} />
-            <CancelButton canCancel={true} OnCancel={onCancel} />
+            <SubmitButton />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

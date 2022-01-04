@@ -1,22 +1,19 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
+import { MpgaDocument } from "models/Documents";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
 import { DatePickerField } from "../../components/DatePickerField";
 import SubmitButton from "../../components/SubmitButton";
 import { Announcement } from "../../models/Announcement";
-import { MpgaDocument } from "../../models/Documents";
-import { IAnnouncementView } from "./AnnouncementView";
-
-export interface IAnnouncementEdit extends IAnnouncementView {
-  currentDocuments: MpgaDocument[];
-  Cancel: () => void;
-  Save: (announcement: Announcement) => void;
-}
+import { useAddAnnouncementMutation, useUpdateAnnouncementMutation } from "./announcementApi";
+import { AnnouncementEditProps } from "./announcementPropTypes";
 
 interface IAnnouncementData {
   title: string;
@@ -43,8 +40,13 @@ const schema = yup.object({
   }),
 });
 
-const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
-  const announcement = props.announcement;
+const AnnouncementEdit: React.FC<AnnouncementEditProps> = (props) => {
+  const { announcement, documents, onClose } = props;
+  const [addAnnouncement, { isLoading: isSaving }] = useAddAnnouncementMutation();
+  const [updateAnnouncement, { isLoading: isUpdating }] = useUpdateAnnouncementMutation();
+
+  const isBusy = isSaving || isUpdating;
+
   const announcementData = {
     title: announcement.title,
     text: announcement.text,
@@ -56,15 +58,30 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
     document: announcement.document?.id?.toString(),
   } as IAnnouncementData;
 
+  const handleSave = async (value: Announcement, document: MpgaDocument) => {
+    const data = value.prepJson();
+    data.document = document?.id;
+    const mutation = value.id > 0 ? updateAnnouncement(data) : addAnnouncement(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${value.title} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
+
   return (
-    <div>
+    <LoadingContainer loading={isBusy}>
       <Formik
         validationSchema={schema}
         onSubmit={(values) => {
-          const newModel = new Announcement(values);
-          newModel.id = props.announcement.id;
-          newModel.document = props.currentDocuments.find((d) => d.id?.toString() === values.document);
-          props.Save(newModel);
+          const value = new Announcement(values);
+          const document = documents.find((d) => d.id?.toString() === values.document);
+          value.id = announcement.id;
+          handleSave(value, document);
         }}
         initialValues={announcementData}
       >
@@ -85,7 +102,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
             </Form.Group>
             <Form.Group controlId="description">
               <Form.Label>Text</Form.Label>
-              <MarkdownField name="text" value={values.text} height="240px" />
+              <MarkdownField name="text" value={values.text} height="300px" />
             </Form.Group>
             <Form.Group controlId="announcement.Starts">
               <Form.Label className="full-width">Display Start</Form.Label>
@@ -129,7 +146,7 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
                 onBlur={handleBlur}
               >
                 <option value={undefined}></option>
-                {props.currentDocuments.map((doc) => {
+                {props.documents.map((doc) => {
                   return (
                     <option key={doc.id} value={doc.id}>
                       {doc.title}
@@ -166,11 +183,11 @@ const AnnouncementEdit: React.FC<IAnnouncementEdit> = (props) => {
               <Form.Control.Feedback type="invalid">{errors.externalName}</Form.Control.Feedback>
             </Form.Group>
             <SubmitButton />
-            <CancelButton canCancel={announcement.id === 0} OnCancel={() => props.Cancel()} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from "react";
 
-import DocumentActions, { IDocumentSearch } from '../../store/DocumentActions';
+import { useAppDispatch } from "app-store";
+
+import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 
 export interface IDocumentLoaderProps {
-    query: IDocumentSearch,
+  query: IDocumentSearch;
 }
 
 const DocumentLoader: React.FC<IDocumentLoaderProps> = (props) => {
-    const { query } = props;
-    const dispatch = useDispatch();
+  const { query } = props;
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(DocumentActions.Load(query));  
-    }, [dispatch, query]);
+  useEffect(() => {
+    dispatch(DocumentActions.Load(query));
+  }, [dispatch, query]);
 
-    return <></>;
-}
+  return <></>;
+};
 
 export default DocumentLoader;

@@ -9,21 +9,18 @@ export type AwardDetailProps = {
 };
 
 export type AwardEditProps = AwardViewProps & {
-  onSave: (award: Award) => void;
-  onCancel: () => void;
+  onClose: () => void;
 };
 
 export type AwardWinnerViewProps = {
   winner: AwardWinner;
 };
 
-export type AwardWinnerDetailProps = AwardWinnerViewProps & {
-  award: Award;
-  edit: boolean;
+export type AwardWinnerEditProps = AwardWinnerViewProps & {
   onClose: () => void;
 };
 
-export type AwardWinnerEditProps = AwardWinnerViewProps & {
-  onSave: (winner: AwardWinner) => void;
-  onCancel: () => void;
+export type AwardWinnerDetailProps = AwardWinnerEditProps & {
+  award: Award;
+  edit: boolean;
 };

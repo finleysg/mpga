@@ -1,5 +1,5 @@
-import { IAwardData, IAwardWinnerData } from "../models/Data";
-import { mpgaApi } from "./MpgaApi";
+import { IAwardData, IAwardWinnerData } from "services/Data";
+import { mpgaApi } from "services/MpgaApi";
 
 const awardApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
