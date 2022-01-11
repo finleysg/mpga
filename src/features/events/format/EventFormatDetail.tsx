@@ -1,35 +1,29 @@
-import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 
-import WithEdit from "../../../components/WithEdit";
-import { EventDetail } from "../../../models/Events";
-import EventActions, { EventForm } from "../../../store/EventActions";
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
+import { EventProps } from "../eventsPropType";
 import EventFormatEdit from "./EventFormatEdit";
 import EventFormatView from "./EventFormatView";
 
-interface IEventDetailProps {
-    eventDetail: EventDetail;
-}
+const EventFormatDetail: React.FunctionComponent<EventProps> = (props) => {
+  const { eventDetail } = props;
+  const permissions = usePermissions();
+  const closeRef = React.useRef<CloseHandle>();
 
-const EventFormatDetail: React.FunctionComponent<IEventDetailProps> = (props) => {
-    const { eventDetail } = props;
-    const dispatch = useDispatch();
-    const permissions = usePermissions();
+  const handleClose = () => {
+    closeRef.current.close();
+  };
 
-    const saveFormat = useCallback((eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)), [
-        dispatch,
-    ]);
-
-    return (
-        <WithEdit
-            formName={EventForm}
-            initEdit={false}
-            canEdit={permissions.canManageEvent()}
-            viewComponent={<EventFormatView eventDetail={eventDetail} />}
-            editComponent={<EventFormatEdit eventDetail={eventDetail} Save={saveFormat} />}
-        />
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={false}
+      canEdit={permissions.canManageEvent()}
+      viewComponent={<EventFormatView eventDetail={eventDetail} />}
+      editComponent={<EventFormatEdit eventDetail={eventDetail} onClose={handleClose} />}
+    />
+  );
 };
 
 export default EventFormatDetail;

@@ -1,13 +1,11 @@
 import React from "react";
 
 import Table from "react-bootstrap/Table";
-import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import LoadingContainer from "../../components/LoadingContainer";
 import { Team } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
-import MatchPlayActions from "../../store/MatchPlayActions";
+import { useGetTeamsQuery } from "./matchPlayApi";
 import TeamRow from "./TeamRow";
 
 const FilterButton = styled.a`
@@ -23,15 +21,15 @@ const GroupColumn = styled.th`
 GroupColumn.displayName = "GroupColumn";
 
 export function TeamList() {
-  const dispatch = useDispatch();
-  const matchPlayState = useSelector((state: IApplicationState) => state.matchPlay);
-
-  React.useEffect(() => {
-    dispatch(MatchPlayActions.LoadTeams());
-  }, [dispatch]);
+  const { teams, isLoading } = useGetTeamsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      teams: data.map((t) => new Team(t)),
+      isLoading,
+    }),
+  });
 
   return (
-    <LoadingContainer loading={!matchPlayState.teams}>
+    <LoadingContainer loading={isLoading}>
       <Table striped size="sm">
         <thead>
           <tr>
@@ -42,7 +40,7 @@ export function TeamList() {
           </tr>
         </thead>
         <tbody>
-          {matchPlayState.teams.map((team: Team) => (
+          {teams?.map((team: Team) => (
             <TeamRow key={team.id} team={team} />
           ))}
         </tbody>

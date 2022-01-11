@@ -3,33 +3,28 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import DocumentEdit, { IDocumentEdit } from "./DocumentEdit";
+import DocumentEdit from "./DocumentEdit";
+import { DocumentEditProps } from "./documentPropTypes";
 
-export interface IDocumentEditModalProps extends IDocumentEdit {
+type DocumentEditModalProps = DocumentEditProps & {
   show: boolean;
-}
+};
 
-const DocumentEditModal: React.FC<IDocumentEditModalProps> = (props) => {
-  const { document, Cancel, Save, Delete } = props;
+const DocumentEditModal: React.FC<DocumentEditModalProps> = (props) => {
+  const { document, onClose, show } = props;
 
   return (
     <React.Fragment>
-      {document !== undefined && (
-        <Modal show={props.show} onHide={() => Cancel()}>
+      {document && (
+        <Modal show={show} onHide={onClose}>
           <Modal.Header closeButton>
             <Modal.Title className="text-primary">Document Upload / Edit / Replace</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <DocumentEdit
-              document={document}
-              tournaments={props.tournaments}
-              Cancel={Cancel}
-              Delete={Delete}
-              Save={Save}
-            />
+            <DocumentEdit document={document} onClose={onClose} />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="light" onClick={Cancel}>
+            <Button variant="light" onClick={onClose}>
               Cancel
             </Button>
           </Modal.Footer>

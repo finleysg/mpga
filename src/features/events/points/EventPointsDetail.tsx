@@ -1,28 +1,31 @@
 import * as React from "react";
 
-import WithEdit from "../../../components/WithEdit";
-import { EventPointsForm } from "../../../store/EventActions";
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
-import EventPointsEdit, { IEventPointsEditProps } from "./EventPointsEdit";
+import { EventPointsDetailProps } from "../eventsPropType";
+import EventPointsEdit from "./EventPointsEdit";
 import EventPointsView from "./EventPointsView";
 
-export interface IEventPointsDetailProps extends IEventPointsEditProps {
-    edit: boolean;
-}
+const EventPointsDetail: React.FC<EventPointsDetailProps> = (props) => {
+  const { points, edit, onClose } = props;
 
-const EventPointsDetail: React.FunctionComponent<IEventPointsDetailProps> = (props) => {
-    const permissions = usePermissions();
-    const { points, edit, Cancel, Save, Delete } = props;
+  const permissions = usePermissions();
+  const closeRef = React.useRef<CloseHandle>();
 
-    return (
-        <WithEdit
-            formName={EventPointsForm}
-            initEdit={edit}
-            canEdit={permissions.canManageEvent()}
-            viewComponent={<EventPointsView points={points} />}
-            editComponent={<EventPointsEdit points={points} Cancel={Cancel} Save={Save} Delete={Delete} />}
-        />
-    );
+  const handleClose = () => {
+    closeRef.current.close();
+    onClose();
+  };
+
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={edit}
+      canEdit={permissions.canManageEvent()}
+      viewComponent={<EventPointsView points={points} />}
+      editComponent={<EventPointsEdit points={points} onClose={handleClose} />}
+    />
+  );
 };
 
 export default EventPointsDetail;

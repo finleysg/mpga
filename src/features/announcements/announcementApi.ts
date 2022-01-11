@@ -1,7 +1,7 @@
 import { IAnnouncementData, IContactMessageData } from "../../services/Data";
 import { mpgaApi } from "../../services/MpgaApi";
 
-const communicationApi = mpgaApi.injectEndpoints({
+const extendedApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
     getAnnouncements: build.query<IAnnouncementData[], void>({
       query: () => ({ url: "/announcements/", method: "GET" }),
@@ -31,6 +31,16 @@ const communicationApi = mpgaApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "Announcements", id: "LIST" }],
     }),
+    deleteAnnouncement: build.mutation<IAnnouncementData, Partial<IAnnouncementData>>({
+      query(data) {
+        const { id } = data;
+        return {
+          url: `/announcements/${id}/`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Announcements", id }],
+    }),
     sendMessage: build.mutation<IContactMessageData, Partial<IContactMessageData>>({
       query(data) {
         return {
@@ -43,4 +53,9 @@ const communicationApi = mpgaApi.injectEndpoints({
   }),
 });
 
-export const { useGetAnnouncementsQuery, useAddAnnouncementMutation, useUpdateAnnouncementMutation } = communicationApi;
+export const {
+  useGetAnnouncementsQuery,
+  useAddAnnouncementMutation,
+  useUpdateAnnouncementMutation,
+  useDeleteAnnouncementMutation,
+} = extendedApi;

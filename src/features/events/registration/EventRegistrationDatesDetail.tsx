@@ -1,36 +1,29 @@
-import React, { useCallback } from "react";
+import React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
-
-import LoadingContainer from "../../../components/LoadingContainer";
-import WithEdit from "../../../components/WithEdit";
-import { EventDetail } from "../../../models/Events";
-import { IApplicationState } from "../../../store";
-import EventActions, { EventForm } from "../../../store/EventActions";
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
+import { EventProps } from "../eventsPropType";
 import EventRegistrationDatesEdit from "./EventRegistrationDatesEdit";
 import EventRegisrationDatesView from "./EventRegistrationDatesView";
 
-const EventRegistrationDatesDetail: React.FC = () => {
-  const state = useSelector((state: IApplicationState) => state.events);
-  const dispatch = useDispatch();
-  const permissions = usePermissions();
+const EventRegistrationDatesDetail: React.FC<EventProps> = (props) => {
+  const { eventDetail } = props;
 
-  const saveEventDetail = useCallback(
-    (eventDetail: EventDetail) => dispatch(EventActions.SaveEvent(eventDetail)),
-    [dispatch],
-  );
+  const permissions = usePermissions();
+  const closeRef = React.useRef<CloseHandle>();
+
+  const handleClose = () => {
+    closeRef.current.close();
+  };
 
   return (
-    <LoadingContainer loading={state.currentEvent === undefined}>
-      <WithEdit
-        formName={EventForm}
-        initEdit={false}
-        canEdit={permissions.canManageEvent()}
-        viewComponent={<EventRegisrationDatesView eventDetail={state.currentEvent} />}
-        editComponent={<EventRegistrationDatesEdit eventDetail={state.currentEvent} Save={saveEventDetail} />}
-      />
-    </LoadingContainer>
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={false}
+      canEdit={permissions.canManageEvent()}
+      viewComponent={<EventRegisrationDatesView eventDetail={eventDetail} />}
+      editComponent={<EventRegistrationDatesEdit eventDetail={eventDetail} onClose={handleClose} />}
+    />
   );
 };
 

@@ -1,9 +1,9 @@
 import * as React from "react";
 
+import { IDocumentSearch } from "features/documents/documentPropTypes";
+
 import { PageCodes } from "../../constants";
-import { IDocumentSearch } from "../../store/DocumentActions";
 import PageContentDetail from "../content/PageContentDetail";
-import DocumentLoader from "../documents/DocumentLoader";
 import LatestOnly from "../documents/LatestOnly";
 
 interface IRegistrationOverviewProps {}
@@ -16,7 +16,6 @@ const RegistrationOverview: React.FunctionComponent<IRegistrationOverviewProps> 
 
   return (
     <React.Fragment>
-      <DocumentLoader query={query} />
       <PageContentDetail pageCode={PageCodes.ClubRegistration} />
       <LatestOnly query={query} />
       {/* <PageContentDetail pageCode={PageCodes.IndividualRegistration} />

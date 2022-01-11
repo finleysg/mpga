@@ -1,34 +1,32 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { useAppDispatch, useAppSelector } from "app-store";
+import { useGetDocumentsQuery } from "features/documents/documentApi";
 import { MpgaDocument } from "models/Documents";
 import Button from "react-bootstrap/Button";
 
 import LoadingContainer from "../../components/LoadingContainer";
 import Constants from "../../constants";
 import { Announcement } from "../../models/Announcement";
-import DocumentActions from "../../store/DocumentActions";
 import usePermissions from "../../utilities/Permissions";
 import { useGetAnnouncementsQuery } from "./announcementApi";
 import AnnouncementDetail from "./AnnouncementDetail";
 
 const AnnouncementList: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const permissions = usePermissions();
-  const documentState = useAppSelector((state) => state.documents);
-  const { data: announcements, isLoading } = useGetAnnouncementsQuery();
   const [addNew, setAddNew] = React.useState(false);
-
-  const queryKey = "current-documents";
-
-  useEffect(() => {
-    dispatch(
-      DocumentActions.Load({
-        key: queryKey,
-        year: Constants.EventCalendarYear,
+  const permissions = usePermissions();
+  const { data: announcements, isLoading } = useGetAnnouncementsQuery();
+  const { documents, docsLoading } = useGetDocumentsQuery(
+    {
+      key: "current-documents",
+      year: Constants.EventCalendarYear,
+    },
+    {
+      selectFromResult: ({ data, isLoading }) => ({
+        documents: data.map((d) => new MpgaDocument(d)),
+        docsLoading: isLoading,
       }),
-    );
-  }, [dispatch]);
+    },
+  );
 
   const emptyAnnouncement = () => {
     return new Announcement({
@@ -38,15 +36,8 @@ const AnnouncementList: React.FC = () => {
     });
   };
 
-  const getDocuments = () => {
-    if (Object.prototype.hasOwnProperty.call(documentState.documents, queryKey)) {
-      return documentState.documents[queryKey].map((doc) => new MpgaDocument(doc));
-    }
-    return [];
-  };
-
   return (
-    <div>
+    <LoadingContainer loading={isLoading || docsLoading}>
       <h3 className="text-primary">MPGA News</h3>
       {permissions.canEditAnnouncements() && !addNew && (
         <Button variant="link" className="text-warning" disabled={addNew} onClick={() => setAddNew(true)}>
@@ -58,24 +49,22 @@ const AnnouncementList: React.FC = () => {
           key={0}
           announcement={emptyAnnouncement()}
           edit={true}
-          documents={getDocuments()}
+          documents={documents}
           onClose={() => setAddNew(false)}
         />
       )}
-      <LoadingContainer loading={isLoading}>
-        {announcements?.map((announcement) => {
-          return (
-            <AnnouncementDetail
-              key={announcement.id}
-              announcement={new Announcement(announcement)}
-              edit={false}
-              documents={getDocuments()}
-              onClose={() => setAddNew(false)}
-            />
-          );
-        })}
-      </LoadingContainer>
-    </div>
+      {announcements?.map((announcement) => {
+        return (
+          <AnnouncementDetail
+            key={announcement.id}
+            announcement={new Announcement(announcement)}
+            edit={false}
+            documents={documents}
+            onClose={() => setAddNew(false)}
+          />
+        );
+      })}
+    </LoadingContainer>
   );
 };
 

@@ -1,29 +1,29 @@
 import * as React from "react";
 
-import WithEdit from "../../../components/WithEdit";
-import { EventLinkForm } from "../../../store/EventActions";
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
-import EventLinkEdit, { IEventLinkEditProps } from "./EventLinkEdit";
-import EventLinkView, { ILinkRenderProps } from "./EventLinkView";
+import { EventLinkDetailProps } from "../eventsPropType";
+import EventLinkEdit from "./EventLinkEdit";
+import EventLinkView from "./EventLinkView";
 
-export interface IEventLinkDetailProps extends IEventLinkEditProps {
-    edit: boolean;
-    render: ILinkRenderProps;
-}
+const EventLinkDetail: React.FunctionComponent<EventLinkDetailProps> = (props) => {
+  const permissions = usePermissions();
+  const { eventLink, edit, render } = props;
+  const closeRef = React.useRef<CloseHandle>();
 
-const EventLinkDetail: React.FunctionComponent<IEventLinkDetailProps> = (props) => {
-    const permissions = usePermissions();
-    const { eventLink, edit, render, Cancel, Save, Delete } = props;
+  const handleClose = () => {
+    closeRef.current.close();
+  };
 
-    return (
-        <WithEdit
-            formName={EventLinkForm}
-            initEdit={edit}
-            canEdit={permissions.canManageEvent()}
-            viewComponent={<EventLinkView eventLink={eventLink} render={render} />}
-            editComponent={<EventLinkEdit eventLink={eventLink} Cancel={Cancel} Save={Save} Delete={Delete} />}
-        />
-    );
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={edit}
+      canEdit={permissions.canManageEvent()}
+      viewComponent={<EventLinkView eventLink={eventLink} render={render} />}
+      editComponent={<EventLinkEdit eventLink={eventLink} onClose={handleClose} />}
+    />
+  );
 };
 
 export default EventLinkDetail;

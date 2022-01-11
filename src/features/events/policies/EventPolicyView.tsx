@@ -1,21 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import ReactMarkdown from 'react-markdown';
+import MarkdownRender from "components/MarkdownRender";
 
-import { EventPolicy } from '../../../models/Events';
+import { EventPolicyProps } from "../eventsPropType";
 
-export interface IEventPolicyViewProps {
-    policy: EventPolicy;
-}
-
-const EventPolicyView: React.FC<IEventPolicyViewProps> = (props) => {
-    const { policy } = props.policy;
+const EventPolicyView: React.FC<EventPolicyProps> = (props) => {
+  const { policy } = props;
+  if (policy && policy.policy) {
     return (
-        <div>
-            <h5 className="text-primary">{policy?.title}</h5>
-            <ReactMarkdown children={policy?.description} />
-        </div>
+      <div>
+        <h5 className="text-primary">{policy.policy.title}</h5>
+        <MarkdownRender text={policy.policy.description} />
+      </div>
     );
+  }
+  return null;
 };
 
 export default EventPolicyView;

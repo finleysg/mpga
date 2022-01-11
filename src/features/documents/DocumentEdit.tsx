@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 
+import LoadingContainer from "components/LoadingContainer";
+import { useGetTournamentsQuery } from "features/tournaments/tournamentApi";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
@@ -10,17 +13,9 @@ import DeleteButton from "../../components/DeleteButton";
 import FilePicker from "../../components/FilePicker";
 import SubmitButton from "../../components/SubmitButton";
 import { ITag, MpgaDocument } from "../../models/Documents";
-import { Tournament } from "../../models/Events";
 import TagPicker from "../tags/TagPicker";
-
-export interface IDocumentEdit {
-  document: MpgaDocument;
-  file?: File;
-  tournaments?: Tournament[];
-  Cancel: () => void;
-  Save: (document: MpgaDocument, file?: File) => void;
-  Delete: (document: MpgaDocument) => void;
-}
+import { useAddDocumentMutation, useDeleteDocumentMutation, useUpdateDocumentMutation } from "./documentApi";
+import { DocumentEditProps } from "./documentPropTypes";
 
 interface IDocument {
   id?: number;
@@ -38,40 +33,69 @@ const schema = yup.object({
   documentType: yup.string().required(),
 });
 
-const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
-  const doc: IDocument = {
-    id: props.document?.id,
-    year: props.document?.year,
-    title: props.document?.title,
-    documentType: props.document?.documentType,
-    tournamentId: props.document?.tournament,
-    tags: props.document?.tags,
-  };
+const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
+  const { document, file, onClose } = props;
+
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const { data: tournaments } = useGetTournamentsQuery();
+  const [addDocument, { isLoading: isSaving }] = useAddDocumentMutation();
+  const [updateDocument, { isLoading: isUpdating }] = useUpdateDocumentMutation();
+  const [deleteDocument, { isLoading: isDeleting }] = useDeleteDocumentMutation();
+
+  const isBusy = isSaving || isUpdating || isDeleting;
+
+  const doc: IDocument = {
+    id: document?.id || 0,
+    year: document?.year,
+    title: document?.title,
+    documentType: document?.documentType,
+    tournamentId: document?.tournament,
+    tags: document?.tags,
+    file: file,
+  };
 
   const handleConfirmRemoveCancel = () => {
     setShowConfirmation(false);
   };
 
-  const handleConfirmRemoveContinue = () => {
+  const handleDelete = async () => {
     setShowConfirmation(false);
-    props.Delete(props.document);
+    await deleteDocument(document.id)
+      .unwrap()
+      .then(() => {
+        toast.success(`${document.title} has been deleted.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
+  };
+
+  const handleSave = async (value: IDocument) => {
+    const newModel = new MpgaDocument(value);
+    newModel.id = doc.id;
+    newModel.tournament = value.tournamentId || document?.tournament;
+    newModel.documentType = value.documentType;
+    newModel.tags = value.tags;
+    const params = {
+      document: newModel.prepJson(),
+      file: value.file,
+    };
+    const mutation = document.id ? updateDocument(params) : addDocument(params);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`${newModel.title} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
   return (
-    <div>
-      <Formik
-        validationSchema={schema}
-        onSubmit={(values, actions) => {
-          const newModel = new MpgaDocument(values);
-          newModel.id = props.document?.id;
-          newModel.tournament = values.tournamentId || props.document?.tournament;
-          newModel.documentType = values.documentType;
-          newModel.tags = values.tags;
-          props.Save(newModel, values.file);
-        }}
-        initialValues={doc}
-      >
+    <LoadingContainer loading={isBusy}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={doc}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="doc.Year">
@@ -126,35 +150,32 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
                 <option value="Tee Times">Tee Times</option>
               </Form.Control>
             </Form.Group>
-            {props.tournaments && (
-              <Form.Group>
-                <Form.Label>Tournament</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="tournamentId"
-                  value={values.tournamentId?.toString()}
-                  isValid={touched.tournamentId && !errors.tournamentId}
-                  isInvalid={!!errors.tournamentId}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                >
-                  <option key={0} value={undefined}></option>
-                  {props.tournaments.map((tournament) => {
-                    return (
-                      <option key={tournament.id} value={tournament.id}>
-                        {tournament.name}
-                      </option>
-                    );
-                  })}
-                </Form.Control>
-              </Form.Group>
-            )}
+            <Form.Group>
+              <Form.Label>Tournament</Form.Label>
+              <Form.Control
+                as="select"
+                name="tournamentId"
+                value={values.tournamentId?.toString()}
+                isValid={touched.tournamentId && !errors.tournamentId}
+                isInvalid={!!errors.tournamentId}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                <option key={0} value={undefined}></option>
+                {tournaments?.map((tournament) => {
+                  return (
+                    <option key={tournament.id} value={tournament.id}>
+                      {tournament.name}
+                    </option>
+                  );
+                })}
+              </Form.Control>
+            </Form.Group>
             <FilePicker OnSelected={(files: any[]) => (values.file = files[0])} />
-            {/* {props.document?.file && <small className="text-muted">{props.document.file}</small>} */}
             <TagPicker selectedTags={values.tags || []} OnChange={(tags: ITag[]) => (values.tags = tags)} />
             <SubmitButton />
             <DeleteButton canDelete={doc.id !== 0} OnDelete={() => setShowConfirmation(true)} />
-            <CancelButton canCancel={doc.id === 0} OnCancel={() => props.Cancel()} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
@@ -164,9 +185,9 @@ const DocumentEdit: React.FC<IDocumentEdit> = (props) => {
         messageText="Please confirm that we should delete this document."
         confirmText="Delete"
         DoCancel={handleConfirmRemoveCancel}
-        DoConfirm={handleConfirmRemoveContinue}
+        DoConfirm={handleDelete}
       />
-    </div>
+    </LoadingContainer>
   );
 };
 

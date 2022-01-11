@@ -1,33 +1,31 @@
 import React from "react";
 
-import { useAppSelector } from "app-store";
+import LoadingContainer from "components/LoadingContainer";
+import { useGetDocumentsQuery } from "features/documents/documentApi";
+import { DocumentViewType, IDocumentRenderProps } from "features/documents/documentPropTypes";
 
 import DocumentList from "../documents/DocumentList";
-import { DocumentViewType, IDocumentRenderProps } from "../documents/DocumentView";
+import { TournamentDetailProps } from "./tournamentPropTypes";
 
-const TournamentResultList: React.FC = () => {
-  const documentState = useAppSelector((state) => state.documents);
-  const tournamentState = useAppSelector((state) => state.tournament);
-  const queryKey = `${tournamentState.currentTournament.systemName}-results`;
+const TournamentResultList: React.FC<TournamentDetailProps> = (props) => {
+  const { tournament } = props;
+
   const documentRender: IDocumentRenderProps = {
     viewType: DocumentViewType.Link,
     variant: "info",
     external: true,
   };
+  const { data: documents, isLoading } = useGetDocumentsQuery({
+    key: `${tournament.systemName}-results`,
+    tournamentId: tournament.id,
+    documentTypes: ["Results"],
+  });
 
   return (
-    <React.Fragment>
+    <LoadingContainer loading={isLoading}>
       <h3 className="text-primary mb-2">Complete Tournament Results</h3>
-      <DocumentList
-        query={{
-          key: queryKey,
-          documentTypes: ["Results"],
-          tournamentId: tournamentState.currentTournament.id,
-        }}
-        documents={documentState.documents[queryKey] || []}
-        render={documentRender}
-      />
-    </React.Fragment>
+      <DocumentList documents={documents || []} render={documentRender} />
+    </LoadingContainer>
   );
 };
 

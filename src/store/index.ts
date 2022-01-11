@@ -1,32 +1,18 @@
 import * as AppStore from "./AppStore";
-import * as DocumentStore from "./DocumentStore";
-import * as EventStore from "./EventStore";
 import * as LayoutStore from "./LayoutStore";
-import * as MatchPlayStore from "./MatchPlayStore";
 import * as MessageStore from "./MessageStore";
 import * as NotificationStore from "./NotificationStore";
 import * as PaymentStore from "./PaymentStore";
-import * as PhotoStore from "./PhotoStore";
-import * as ReportStore from "./ReportStore";
-import * as TournamentStore from "./TournamentStore";
-import * as TournamentWinnerStore from "./TournamentWinnerStore";
 import * as UserStore from "./UserStore";
 
 // The top-level state object
 export interface IApplicationState {
   app: AppStore.IAppState;
-  documents: DocumentStore.IDocumentState;
-  events: EventStore.IEventState;
   layout: LayoutStore.ILayoutState;
-  matchPlay: MatchPlayStore.IMatchPlayState;
   messaging: MessageStore.IMessageState;
   notifications: NotificationStore.INotificationState;
   payments: PaymentStore.IPaymentState;
-  photos: PhotoStore.IPhotoState;
-  reports: ReportStore.IReportState;
   session: UserStore.IUserState;
-  tournament: TournamentStore.ITournamentState;
-  winners: TournamentWinnerStore.ITournamentWinnerState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -34,18 +20,11 @@ export interface IApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
   app: AppStore.AppReducer,
-  documents: DocumentStore.DocumentsReducer,
-  events: EventStore.EventsReducer,
   layout: LayoutStore.reducer,
-  matchPlay: MatchPlayStore.MatchPlaysReducer,
   messaging: MessageStore.MessageReducer,
   notifications: NotificationStore.NotificationReducer,
   payments: PaymentStore.PaymentsReducer,
-  photos: PhotoStore.PhotosReducer,
-  reports: ReportStore.ReportsReducer,
   session: UserStore.UsersReducer,
-  tournament: TournamentStore.TournamentReducer,
-  winners: TournamentWinnerStore.TournamentWinnersReducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

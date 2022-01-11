@@ -1,18 +1,15 @@
 import React from "react";
 
-import { useAppSelector } from "app-store";
+import LoadingContainer from "components/LoadingContainer";
 
-import { IDocumentSearch } from "../../store/DocumentActions";
+import { useGetDocumentsQuery } from "./documentApi";
 import DocumentList from "./DocumentList";
-import { DocumentViewType, IDocumentRenderProps } from "./DocumentView";
+import { DocumentSearchProps, DocumentViewType, IDocumentRenderProps } from "./documentPropTypes";
 
-export interface ILatestOnlyProps {
-  query: IDocumentSearch;
-}
-
-const LatestOnly: React.FC<ILatestOnlyProps> = (props) => {
+const LatestOnly: React.FC<DocumentSearchProps> = (props) => {
   const { query } = props;
-  const documentState = useAppSelector((state) => state.documents);
+  const { data: documents, isLoading } = useGetDocumentsQuery(query);
+
   const documentRender: IDocumentRenderProps = {
     viewType: DocumentViewType.Button,
     variant: "secondary",
@@ -20,13 +17,9 @@ const LatestOnly: React.FC<ILatestOnlyProps> = (props) => {
   };
 
   return (
-    <React.Fragment>
-      <DocumentList
-        query={query}
-        documents={documentState.documents[query.key]?.slice(0, 1) || []}
-        render={documentRender}
-      />
-    </React.Fragment>
+    <LoadingContainer loading={isLoading}>
+      <DocumentList documents={documents?.slice(0, 1) || []} render={documentRender} />
+    </LoadingContainer>
   );
 };
 

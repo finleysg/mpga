@@ -19,3 +19,7 @@ export type TournamentWinnerProps = {
 export type TournamentWinnerEditProps = TournamentWinnerProps & {
   onClose: () => void;
 };
+
+export type TournamentWinnerDetailProps = TournamentWinnerEditProps & {
+  edit: boolean;
+};

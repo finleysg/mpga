@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useGetTournamentsQuery } from "features/tournaments/tournamentApi";
 import { Formik } from "formik";
 import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -7,14 +8,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
-import { Tournament } from "../../models/Events";
-import { IDocumentSearch } from "../../store/DocumentActions";
-
-export interface IDocumentLibrarySearchProps {
-  query: IDocumentSearch;
-  tournaments: Tournament[];
-  OnSearch: (query: IDocumentSearch) => void;
-}
+import { DocumentLibrarySearchProps } from "./documentPropTypes";
 
 interface IQuery {
   tournamentId?: number;
@@ -30,8 +24,11 @@ const schema = yup.object({
   tags: yup.string().nullable(),
 });
 
-const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => {
-  const { query, OnSearch } = props;
+const DocumentLibrarySearch: React.FC<DocumentLibrarySearchProps> = (props) => {
+  const { query, onSearch } = props;
+
+  const { data: tournaments } = useGetTournamentsQuery();
+
   const search: IQuery = {
     tournamentId: query.tournamentId,
     year: query.year,
@@ -56,13 +53,13 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
   return (
     <Formik
       validationSchema={schema}
-      onSubmit={(values, actions) => {
+      onSubmit={(values) => {
         const newQuery = Object.assign({}, query);
         newQuery.year = values.year;
         newQuery.tournamentId = values.tournamentId;
         newQuery.documentType = values.documentType;
         newQuery.tags = values.tags?.split(",") || [];
-        OnSearch(newQuery);
+        onSearch(newQuery);
       }}
       initialValues={search}
     >
@@ -114,7 +111,7 @@ const DocumentLibrarySearch: React.FC<IDocumentLibrarySearchProps> = (props) => 
                 onBlur={handleBlur}
               >
                 <option value={undefined}></option>
-                {props.tournaments.map((tournament) => {
+                {tournaments.map((tournament) => {
                   return (
                     <option key={tournament.id} value={tournament.id}>
                       {tournament.name}

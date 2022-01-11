@@ -115,6 +115,14 @@ export class EventPoints extends BaseModel {
   place: number = 0;
   points: number = 0;
   ordinalPlace?: string;
+
+  constructor(obj: any) {
+    super();
+    if (obj !== undefined) {
+      const point = super.fromJson(obj);
+      Object.assign(this, point);
+    }
+  }
 }
 
 export class EventPolicy extends BaseModel {
@@ -176,7 +184,7 @@ export class EventDetail extends BaseModel {
         evt.chairs = obj["chairs"].map((o: any) => new EventChair().fromJson(o));
       }
       if (obj["player_points"]) {
-        evt.playerPoints = obj["player_points"].map((o: any) => new EventPoints().fromJson(o));
+        evt.playerPoints = obj["player_points"].map((o: any) => new EventPoints({}).fromJson(o));
       }
       if (obj["links"]) {
         evt.links = obj["links"].map((o: any) => new EventLink(o));

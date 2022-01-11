@@ -1,51 +1,45 @@
-import React from 'react';
+import React from "react";
 
-import Container from 'react-bootstrap/Container';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import LoadingContainer from "components/LoadingContainer";
+import { useGetEventQuery } from "features/events/eventsApi";
+import { EventDetail } from "models/Events";
+import Container from "react-bootstrap/Container";
+import { useParams } from "react-router-dom";
 
-import NineThree from '../components/layouts/NineThree';
-import Loading from '../components/Loading';
-import EventDetailLoader from '../features/events/EventDetailLoader';
-import EventDetailView from '../features/events/EventDetailView';
-import {
-    EventInformationLinks,
-} from '../features/events/EventInformationLinks';
-import EventGalleryDetail from '../features/events/photos/EventGalleryDetail';
-import EventWinnerList from '../features/events/winners/EventWinnerList';
-import { IApplicationState } from '../store';
+import NineThree from "../components/layouts/NineThree";
+import EventDetailView from "../features/events/EventDetailView";
+import { EventInformationLinks } from "../features/events/EventInformationLinks";
+import EventGalleryDetail from "../features/events/photos/EventGalleryDetail";
+import EventWinnerList from "../features/events/winners/EventWinnerList";
 
 const EventDetailPage: React.FC = () => {
-    const { name, year } = useParams();
-    const events = useSelector((state: IApplicationState) => state.events);
+  const { name, year } = useParams();
+  const { eventDetail, isLoading } = useGetEventQuery(
+    { name, year: +year },
+    {
+      selectFromResult: ({ data }) => ({
+        eventDetail: new EventDetail(data),
+        isLoading,
+      }),
+    },
+  );
 
-    const doRender = (): boolean => {
-        return (
-            events.currentEvent?.tournament?.systemName !== undefined &&
-            events.currentEvent?.tournament?.systemName === name
-        );
-    };
-
-    return (
-        <Container fluid={true}>
-            <EventDetailLoader />
-            {!doRender() && <Loading />}
-            {doRender() && (
-                <React.Fragment>
-                    <NineThree
-                        LeftColumn={<EventDetailView />}
-                        RightColumn={
-                            <React.Fragment>
-                                <EventInformationLinks name={name!} year={+year!} />
-                                <EventWinnerList eventDetail={events.currentEvent} />
-                                <EventGalleryDetail eventDetail={events.currentEvent} />
-                            </React.Fragment>
-                        }
-                    />
-                </React.Fragment>
-            )}
-        </Container>
-    );
+  return (
+    <Container fluid={true}>
+      <LoadingContainer loading={isLoading}>
+        <NineThree
+          LeftColumn={<EventDetailView eventDetail={eventDetail} />}
+          RightColumn={
+            <React.Fragment>
+              <EventInformationLinks eventDetail={eventDetail} />
+              <EventWinnerList eventDetail={eventDetail} />
+              <EventGalleryDetail eventDetail={eventDetail} />
+            </React.Fragment>
+          }
+        />
+      </LoadingContainer>
+    </Container>
+  );
 };
 
 export default EventDetailPage;

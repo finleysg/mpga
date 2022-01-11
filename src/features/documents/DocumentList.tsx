@@ -1,63 +1,43 @@
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 
-import { useAppDispatch } from "app-store";
 import Button from "react-bootstrap/Button";
-import { IDocumentData } from "services/Data";
 
+import constants from "../../constants";
 import { MpgaDocument } from "../../models/Documents";
-import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
 import usePermissions from "../../utilities/Permissions";
 import DocumentDetail from "./DocumentDetail";
-import { IDocumentRenderProps } from "./DocumentView";
+import { DocumentListProps } from "./documentPropTypes";
 
-export interface IDocumentListProps {
-  query: IDocumentSearch;
-  documents: IDocumentData[];
-  render: IDocumentRenderProps;
-}
-
-const DocumentList: React.FC<IDocumentListProps> = (props) => {
-  const { query, documents } = props;
-  const dispatch = useAppDispatch();
+const DocumentList: React.FC<DocumentListProps> = (props) => {
+  const { documents, render } = props;
+  const [addNew, setAddNew] = useState(false);
   const permissions = usePermissions();
   const canAdd = documents?.findIndex((d) => d.id === 0) || -1 < 0;
-
-  const saveDocument = useCallback(
-    (document: MpgaDocument, file?: File) => {
-      dispatch(DocumentActions.Save(query.key, document, file));
-    },
-    [dispatch, query],
-  );
-
-  const deleteDocument = useCallback(
-    (document: MpgaDocument) => {
-      dispatch(DocumentActions.Delete(query.key, document));
-    },
-    [dispatch, query],
-  );
 
   return (
     <div>
       {permissions.canEditDocuments() && (
-        <Button
-          variant="link"
-          className="text-warning"
-          disabled={!canAdd}
-          onClick={() => dispatch(DocumentActions.AddNew(query))}
-        >
+        <Button variant="link" className="text-warning" disabled={!canAdd} onClick={() => setAddNew(true)}>
           Add New
         </Button>
+      )}
+      {addNew && (
+        <DocumentDetail
+          key={0}
+          document={new MpgaDocument({ id: 0, year: constants.EventCalendarYear })}
+          render={render}
+          edit={true}
+          onClose={() => setAddNew(false)}
+        />
       )}
       {documents?.map((document) => {
         return (
           <DocumentDetail
             key={document.id}
             document={new MpgaDocument(document)}
-            render={props.render}
-            edit={document.id === 0}
-            Cancel={() => dispatch(DocumentActions.CancelNew(query.key))}
-            Delete={deleteDocument}
-            Save={saveDocument}
+            render={render}
+            edit={false}
+            onClose={() => setAddNew(false)}
           />
         );
       })}

@@ -1,23 +1,19 @@
 import React, { useState } from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../../components/CancelButton";
 import Confirm from "../../../components/Confirm";
 import DeleteButton from "../../../components/DeleteButton";
 import SubmitButton from "../../../components/SubmitButton";
-import { EventPolicy } from "../../../models/Events";
 import { Policy } from "../../../models/Policies";
-
-export interface IEventPolicyEditProps {
-  policy: EventPolicy;
-  Cancel: () => void;
-  Save: (policy: EventPolicy) => void;
-  Remove: (policy: EventPolicy) => void;
-}
+import { useAddEventPolicyMutation, useRemoveEventPolicyMutation, useUpdateEventPolicyMutation } from "../eventsApi";
+import { EventPolicyEditProps } from "../eventsPropType";
 
 const schema = yup.object({
   name: yup.string().max(30).required(),
@@ -25,46 +21,60 @@ const schema = yup.object({
   description: yup.string().required(),
 });
 
-const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
+const EventPolicyEdit: React.FC<EventPolicyEditProps> = (props) => {
+  const { policy, onClose } = props;
+
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const policy = {
-    id: props.policy.id || 0,
-    policyId: props.policy.policy?.id || 0,
-    name: props.policy.policy?.name || "",
-    title: props.policy.policy?.title || "",
-    description: props.policy.policy?.description || "",
-  };
+  const localPolicy = policy.policy;
 
-  const handleConfirmRemoveCancel = () => {
+  const [addPolicy, { isLoading: isSaving }] = useAddEventPolicyMutation();
+  const [updatePolicy, { isLoading: isUpdating }] = useUpdateEventPolicyMutation();
+  const [deletePolicy, { isLoading: isDeleting }] = useRemoveEventPolicyMutation();
+
+  const isBusy = isSaving || isUpdating || isDeleting;
+
+  const handleConfirmDeleteCancel = () => {
     setShowConfirmation(false);
   };
 
-  const handleConfirmRemoveContinue = () => {
+  const handleDelete = async () => {
     setShowConfirmation(false);
-    props.Remove(props.policy);
+    const data = policy.prepJson();
+    await deletePolicy(data)
+      .unwrap()
+      .then(() => {
+        toast.success(`${policy.policy.name} has been removed from this event.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
-  const saveEventPolicy = (values: any) => {
-    const updatedPolicy = new Policy(values);
-    updatedPolicy.policyType = "TN"; // Tournament policy
-    const newModel = new EventPolicy({
-      id: props.policy.id,
-      event: props.policy.event,
-      order: props.policy.order,
-      policy: updatedPolicy,
-    });
-    props.Save(newModel);
+  const handleSave = async (value: Policy) => {
+    policy.policy = value;
+    const data = policy.prepJson();
+    const mutation = value.id > 0 ? updatePolicy(data) : addPolicy(data);
+    await mutation
+      .unwrap()
+      .then(() => {
+        toast.success(`Policy ${value.name} has been saved.`);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("💣 " + error);
+      });
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isBusy}>
       {policy.id > 0 && (
         <p className="text-muted">
           Policies are typically shared between tournaments, so changes to this policy will be reflected in elsewhere.
           If you need a policy unique to this event, consider adding a new policy and removing this one.
         </p>
       )}
-      <Formik validationSchema={schema} onSubmit={saveEventPolicy} initialValues={policy}>
+      <Formik validationSchema={schema} onSubmit={handleSave} initialValues={localPolicy}>
         {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="policy.Name">
@@ -100,7 +110,7 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
             </Form.Group>
             <SubmitButton />
             <DeleteButton canDelete={policy.id !== 0} OnDelete={() => setShowConfirmation(true)} />
-            <CancelButton canCancel={policy.id === 0} OnCancel={() => props.Cancel()} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>
@@ -109,10 +119,10 @@ const EventPolicyEdit: React.FC<IEventPolicyEditProps> = (props) => {
         titleText="Remove Policy?"
         messageText="Please confirm that we should remove this policy from the tournament."
         confirmText="Remove Policy"
-        DoCancel={handleConfirmRemoveCancel}
-        DoConfirm={handleConfirmRemoveContinue}
+        DoCancel={handleConfirmDeleteCancel}
+        DoConfirm={handleDelete}
       />
-    </div>
+    </LoadingContainer>
   );
 };
 

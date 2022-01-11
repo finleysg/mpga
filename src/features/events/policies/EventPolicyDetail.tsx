@@ -1,28 +1,31 @@
 import * as React from "react";
 
-import WithEdit from "../../../components/WithEdit";
-import { EventPolicyForm } from "../../../store/EventActions";
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
-import EventPolicyEdit, { IEventPolicyEditProps } from "./EventPolicyEdit";
+import { EventPolicyDetailProps } from "../eventsPropType";
+import EventPolicyEdit from "./EventPolicyEdit";
 import EventPolicyView from "./EventPolicyView";
 
-export interface IEventPolicyDetailProps extends IEventPolicyEditProps {
-    edit: boolean;
-}
+const EventPolicyDetail: React.FC<EventPolicyDetailProps> = (props) => {
+  const { policy, edit, onClose } = props;
 
-const EventPolicyDetail: React.FunctionComponent<IEventPolicyDetailProps> = (props) => {
-    const { policy, edit, Cancel, Save, Remove } = props;
-    const permissions = usePermissions();
+  const permissions = usePermissions();
+  const closeRef = React.useRef<CloseHandle>();
 
-    return (
-        <WithEdit
-            formName={EventPolicyForm}
-            initEdit={edit}
-            canEdit={permissions.canManageEvent()}
-            viewComponent={<EventPolicyView policy={policy} />}
-            editComponent={<EventPolicyEdit policy={policy} Cancel={Cancel} Save={Save} Remove={Remove} />}
-        />
-    );
+  const handleClose = () => {
+    closeRef.current.close();
+    onClose();
+  };
+
+  return (
+    <CloseableEditContainer
+      ref={closeRef}
+      initEdit={edit}
+      canEdit={permissions.canManageEvent()}
+      viewComponent={<EventPolicyView policy={policy} />}
+      editComponent={<EventPolicyEdit policy={policy} onClose={handleClose} />}
+    />
+  );
 };
 
 export default EventPolicyDetail;

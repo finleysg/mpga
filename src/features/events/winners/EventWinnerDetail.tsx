@@ -1,29 +1,29 @@
 import React from "react";
 
-import WithEdit from "../../../components/WithEdit";
-import { TournamentWinner } from "../../../models/Events";
-import { TournamentWinnerForm } from "../../../store/TournamentWinnerActions";
+import { TournamentWinnerDetailProps } from "features/tournaments/tournamentPropTypes";
+
+import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
 import usePermissions from "../../../utilities/Permissions";
 import TournamentWinnerEdit from "../../tournaments/TournamentWinnerEdit";
-import EventWinnerView, { IEventWinnerViewProps } from "./EventWinnerView";
+import EventWinnerView from "./EventWinnerView";
 
-export interface IEventWinnerDetailProps extends IEventWinnerViewProps {
-  edit: boolean;
-  Cancel: () => void;
-  Save: (winner: TournamentWinner) => void;
-}
-
-const EventWinnerDetail: React.FC<IEventWinnerDetailProps> = (props) => {
-  const { winner, edit, Cancel, Save } = props;
+const EventWinnerDetail: React.FC<TournamentWinnerDetailProps> = (props) => {
+  const { winner, edit, onClose } = props;
   const permissions = usePermissions();
+  const closeRef = React.useRef<CloseHandle>();
+
+  const handleClose = () => {
+    closeRef.current.close();
+    onClose();
+  };
 
   return (
-    <WithEdit
-      formName={TournamentWinnerForm}
+    <CloseableEditContainer
+      ref={closeRef}
       initEdit={edit}
       canEdit={permissions.canManageEvent()}
       viewComponent={<EventWinnerView winner={winner} />}
-      editComponent={<TournamentWinnerEdit winner={winner} onClose={Cancel} />}
+      editComponent={<TournamentWinnerEdit winner={winner} onClose={handleClose} />}
     />
   );
 };

@@ -1,32 +1,21 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
+import { useAppDispatch } from "app-store";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 
 import EditContainer from "../../components/EditContainer";
 import { MatchResult } from "../../models/Clubs";
-import { IApplicationState } from "../../store";
 import AppActions from "../../store/AppActions";
-import MatchPlayActions from "../../store/MatchPlayActions";
 import usePermissions from "../../utilities/Permissions";
 import MatchResultEdit from "./MatchResultEdit";
 
 const MatchResultEntry: React.FC = () => {
   const [doEdit, setDoEdit] = useState(false);
-  const matchPlayState = useSelector((state: IApplicationState) => state.matchPlay);
-  const dispatch = useDispatch();
   const permissions = usePermissions();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const saveResult = useCallback(
-    (result: MatchResult) => {
-      dispatch(MatchPlayActions.SaveMatchResult(result));
-      setDoEdit(false);
-    },
-    [dispatch],
-  );
+  const dispatch = useAppDispatch();
 
   const goRegister = () => {
     dispatch(AppActions.SaveLocation(location.pathname));
@@ -60,15 +49,7 @@ const MatchResultEntry: React.FC = () => {
             )}
           </React.Fragment>
         }
-        editComponent={
-          <MatchResultEdit
-            result={new MatchResult({ id: 0 })}
-            groups={matchPlayState.groups}
-            teams={matchPlayState.teams}
-            Save={saveResult}
-            Cancel={() => setDoEdit(false)}
-          />
-        }
+        editComponent={<MatchResultEdit result={new MatchResult({ id: 0 })} onClose={() => setDoEdit(false)} />}
       />
     </React.Fragment>
   );

@@ -2,45 +2,9 @@ import React from "react";
 
 import Button from "react-bootstrap/Button";
 
-import { MpgaDocument } from "../../models/Documents";
+import { DocumentViewProps, DocumentViewType } from "./documentPropTypes";
 
-export enum DocumentViewType {
-  Link,
-  Button,
-  Detail,
-  Icon,
-}
-
-export interface IDocumentRenderProps {
-  viewType: DocumentViewType;
-  className?: string;
-  external: boolean;
-  variant?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-    | "dark"
-    | "light"
-    | "link"
-    | "outline-primary"
-    | "outline-secondary"
-    | "outline-success"
-    | "outline-danger"
-    | "outline-warning"
-    | "outline-info"
-    | "outline-dark"
-    | "outline-light";
-}
-
-export interface IDocumentViewProps {
-  document: MpgaDocument;
-  render: IDocumentRenderProps;
-}
-
-const DocumentView: React.FC<IDocumentViewProps> = (props) => {
+const DocumentView: React.FC<DocumentViewProps> = (props) => {
   const { document, render } = props;
 
   const renderView = () => {

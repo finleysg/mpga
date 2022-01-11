@@ -22,7 +22,7 @@ const TournamentHistoryPage: React.FC = () => {
             <TournamentHistoryTable tournament={new Tournament(tournament)} />
           </LoadingContainer>
         }
-        RightColumn={<TournamentResultList />}
+        RightColumn={<TournamentResultList tournament={new Tournament(tournament)} />}
       />
     </Container>
   );

@@ -1,18 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 
-import { useAppDispatch } from "app-store";
+import LoadingContainer from "components/LoadingContainer";
+import { useGetDocumentsQuery } from "features/documents/documentApi";
+import { IDocumentSearch } from "features/documents/documentPropTypes";
 import Button from "react-bootstrap/Button";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { MpgaDocument } from "../../models/Documents";
 import { EventLink } from "../../models/Events";
-import { IApplicationState } from "../../store";
-import DocumentActions, { IDocumentSearch } from "../../store/DocumentActions";
-import EventActions from "../../store/EventActions";
 import usePermissions from "../../utilities/Permissions";
 import DocumentEdit from "../documents/DocumentEdit";
 import EventDocumentList from "./EventDocumentList";
+import { EventProps } from "./eventsPropType";
 import EventLinkEdit from "./links/EventLinkEdit";
 import EventLinkList from "./links/EventLinkList";
 import EventRegistration from "./registration/EventRegistration";
@@ -26,60 +25,28 @@ export const FormContainer = styled.div`
 `;
 FormContainer.displayName = "FormContainer";
 
-export interface IEventInformationLinksProps {
-  name: string;
-  year: number;
-}
+export function EventInformationLinks(props: EventProps) {
+  const { eventDetail } = props;
 
-export function EventInformationLinks(props: IEventInformationLinksProps) {
   const [addDocument, setAddDocument] = useState(false);
   const [addLink, setAddLink] = useState(false);
-  const dispatch = useAppDispatch();
   const permissions = usePermissions();
-  const eventState = useSelector((eventState: IApplicationState) => eventState.events);
-  const queryKey = `${props.year}-${props.name}-event-detail`;
-  const query: IDocumentSearch = {
-    key: queryKey,
-    year: eventState.currentEvent.eventYear,
-    tournamentId: eventState.currentEvent.tournament.id,
+
+  const query = useMemo(() => {
+    const queryKey = `${eventDetail.startDate.getFullYear()}-${eventDetail.tournament.systemName}-event-detail`;
+    return {
+      key: queryKey,
+      year: eventDetail.startDate.getFullYear(),
+      tournamentId: eventDetail.tournament.id,
+    } as IDocumentSearch;
+  }, [eventDetail.startDate, eventDetail.tournament]);
+
+  const { data: eventDocuments, isLoading } = useGetDocumentsQuery(query);
+
+  const handleClose = () => {
+    setAddDocument(false);
+    setAddLink(false);
   };
-
-  useEffect(() => {
-    dispatch(DocumentActions.Load(query));
-    // eslint-disable-next-line
-  }, []);
-
-  const saveEventLink = useCallback(
-    (eventLink: EventLink) => {
-      dispatch(EventActions.SaveEventLink(eventLink));
-      setAddLink(false);
-    },
-    [dispatch],
-  );
-
-  const deleteEventLink = useCallback(
-    (eventLink: EventLink) => {
-      dispatch(EventActions.DeleteEventLink(eventLink));
-      setAddLink(false);
-    },
-    [dispatch],
-  );
-
-  const saveDocument = useCallback(
-    (document: MpgaDocument, file?: File) => {
-      dispatch(DocumentActions.Save(queryKey, document, file));
-      setAddDocument(false);
-    },
-    [dispatch, queryKey],
-  );
-
-  const deleteDocument = useCallback(
-    (document: MpgaDocument) => {
-      dispatch(DocumentActions.Delete(queryKey, document));
-      setAddDocument(false);
-    },
-    [dispatch, queryKey],
-  );
 
   return (
     <React.Fragment>
@@ -95,12 +62,7 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
       )}
       {addLink && (
         <FormContainer>
-          <EventLinkEdit
-            eventLink={new EventLink({ id: 0, event: eventState.currentEvent.id })}
-            Cancel={() => setAddLink(false)}
-            Delete={deleteEventLink}
-            Save={saveEventLink}
-          />
+          <EventLinkEdit eventLink={new EventLink({ id: 0, event: eventDetail.id })} onClose={handleClose} />
         </FormContainer>
       )}
       {addDocument && (
@@ -109,27 +71,25 @@ export function EventInformationLinks(props: IEventInformationLinksProps) {
             document={
               new MpgaDocument({
                 id: 0,
-                year: props.year,
-                tournament: eventState.currentEvent.tournament?.id,
+                year: query.year,
+                tournament: query.tournamentId,
               })
             }
-            Cancel={() => setAddDocument(false)}
-            Save={saveDocument}
-            Delete={deleteDocument}
+            onClose={handleClose}
           />
         </FormContainer>
       )}
-      {eventState.currentEvent.eventType !== "C" && eventState.currentEvent.eventType !== "P" && (
-        <React.Fragment>
-          <EventRegistration />
-          <EventLinkList title="Register Now" linkType="Registration" />
-          <EventDocumentList queryKey={queryKey} title="Register by Mail" documentType="Registration" />
-          <EventLinkList title="Online Tee Times" linkType="Tee Times" />
-          <EventDocumentList queryKey={queryKey} title="Tee Times" documentType="Tee Times" />
-          <EventLinkList title="Online Results" linkType="Results" />
-          <EventDocumentList queryKey={queryKey} title="Results" documentType="Results" />
-          <EventLinkList title="Media" linkType="Media" />
-        </React.Fragment>
+      {eventDetail.eventType !== "C" && eventDetail.eventType !== "P" && (
+        <LoadingContainer loading={isLoading}>
+          <EventRegistration eventDetail={eventDetail} />
+          <EventLinkList eventDetail={eventDetail} title="Register Now" linkType="Registration" />
+          <EventDocumentList documents={eventDocuments} title="Register by Mail" documentType="Registration" />
+          <EventLinkList eventDetail={eventDetail} title="Online Tee Times" linkType="Tee Times" />
+          <EventDocumentList documents={eventDocuments} title="Tee Times" documentType="Tee Times" />
+          <EventLinkList eventDetail={eventDetail} title="Online Results" linkType="Results" />
+          <EventDocumentList documents={eventDocuments} title="Results" documentType="Results" />
+          <EventLinkList eventDetail={eventDetail} title="Media" linkType="Media" />
+        </LoadingContainer>
       )}
     </React.Fragment>
   );

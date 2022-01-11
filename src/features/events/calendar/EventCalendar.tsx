@@ -1,23 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { EventDetail } from "models/Events";
 import { useNavigate } from "react-router-dom";
 
 import LoadingContainer from "../../../components/LoadingContainer";
 import constants from "../../../constants";
-import { IApplicationState } from "../../../store";
-import EventActions from "../../../store/EventActions";
+import { useGetEventsQuery } from "../eventsApi";
 import EventCalendarItem from "./EventCalendarItem";
 
 const EventCalendar: React.FC = () => {
-  const dispatch = useDispatch();
-  const state = useSelector((state: IApplicationState) => state.events);
-
+  const { data: events, isLoading } = useGetEventsQuery(constants.EventCalendarYear);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(EventActions.LoadEvents());
-  }, [dispatch]);
 
   const handleNavigation = (linkName: string) => {
     const location = {
@@ -29,23 +22,12 @@ const EventCalendar: React.FC = () => {
   return (
     <div>
       <h3 className="text-primary mb-3">{constants.EventCalendarYear} Tournament Calendar</h3>
-      <LoadingContainer loading={state.events === undefined}>
-        {state.events.map((event) => {
-          return (
-            <EventCalendarItem
-              key={event.id!}
-              eventId={event.id!}
-              tournamentName={event.name}
-              hostCourseName={event.location!.name}
-              hostCourceImageUrl={event.location?.logoUrl}
-              eventDates={event.eventDates}
-              rounds={event.rounds}
-              linkName={event.tournament?.systemName}
-              eventType={event.eventType}
-              OnSelect={handleNavigation}
-            />
-          );
-        })}
+      <LoadingContainer loading={isLoading}>
+        {events
+          ?.map((eventData) => new EventDetail(eventData))
+          .map((event) => {
+            return <EventCalendarItem key={event.id} eventDetail={event} onSelect={handleNavigation} />;
+          })}
       </LoadingContainer>
     </div>
   );

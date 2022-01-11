@@ -1,67 +1,70 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState } from "react";
 
+import { useGetTournamentWinnersQuery } from "features/tournaments/tournamentApi";
 import Button from "react-bootstrap/Button";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { ITournamentWinnerData } from "services/Data";
 
 import LoadingContainer from "../../../components/LoadingContainer";
-import { EventDetail, TournamentWinner } from "../../../models/Events";
-import { IApplicationState } from "../../../store";
-import TournamentWinnerActions from "../../../store/TournamentWinnerActions";
+import { ITournamentWinnerGroup, TournamentWinner } from "../../../models/Events";
 import usePermissions from "../../../utilities/Permissions";
+import { EventProps } from "../eventsPropType";
 import EventWinnerDetail from "./EventWinnerDetail";
 
-interface IEventWinnerListProps {
-  eventDetail: EventDetail;
-}
-
-const EventWinnerList: React.FunctionComponent<IEventWinnerListProps> = (props) => {
+const EventWinnerList: React.FunctionComponent<EventProps> = (props) => {
   const { eventDetail } = props;
-  const { tournament } = eventDetail;
-  const dispatch = useDispatch();
+
   const permissions = usePermissions();
-  const state = useSelector((state: IApplicationState) => state.winners);
-  const mostRecentWinners = state.groups[0];
+  const [addNew, setAddNew] = useState(false);
+  const { groups, isLoading } = useGetTournamentWinnersQuery(eventDetail.tournament.systemName, {
+    selectFromResult: ({ data }) => ({
+      groups: data.reduce((acc: ITournamentWinnerGroup[], item: ITournamentWinnerData) => {
+        const group = acc.find((g) => g.year === item.year);
+        if (group) {
+          group.winners.push(new TournamentWinner(item));
+        } else {
+          acc.push({
+            year: item.year,
+            location: item.location,
+            tournament: eventDetail.tournament,
+            winners: [new TournamentWinner(item)],
+          });
+        }
+        return acc;
+      }, []),
+      isLoading,
+    }),
+  });
 
-  useEffect(() => {
-    dispatch(TournamentWinnerActions.LoadTournamentWinners(tournament!));
-  }, [dispatch, tournament]);
-
-  const saveWinner = useCallback(
-    (winner: TournamentWinner) => dispatch(TournamentWinnerActions.SaveTournamentWinner(tournament!, winner)),
-    [dispatch, tournament],
-  );
+  const mostRecentWinner =
+    groups?.length > 0
+      ? (groups[0] as ITournamentWinnerGroup)
+      : ({ year: eventDetail.eventYear - 1, location: "loading...", winners: [] } as ITournamentWinnerGroup);
 
   return (
-    <LoadingContainer loading={mostRecentWinners === undefined}>
-      <h3 className="text-primary">{mostRecentWinners?.year} Winners</h3>
-      <h4>{mostRecentWinners?.location}</h4>
-      {mostRecentWinners?.winners.map((winner) => {
-        return (
-          <EventWinnerDetail
-            key={winner.id}
-            edit={(winner.id || 0) <= 0}
-            winner={winner}
-            Cancel={() => TournamentWinnerActions.CancelNew()}
-            Save={saveWinner}
-          />
-        );
+    <LoadingContainer loading={isLoading}>
+      <h3 className="text-primary">{mostRecentWinner.year} Winners</h3>
+      <h4>{mostRecentWinner.location}</h4>
+      {mostRecentWinner.winners.map((winner) => {
+        return <EventWinnerDetail key={winner.id} edit={false} winner={winner} onClose={() => setAddNew(false)} />;
       })}
+      {addNew && (
+        <EventWinnerDetail
+          key={0}
+          edit={true}
+          winner={
+            new TournamentWinner({
+              tournament: eventDetail.tournament,
+              year: eventDetail.eventYear,
+              location: eventDetail.location.name,
+            })
+          }
+          onClose={() => setAddNew(false)}
+        />
+      )}
       <p>* Net Score</p>
       {permissions.canManageEvent() && (
-        <Button
-          variant="link"
-          className="text-warning"
-          onClick={() =>
-            dispatch(
-              TournamentWinnerActions.AddNew(
-                eventDetail.tournament!,
-                eventDetail.eventYear,
-                eventDetail.location?.name,
-              ),
-            )
-          }
-        >
+        <Button variant="link" className="text-warning" onClick={() => setAddNew(true)}>
           New Winner
         </Button>
       )}

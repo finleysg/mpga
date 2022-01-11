@@ -51,7 +51,7 @@ const clubApi = mpgaApi.injectEndpoints({
         const { id } = data;
         return {
           url: `/club-contacts/${id}/`,
-          method: "POST",
+          method: "DELETE",
         };
       },
       invalidatesTags: (_result, _error, { club }) => [{ type: "Clubs", id: club }],
