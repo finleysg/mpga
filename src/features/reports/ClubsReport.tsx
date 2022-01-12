@@ -1,5 +1,6 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { useGetClubsQuery } from "features/member-clubs/memberClubApi";
 import { useGetMembershipsForYearQuery } from "features/member-clubs/membershipApi";
 import Table from "react-bootstrap/Table";
@@ -12,7 +13,7 @@ interface IClubReportProps {
   current: boolean;
 }
 
-const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
+const ClubsReport: React.FC<IClubReportProps> = (props) => {
   const { current } = props;
   const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
   const { data: clubs, isLoading: clubsLoading } = useGetClubsQuery();
@@ -38,13 +39,16 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
   };
 
   const paymentMethod = (membership: IMembershipData): string => {
-    if (membership.payment_type === "CK") {
-      return `Check (${membership.payment_code})`;
-    } else if (membership.payment_type === "OL") {
-      return "Online";
-    } else {
-      return "Other";
+    if (membership) {
+      if (membership.payment_type === "CK") {
+        return `Check (${membership.payment_code})`;
+      } else if (membership.payment_type === "OL") {
+        return "Online";
+      } else {
+        return "Other";
+      }
     }
+    return "None";
   };
 
   const getHeaders = () => {
@@ -67,6 +71,7 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
         .filter((c) => c.isCurrent)
         .map((club: any) => {
           return {
+            id: club.id,
             name: club.name,
             systemName: club.systemName,
             homeCourse: club.location,
@@ -78,6 +83,7 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
     }
     return getClubList().map((club: any) => {
       return {
+        id: club.id,
         name: club.name,
         systemName: club.systemName,
         homeCourse: club.location,
@@ -87,7 +93,7 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
   };
 
   return (
-    <div>
+    <LoadingContainer loading={clubsLoading || membershipsLoading}>
       <CSVLink
         data={getData()}
         headers={getHeaders()}
@@ -112,15 +118,15 @@ const ClubsReport: React.FunctionComponent<IClubReportProps> = (props) => {
             <tr key={club.id}>
               <td>{club.name}</td>
               <td>{club.systemName}</td>
-              <td>{club.golfCourse?.name}</td>
-              <td>{club.size}</td>
+              <td>{club.homeCourse}</td>
+              <td>{club.members}</td>
               {current && <td>{club.paymentDate}</td>}
               {current && <td>{club.paymentMethod}</td>}
             </tr>
           ))}
         </tbody>
       </Table>
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -1,15 +1,14 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { useGetContactsQuery } from "features/member-clubs/memberClubApi";
 import Table from "react-bootstrap/Table";
 import { CSVLink } from "react-csv";
 
 import { Contact } from "../../models/Clubs";
 
-interface IContactReportProps {}
-
-const ContactsReport: React.FunctionComponent<IContactReportProps> = (props) => {
-  const { data: contacts } = useGetContactsQuery();
+const ContactsReport: React.FC<{}> = () => {
+  const { data: contacts, isLoading } = useGetContactsQuery();
 
   const headers = [
     { label: "First Name", key: "firstName" },
@@ -23,14 +22,16 @@ const ContactsReport: React.FunctionComponent<IContactReportProps> = (props) => 
     { label: "Home Club", key: "homeClub" },
   ];
 
+  const getData = () => {
+    if (contacts && contacts.length > 0) {
+      return contacts.map((c) => new Contact(c));
+    }
+    return [];
+  };
+
   return (
-    <div>
-      <CSVLink
-        data={contacts?.map((c) => new Contact(c))}
-        headers={headers}
-        enclosingCharacter={'"'}
-        filename={"MpgaContacts.csv"}
-      >
+    <LoadingContainer loading={isLoading}>
+      <CSVLink data={getData()} headers={headers} enclosingCharacter={'"'} filename={"MpgaContacts.csv"}>
         Download
       </CSVLink>
       <Table striped size="sm">
@@ -48,24 +49,22 @@ const ContactsReport: React.FunctionComponent<IContactReportProps> = (props) => 
           </tr>
         </thead>
         <tbody>
-          {contacts
-            ?.map((c) => new Contact(c))
-            .map((contact: Contact) => (
-              <tr key={contact.id}>
-                <td>{contact.firstName}</td>
-                <td>{contact.lastName}</td>
-                <td>{contact.email}</td>
-                <td>{contact.primaryPhone}</td>
-                <td>{contact.addressTxt}</td>
-                <td>{contact.city}</td>
-                <td>{contact.state}</td>
-                <td>{contact.zip}</td>
-                <td>{contact.homeClub}</td>
-              </tr>
-            ))}
+          {getData().map((contact: Contact) => (
+            <tr key={contact.id}>
+              <td>{contact.firstName}</td>
+              <td>{contact.lastName}</td>
+              <td>{contact.email}</td>
+              <td>{contact.primaryPhone}</td>
+              <td>{contact.addressTxt}</td>
+              <td>{contact.city}</td>
+              <td>{contact.state}</td>
+              <td>{contact.zip}</td>
+              <td>{contact.homeClub}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
-    </div>
+    </LoadingContainer>
   );
 };
 

@@ -9,7 +9,7 @@ const extendedApi = mpgaApi.injectEndpoints({
       query: () => ({ url: `/teams/?year=${constants.MatchPlayYear}`, method: "GET" }),
     }),
     getMatchResults: build.query<IMatchPlayResultData[], void>({
-      query: () => ({ url: `/match-results/?year=${constants.MatchPlayYear}/`, method: "GET" }),
+      query: () => ({ url: `/match-results/?year=${constants.MatchPlayYear}`, method: "GET" }),
       providesTags: (result) =>
         result
           ? [

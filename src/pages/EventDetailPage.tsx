@@ -18,7 +18,7 @@ const EventDetailPage: React.FC = () => {
     { name, year: +year },
     {
       selectFromResult: ({ data }) => ({
-        eventDetail: new EventDetail(data),
+        eventDetail: data ? new EventDetail(data) : EventDetail.CreateDefault(),
         isLoading,
       }),
     },

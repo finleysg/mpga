@@ -22,7 +22,7 @@ const AnnouncementList: React.FC = () => {
     },
     {
       selectFromResult: ({ data, isLoading }) => ({
-        documents: data.map((d) => new MpgaDocument(d)),
+        documents: data?.map((d) => new MpgaDocument(d)) || [],
         docsLoading: isLoading,
       }),
     },

@@ -11,7 +11,10 @@ const tournamentApi = mpgaApi.injectEndpoints({
           : [{ type: "Tournaments", id: "LIST" }],
     }),
     getTournament: build.query<ITournamentData, string>({
-      query: (name) => ({ url: `/tournaments/?name=${name}/`, method: "GET" }),
+      query: (name) => ({ url: `/tournaments/?name=${name}`, method: "GET" }),
+      transformResponse: (response: ITournamentData[]) => {
+        return response?.length === 1 ? response[0] : undefined;
+      },
       providesTags: (_result, _error, id) => [{ type: "Tournaments", id }],
     }),
     updateTournament: build.mutation<ITournamentData, Partial<ITournamentData>>({

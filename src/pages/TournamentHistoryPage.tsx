@@ -1,4 +1,6 @@
-import React from "react";
+import { createSelector } from "@reduxjs/toolkit";
+
+import React, { useMemo } from "react";
 
 import LoadingContainer from "components/LoadingContainer";
 import { useGetTournamentQuery } from "features/tournaments/tournamentApi";
@@ -12,17 +14,30 @@ import TournamentResultList from "../features/tournaments/TournamentResultList";
 
 const TournamentHistoryPage: React.FC = () => {
   const { name } = useParams();
-  const { data: tournament, isLoading } = useGetTournamentQuery(name);
+
+  const selectTournament = useMemo(() => {
+    return createSelector(
+      (res) => res.data,
+      (data) => (data ? new Tournament(data) : undefined),
+    );
+  }, []);
+
+  const { tournament, isLoading } = useGetTournamentQuery(name, {
+    selectFromResult: (result) => ({
+      ...result,
+      tournament: selectTournament(result),
+    }),
+  });
 
   return (
     <Container fluid={true}>
       <LargeLeftSmallRight
         LeftColumn={
           <LoadingContainer loading={isLoading}>
-            <TournamentHistoryTable tournament={new Tournament(tournament)} />
+            {tournament && <TournamentHistoryTable tournament={tournament} />}
           </LoadingContainer>
         }
-        RightColumn={<TournamentResultList tournament={new Tournament(tournament)} />}
+        RightColumn={tournament && <TournamentResultList tournament={tournament} />}
       />
     </Container>
   );

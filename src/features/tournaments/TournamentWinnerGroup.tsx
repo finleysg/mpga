@@ -1,19 +1,16 @@
 import React from "react";
 
-import { ITournamentWinnerGroup, TournamentWinner } from "../../models/Events";
+import { TournamentWinner } from "../../models/Events";
+import { TournamentWinnerGroupProps } from "./tournamentPropTypes";
 import TournamentWinnerRow from "./TournamentWinnerRow";
 
-type TournamentWinnerGroupProps = {
-  group: ITournamentWinnerGroup;
-};
-
 const TournamentWinnerGroup: React.FC<TournamentWinnerGroupProps> = (props) => {
-  const { group } = props;
+  const { group, onEdit } = props;
 
   return (
     <React.Fragment>
       {group.winners.map((winner: TournamentWinner) => {
-        return <TournamentWinnerRow key={winner.id} winner={winner} />;
+        return <TournamentWinnerRow key={winner.id} winner={winner} onEdit={onEdit} />;
       })}
     </React.Fragment>
   );

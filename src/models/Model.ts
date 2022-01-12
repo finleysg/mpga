@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 export interface IModel {
   id: number | undefined;
   prepJson(obj: any): string;
@@ -21,13 +19,15 @@ export class BaseModel implements IModel {
   }
 
   snakeCase(obj: any): any {
-    const newObj: {[index: string]:any} = {};
+    const newObj: { [index: string]: any } = {};
     if (obj) {
       for (const d in obj) {
         if (obj.hasOwnProperty(d) && !this.isLocalProperty(d)) {
-          const prop = d.replace(/[\w]([A-Z])/g, function (m) {
-            return m[0] + '_' + m[1];
-          }).toLowerCase();
+          const prop = d
+            .replace(/[\w]([A-Z])/g, function (m) {
+              return m[0] + "_" + m[1];
+            })
+            .toLowerCase();
           if (!obj[d] && this.isBooleanProperty(prop)) {
             obj[d] = false; // coerce null booleans to false
           }
@@ -39,25 +39,26 @@ export class BaseModel implements IModel {
   }
 
   isBooleanProperty(prop: string): boolean {
-    return prop != null &&
-      (prop.startsWith('is_') ||
-        prop.startsWith('use_') ||
-        prop.startsWith('can_') ||
-        prop.startsWith('has_'));
+    return (
+      prop != null &&
+      (prop.startsWith("is_") || prop.startsWith("use_") || prop.startsWith("can_") || prop.startsWith("has_"))
+    );
   }
 
   isLocalProperty(prop: string): boolean {
-    return ['deleted', 'dirty', 'localId'].indexOf(prop) >= 0;
+    return ["deleted", "dirty", "localId"].indexOf(prop) >= 0;
   }
 
   camelCase(obj: any): any {
-    const newObj: {[index: string]:any} = {};
+    const newObj: { [index: string]: any } = {};
     if (obj) {
       for (const d in obj) {
         if (obj.hasOwnProperty(d)) {
-          newObj[d.replace(/(_\w)/g, function (k) {
-            return k[1].toUpperCase();
-          })] = this.isDate(d) ? moment(obj[d]) : obj[d];
+          newObj[
+            d.replace(/(_\w)/g, function (k) {
+              return k[1].toUpperCase();
+            })
+          ] = this.isDate(d) ? new Date(obj[d]) : obj[d];
         }
       }
     }
@@ -65,9 +66,6 @@ export class BaseModel implements IModel {
   }
 
   isDate(propName: string): boolean {
-    return propName != null && (
-      propName.endsWith('_date') ||
-      propName.endsWith('_start') ||
-      propName.endsWith('_end'));
+    return propName != null && (propName.endsWith("_date") || propName.endsWith("_start") || propName.endsWith("_end"));
   }
 }

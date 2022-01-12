@@ -171,31 +171,41 @@ export class EventDetail extends BaseModel {
   links?: EventLink[];
   eventDates: string = "";
 
+  static CreateDefault(): EventDetail {
+    const evt = new EventDetail({ id: 0, name: "loading...", description: "loading..." });
+    evt.tournament = new Tournament({ id: 0, system_name: "loading...", winners: [] });
+    return evt;
+  }
+
   constructor(obj: any) {
     super();
-    const evt = super.fromJson(obj);
-    if (evt.startDate) {
-      evt.location = new GolfCourse(obj["location"]);
-      evt.tournament = new Tournament(obj["tournament"]);
-      if (obj["policies"]) {
-        evt.policies = obj["policies"].map((o: any) => new EventPolicy(o));
+    if (obj) {
+      const evt = super.fromJson(obj);
+      if (evt.startDate) {
+        evt.location = new GolfCourse(obj["location"]);
+        evt.tournament = new Tournament(obj["tournament"]);
+        if (obj["policies"]) {
+          evt.policies = obj["policies"].map((o: any) => new EventPolicy(o));
+        }
+        if (obj["chairs"]) {
+          evt.chairs = obj["chairs"].map((o: any) => new EventChair().fromJson(o));
+        }
+        if (obj["player_points"]) {
+          evt.playerPoints = obj["player_points"].map((o: any) => new EventPoints({}).fromJson(o));
+        }
+        if (obj["links"]) {
+          evt.links = obj["links"].map((o: any) => new EventLink(o));
+        }
+        if (evt.rounds === 1) {
+          evt.eventDates = moment(evt.startDate).format("dddd, MMM D");
+        } else {
+          evt.eventDates = `${moment(evt.startDate).format("dddd, MMM D")} - ${moment(evt.startDate)
+            .add(1, "d")
+            .format("dddd, MMM D")}`;
+        }
       }
-      if (obj["chairs"]) {
-        evt.chairs = obj["chairs"].map((o: any) => new EventChair().fromJson(o));
-      }
-      if (obj["player_points"]) {
-        evt.playerPoints = obj["player_points"].map((o: any) => new EventPoints({}).fromJson(o));
-      }
-      if (obj["links"]) {
-        evt.links = obj["links"].map((o: any) => new EventLink(o));
-      }
-      if (evt.rounds === 1) {
-        evt.eventDates = evt.startDate.format("dddd, MMM D");
-      } else {
-        evt.eventDates = `${evt.startDate.format("dddd, MMM D")} - ${evt.startDate.add(1, "d").format("dddd, MMM D")}`;
-      }
+      Object.assign(this, evt);
     }
-    Object.assign(this, evt);
   }
 
   get eventYear(): number {
@@ -229,6 +239,6 @@ export class EventDetail extends BaseModel {
 
   get registrationIsClosed(): boolean {
     const endDate = moment(this.registrationEnd).clone();
-    return endDate.add("d", 1).isBefore(moment());
+    return endDate.add(1, "d").isBefore(moment());
   }
 }

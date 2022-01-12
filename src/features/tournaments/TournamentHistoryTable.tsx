@@ -16,12 +16,14 @@ const TournamentHistoryTable: React.FC<TournamentDetailProps> = (props) => {
   const { tournament } = props;
 
   const [doEdit, updateDoEdit] = useState(false);
+  const [winnerToEdit, updateWinnerToEdit] = useState<TournamentWinner>();
+
   // const [doSearch, updateDoSearch] = useState(false);
   // const [search, updateSearch] = useState({});
   const permissions = usePermissions();
   const { groups, isLoading } = useGetTournamentWinnersQuery(tournament.systemName, {
     selectFromResult: ({ data }) => ({
-      groups: data.reduce((acc: ITournamentWinnerGroup[], item: ITournamentWinnerData) => {
+      groups: data?.reduce((acc: ITournamentWinnerGroup[], item: ITournamentWinnerData) => {
         const group = acc.find((g) => g.year === item.year);
         if (group) {
           group.winners.push(new TournamentWinner(item));
@@ -43,7 +45,12 @@ const TournamentHistoryTable: React.FC<TournamentDetailProps> = (props) => {
     updateDoEdit(false);
   };
 
-  const createNewWinner = () => {
+  const handleEdit = (winner?: TournamentWinner) => {
+    if (!winner) {
+      updateWinnerToEdit(new TournamentWinner({ id: 0, tournament: tournament.id }));
+    } else {
+      updateWinnerToEdit(winner);
+    }
     updateDoEdit(true);
   };
 
@@ -71,7 +78,7 @@ const TournamentHistoryTable: React.FC<TournamentDetailProps> = (props) => {
           </React.Fragment>
         )} */}
         {permissions.canEditTournamentHistory() && (
-          <Button variant="link" className="text-warning" onClick={() => createNewWinner()}>
+          <Button variant="link" className="text-warning" onClick={() => handleEdit()}>
             Add New Champion
           </Button>
         )}
@@ -84,20 +91,18 @@ const TournamentHistoryTable: React.FC<TournamentDetailProps> = (props) => {
               <th>Champion</th>
               <th>Score</th>
               <th>Notes</th>
-              {permissions.canEditTournamentHistory() && <th>Edit</th>}
+              {permissions.canEditTournamentHistory() ? <th>Edit</th> : null}
             </tr>
           </thead>
           <tbody>
-            {groups.map((group: ITournamentWinnerGroup, idx: number) => {
-              return <TournamentWinnerGroup key={idx} group={group} />;
-            })}
+            {groups
+              ? groups.map((group: ITournamentWinnerGroup, idx: number) => {
+                  return <TournamentWinnerGroup key={idx} group={group} onEdit={(winner) => handleEdit(winner)} />;
+                })
+              : null}
           </tbody>
         </Table>
-        <TournamentWinnerEditModal
-          show={doEdit}
-          winner={new TournamentWinner({ id: 0, tournament: tournament.id })}
-          onClose={handleClose}
-        />
+        <TournamentWinnerEditModal show={doEdit} winner={winnerToEdit} onClose={handleClose} />
       </LoadingContainer>
     </React.Fragment>
   );

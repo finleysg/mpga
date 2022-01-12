@@ -22,7 +22,7 @@ const TournamentPhotoList: React.FC<TournamentDetailProps> = (props) => {
     { tournamentId: tournament.id, year: year ? +year : undefined },
     {
       selectFromResult: ({ data }) => ({
-        photos: data.map((d) => new MpgaPhoto(d)),
+        photos: data?.map((d) => new MpgaPhoto(d)) || [],
         isLoading,
       }),
     },

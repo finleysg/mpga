@@ -1,3 +1,5 @@
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+
 import React, { useState } from "react";
 
 import { useGetRandomPhotoQuery } from "features/gallery/galleryApi";
@@ -16,7 +18,7 @@ const EventGalleryDetail: React.FC<EventProps> = (props) => {
   const { eventDetail } = props;
   const [doUpload, setDoUpload] = useState(false);
   const permissions = usePermissions();
-  const { data: photo, isLoading } = useGetRandomPhotoQuery(eventDetail.tournament.id);
+  const { data: photo, isLoading } = useGetRandomPhotoQuery(eventDetail.tournament.id || skipToken);
 
   return (
     <LoadingContainer loading={isLoading}>

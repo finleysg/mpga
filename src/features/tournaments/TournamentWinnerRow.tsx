@@ -4,22 +4,15 @@ import { TiDocumentText, TiEdit } from "react-icons/ti";
 
 import Notes from "../../components/Notes";
 import usePermissions from "../../utilities/Permissions";
-import { TournamentWinnerProps } from "./tournamentPropTypes";
-import TournamentWinnerEditModal from "./TournamentWinnerEditModal";
+import { TournamentWinnerViewProps } from "./tournamentPropTypes";
 
-const TournamentWinnerRow: React.FC<TournamentWinnerProps> = (props) => {
-  const { winner } = props;
+const TournamentWinnerRow: React.FC<TournamentWinnerViewProps> = (props) => {
+  const { winner, onEdit } = props;
   const permissions = usePermissions();
   const [showNote, updateShowNote] = useState(false);
-  const [doEdit, updateDoEdit] = useState(false);
-
-  const handleClose = () => {
-    updateDoEdit(false);
-  };
 
   return (
     <React.Fragment>
-      <TournamentWinnerEditModal show={doEdit} winner={winner} onClose={handleClose} />
       <tr>
         <td>{winner.year}</td>
         <td>{winner.location}</td>
@@ -29,19 +22,19 @@ const TournamentWinnerRow: React.FC<TournamentWinnerProps> = (props) => {
         <td className="clickable text-secondary" onClick={() => updateShowNote(!showNote)}>
           {winner.notes && <TiDocumentText size={18} color={"primary"} />}
         </td>
-        {permissions.canEditTournamentHistory() && (
-          <td className="clickable text-warning" onClick={() => updateDoEdit(!doEdit)}>
+        {permissions.canEditTournamentHistory() ? (
+          <td className="clickable text-warning" onClick={() => onEdit(winner)}>
             <TiEdit size={18} color={"warning"} />
           </td>
-        )}
+        ) : null}
       </tr>
-      {winner.notes && showNote && !doEdit && (
+      {winner.notes && showNote ? (
         <tr>
           <td colSpan={permissions.canEditTournamentHistory() ? 7 : 6}>
             <Notes>{winner.notes}</Notes>
           </td>
         </tr>
-      )}
+      ) : null}
     </React.Fragment>
   );
 };

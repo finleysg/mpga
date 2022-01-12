@@ -5,15 +5,9 @@ import "./layout.scss";
 import { useEffect } from "react";
 
 import Navbar from "react-bootstrap/Navbar";
-import {
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useResizeAware from "react-resize-aware";
-import {
-  Outlet,
-  useLocation,
-} from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
 
 import ErrorBoundary from "../components/ErrorBoundary";

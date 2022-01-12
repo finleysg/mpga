@@ -38,7 +38,7 @@ export function MatchResultList() {
 
   const { results, isLoading } = useGetMatchResultsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      results: data.map((d) => new MatchResult(d)),
+      results: data?.map((d) => new MatchResult(d)) || [],
       isLoading,
     }),
   });

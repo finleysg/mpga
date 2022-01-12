@@ -29,7 +29,7 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 
   const { teams } = useGetTeamsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      teams: data.map((t) => new Team(t)),
+      teams: data?.map((t) => new Team(t)) || [],
     }),
   });
   const [addResult, { isLoading }] = useAddMatchResultMutation();

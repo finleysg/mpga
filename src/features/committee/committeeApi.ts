@@ -4,7 +4,7 @@ import { mpgaApi } from "services/MpgaApi";
 const committeeApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
     getCommittee: build.query<ICommitteeData[], void>({
-      query: () => ({ url: "/committees/", method: "GET" }),
+      query: () => ({ url: "/committee/", method: "GET" }),
       providesTags: (result) => {
         return result
           ? [...result.map(({ id }) => ({ type: "Committee", id } as const)), { type: "Committee", id: "LIST" }]
@@ -15,7 +15,7 @@ const committeeApi = mpgaApi.injectEndpoints({
       query(data) {
         const { id } = data;
         return {
-          url: `/committees/${id}/`,
+          url: `/committee/${id}/`,
           method: "PUT",
           data,
         };
@@ -25,7 +25,7 @@ const committeeApi = mpgaApi.injectEndpoints({
     addCommittee: build.mutation<ICommitteeData, Partial<ICommitteeData>>({
       query(data) {
         return {
-          url: "/committees/",
+          url: "/committee/",
           method: "POST",
           data,
         };
@@ -36,7 +36,7 @@ const committeeApi = mpgaApi.injectEndpoints({
       query(data) {
         const { id } = data;
         return {
-          url: `/committees/${id}/`,
+          url: `/committee/${id}/`,
           method: "DELETE",
         };
       },

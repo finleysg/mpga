@@ -12,6 +12,9 @@ const eventApi = mpgaApi.injectEndpoints({
     }),
     getEvent: build.query<IEventData, { name: string; year: number }>({
       query: ({ name, year }) => ({ url: `/events/?name=${name}&year=${year}`, method: "GET" }),
+      transformResponse: (response: IEventData[]) => {
+        return response?.length === 1 ? response[0] : undefined;
+      },
       providesTags: (result) => [
         { type: "Events", id: result.id },
         { type: "Events", id: "LIST" },

@@ -1,5 +1,6 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
 import { useGetClubContactsQuery, useGetClubsQuery } from "features/member-clubs/memberClubApi";
 import Table from "react-bootstrap/Table";
 import { CSVLink } from "react-csv";
@@ -12,7 +13,7 @@ interface IClubContactReportProps {
 
 const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (props) => {
   const { filter } = props;
-  const { data: clubContacts } = useGetClubContactsQuery();
+  const { data: clubContacts, isLoading } = useGetClubContactsQuery();
   const { data: clubs } = useGetClubsQuery();
 
   const formatRoles = (cc: ClubContact): string => {
@@ -32,7 +33,10 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
   };
 
   const getClub = (cc: ClubContact) => {
-    return clubs?.find((c) => (c.id = cc.club));
+    if (clubs) {
+      return clubs.find((c) => c.id === cc.club);
+    }
+    return undefined;
   };
 
   const getHeaders = () => {
@@ -59,47 +63,52 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
 
   const getData = (): any[] => {
     const contacts: any[] = [];
-    clubContacts
-      ?.map((cc) => new ClubContact(cc))
-      .filter((cc) => applyFilter(cc))
-      .forEach((cc: ClubContact) => {
-        if (filter === "mailings") {
-          contacts.push({
-            homeClub: getClub(cc).name,
-            firstName: cc.contact?.firstName,
-            lastName: cc.contact?.lastName,
-            email: cc.contact?.email,
-            phone: cc.contact?.primaryPhone,
-            clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
-            address: cc.contact?.addressTxt,
-            city: cc.contact?.city,
-            state: cc.contact?.state,
-            zip: cc.contact?.zip,
-            roles: formatRoles(cc),
-          });
-        } else if (filter === "captains") {
-          contacts.push({
-            homeClub: getClub(cc).name,
-            firstName: cc.contact?.firstName,
-            lastName: cc.contact?.lastName,
-            email: cc.contact?.email,
-            phone: cc.contact?.primaryPhone,
-            clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
-            roles: formatRoles(cc),
-            notes: cc.contact?.notes,
-          });
-        } else {
-          contacts.push({
-            homeClub: getClub(cc).name,
-            firstName: cc.contact?.firstName,
-            lastName: cc.contact?.lastName,
-            email: cc.contact?.email,
-            phone: cc.contact?.primaryPhone,
-            clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
-            roles: formatRoles(cc),
-          });
-        }
-      });
+    if (clubContacts && clubContacts.length > 0) {
+      clubContacts
+        ?.map((cc) => new ClubContact(cc))
+        .filter((cc) => applyFilter(cc))
+        .forEach((cc: ClubContact) => {
+          if (filter === "mailings") {
+            contacts.push({
+              id: cc.id,
+              homeClub: getClub(cc).name,
+              firstName: cc.contact?.firstName,
+              lastName: cc.contact?.lastName,
+              email: cc.contact?.email,
+              phone: cc.contact?.primaryPhone,
+              clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
+              address: cc.contact?.addressTxt,
+              city: cc.contact?.city,
+              state: cc.contact?.state,
+              zip: cc.contact?.zip,
+              roles: formatRoles(cc),
+            });
+          } else if (filter === "captains") {
+            contacts.push({
+              id: cc.id,
+              homeClub: getClub(cc).name,
+              firstName: cc.contact?.firstName,
+              lastName: cc.contact?.lastName,
+              email: cc.contact?.email,
+              phone: cc.contact?.primaryPhone,
+              clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
+              roles: formatRoles(cc),
+              notes: cc.notes,
+            });
+          } else {
+            contacts.push({
+              id: cc.id,
+              homeClub: getClub(cc).name,
+              firstName: cc.contact?.firstName,
+              lastName: cc.contact?.lastName,
+              email: cc.contact?.email,
+              phone: cc.contact?.primaryPhone,
+              clubUrl: `https://mpga.net/clubs/${getClub(cc).system_name}`,
+              roles: formatRoles(cc),
+            });
+          }
+        });
+    }
     return contacts;
   };
 
@@ -116,7 +125,7 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
   };
 
   return (
-    <div>
+    <LoadingContainer loading={isLoading}>
       <CSVLink data={getData()} headers={getHeaders()} enclosingCharacter={'"'} filename={getFilename()}>
         Download
       </CSVLink>
@@ -141,22 +150,22 @@ const ClubContactsReport: React.FunctionComponent<IClubContactReportProps> = (pr
           {getData().map((cc: any) => (
             <tr key={cc.id}>
               <td>{cc.homeClub}</td>
-              <td>{cc.contact?.firstName}</td>
-              <td>{cc.contact?.lastName}</td>
-              <td>{cc.contact?.email}</td>
-              <td>{cc.contact?.primaryPhone}</td>
-              {filter === "mailings" && <td>{cc.contact?.addressTxt}</td>}
-              {filter === "mailings" && <td>{cc.contact?.city}</td>}
-              {filter === "mailings" && <td>{cc.contact?.state}</td>}
-              {filter === "mailings" && <td>{cc.contact?.zip}</td>}
+              <td>{cc.firstName}</td>
+              <td>{cc.lastName}</td>
+              <td>{cc.email}</td>
+              <td>{cc.phone}</td>
+              {filter === "mailings" && <td>{cc.address}</td>}
+              {filter === "mailings" && <td>{cc.city}</td>}
+              {filter === "mailings" && <td>{cc.state}</td>}
+              {filter === "mailings" && <td>{cc.zip}</td>}
               <td>{cc.roles}</td>
-              <td>cc.clubUrl</td>
+              <td>{cc.clubUrl}</td>
               {filter === "captains" && <td>{cc.notes}</td>}
             </tr>
           ))}
         </tbody>
       </Table>
-    </div>
+    </LoadingContainer>
   );
 };
 

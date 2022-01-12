@@ -8,16 +8,14 @@ import TournamentDetail from "./TournamentDetail";
 const TournamentList: React.FC = () => {
   const { tournaments, isLoading } = useGetTournamentsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      tournaments: data?.find((t) => t.system_name !== "match-play"),
+      tournaments: data?.filter((t) => t.system_name !== "match-play").map((t) => new Tournament(t)),
       isLoading,
     }),
   });
 
   return (
     <LoadingContainer loading={isLoading}>
-      {tournaments.map((tournament) => (
-        <TournamentDetail key={tournament.id} tournament={new Tournament(tournament)} />
-      ))}
+      {tournaments && tournaments.map((tournament) => <TournamentDetail key={tournament.id} tournament={tournament} />)}
     </LoadingContainer>
   );
 };

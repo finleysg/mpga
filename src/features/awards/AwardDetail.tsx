@@ -1,3 +1,5 @@
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+
 import React, { useRef } from "react";
 
 import LoadingContainer from "../../components/LoadingContainer";
@@ -11,7 +13,7 @@ import AwardView from "./AwardView";
 
 const AwardDetail: React.FC<AwardDetailProps> = (props) => {
   const { awardId } = props;
-  const { data, isLoading } = useGetAwardQuery(awardId);
+  const { data, isLoading } = useGetAwardQuery(awardId || skipToken);
   const permissions = usePermissions();
   const closeRef = useRef<CloseHandle>();
 

@@ -111,13 +111,14 @@ const DocumentLibrarySearch: React.FC<DocumentLibrarySearchProps> = (props) => {
                 onBlur={handleBlur}
               >
                 <option value={undefined}></option>
-                {tournaments.map((tournament) => {
-                  return (
-                    <option key={tournament.id} value={tournament.id}>
-                      {tournament.name}
-                    </option>
-                  );
-                })}
+                {tournaments &&
+                  tournaments.map((tournament) => {
+                    return (
+                      <option key={tournament.id} value={tournament.id}>
+                        {tournament.name}
+                      </option>
+                    );
+                  })}
               </Form.Control>
             </Col>
             <Col xs={12} sm={6} md={3} lg={3}>

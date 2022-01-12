@@ -18,7 +18,7 @@ const EventWinnerList: React.FunctionComponent<EventProps> = (props) => {
   const [addNew, setAddNew] = useState(false);
   const { groups, isLoading } = useGetTournamentWinnersQuery(eventDetail.tournament.systemName, {
     selectFromResult: ({ data }) => ({
-      groups: data.reduce((acc: ITournamentWinnerGroup[], item: ITournamentWinnerData) => {
+      groups: data?.reduce((acc: ITournamentWinnerGroup[], item: ITournamentWinnerData) => {
         const group = acc.find((g) => g.year === item.year);
         if (group) {
           group.winners.push(new TournamentWinner(item));

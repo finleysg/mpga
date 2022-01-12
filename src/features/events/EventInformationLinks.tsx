@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 import LoadingContainer from "components/LoadingContainer";
 import { useGetDocumentsQuery } from "features/documents/documentApi";
-import { IDocumentSearch } from "features/documents/documentPropTypes";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
@@ -32,16 +31,11 @@ export function EventInformationLinks(props: EventProps) {
   const [addLink, setAddLink] = useState(false);
   const permissions = usePermissions();
 
-  const query = useMemo(() => {
-    const queryKey = `${eventDetail.startDate.getFullYear()}-${eventDetail.tournament.systemName}-event-detail`;
-    return {
-      key: queryKey,
-      year: eventDetail.startDate.getFullYear(),
-      tournamentId: eventDetail.tournament.id,
-    } as IDocumentSearch;
-  }, [eventDetail.startDate, eventDetail.tournament]);
-
-  const { data: eventDocuments, isLoading } = useGetDocumentsQuery(query);
+  const { data: eventDocuments, isLoading } = useGetDocumentsQuery({
+    key: `${eventDetail.startDate.getFullYear()}-${eventDetail.tournament.systemName}-event-detail`,
+    year: eventDetail.startDate.getFullYear(),
+    tournamentId: eventDetail.tournament.id,
+  });
 
   const handleClose = () => {
     setAddDocument(false);
@@ -71,8 +65,8 @@ export function EventInformationLinks(props: EventProps) {
             document={
               new MpgaDocument({
                 id: 0,
-                year: query.year,
-                tournament: query.tournamentId,
+                year: eventDetail.startDate.getFullYear(),
+                tournament: eventDetail.tournament.id,
               })
             }
             onClose={handleClose}
