@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import SessionLayout from "../components/layouts/SessionLayout";
+import constants from "../constants";
 import AccountDetail from "../features/account/AccountDetail";
 import AccountActivation from "../features/session/AccountActivation";
 import ForgotPassword from "../features/session/ForgotPassword";
@@ -37,9 +38,21 @@ import UserActions from "../store/UserActions";
 
 export const AppRoutes = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(UserActions.GetUser());
   }, [dispatch]);
+
+  if (constants.MaintenanceMode) {
+    return (
+      <Switch>
+        <Route path="*">
+          <MaintenancePage />
+        </Route>
+      </Switch>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
