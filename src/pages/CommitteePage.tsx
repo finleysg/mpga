@@ -2,8 +2,8 @@ import React from "react";
 
 import Container from "react-bootstrap/Container";
 
+import { PageCodes } from "../app-constants";
 import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
-import { PageCodes } from "../constants";
 import AwardDetail from "../features/awards/AwardDetail";
 import useAwards from "../features/awards/UseAwards";
 import CommitteeList from "../features/committee/CommitteeList";

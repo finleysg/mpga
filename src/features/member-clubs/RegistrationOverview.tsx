@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { IDocumentSearch } from "features/documents/documentPropTypes";
 
-import { PageCodes } from "../../constants";
+import { PageCodes } from "../../app-constants";
 import PageContentDetail from "../content/PageContentDetail";
 import LatestOnly from "../documents/LatestOnly";
 

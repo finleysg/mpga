@@ -3,9 +3,9 @@ import React, { useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
+import constants from "../../app-constants";
 import LoadingContainer from "../../components/LoadingContainer";
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit";
-import constants from "../../constants";
 import { Membership } from "../../models/Clubs";
 import usePermissions from "../../utilities/Permissions";
 import ClubDuesPayment from "../payments/ClubDuesPayment";

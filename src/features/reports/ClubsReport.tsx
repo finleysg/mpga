@@ -7,7 +7,7 @@ import Table from "react-bootstrap/Table";
 import { CSVLink } from "react-csv";
 import { IMembershipData } from "services/Data";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 
 interface IClubReportProps {
   current: boolean;

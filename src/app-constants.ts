@@ -1,11 +1,6 @@
 const getStringFromConfig = (value: string) => {
-<<<<<<< HEAD
+  console.log(`${value} = ${process.env[value]}`);
   return process && process.env && process.env[value] ? (process.env[value] as string) : "ERROR!ERROR!";
-=======
-  return process && process.env && process.env[value]
-    ? (process.env[value] as string)
-    : "ERROR!ERROR!";
->>>>>>> master
 };
 
 export class PolicyCodes {
@@ -48,9 +43,7 @@ export default class Constants {
   public static MembershipDues: number = Number(getStringFromConfig("REACT_APP_MEMBERSHIP_DUES"));
   public static StripePublicKey: string = getStringFromConfig("REACT_APP_STRIPE_PUBLIC_KEY");
 
-  public static MaintenanceMode: boolean = Boolean(
-    getStringFromConfig("REACT_APP_MAINTENANCE")
-  );
+  public static Mode: string = getStringFromConfig("REACT_APP_MODE");
 
   public static BearerTokenName: string = "mpga-token";
   public static CrsfCookieName: string = "crsftoken";

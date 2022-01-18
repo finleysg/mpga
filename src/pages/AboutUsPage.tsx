@@ -3,8 +3,8 @@ import React from "react";
 import { IDocumentSearch } from "features/documents/documentPropTypes";
 import Container from "react-bootstrap/Container";
 
+import { PageCodes } from "../app-constants";
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
-import { PageCodes } from "../constants";
 import PageContentDetail from "../features/content/PageContentDetail";
 import LatestOnly from "../features/documents/LatestOnly";
 

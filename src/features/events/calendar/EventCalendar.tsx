@@ -3,8 +3,8 @@ import React from "react";
 import { EventDetail } from "models/Events";
 import { useNavigate } from "react-router-dom";
 
+import constants from "../../../app-constants";
 import LoadingContainer from "../../../components/LoadingContainer";
-import constants from "../../../constants";
 import { useGetEventsQuery } from "../eventsApi";
 import EventCalendarItem from "./EventCalendarItem";
 

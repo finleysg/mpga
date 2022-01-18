@@ -3,7 +3,7 @@ import React from "react";
 import Badge from "react-bootstrap/Badge";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 
 export interface IGalleryMenuProps {
   currentYear: string;

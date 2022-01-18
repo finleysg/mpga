@@ -2,8 +2,8 @@ import React from "react";
 
 import Container from "react-bootstrap/Container";
 
+import { PageCodes } from "../app-constants";
 import LargeLeftSmallRight from "../components/layouts/LargeLeftSmallRight";
-import { PageCodes } from "../constants";
 import PageContentDetail from "../features/content/PageContentDetail";
 import MemberClubList from "../features/member-clubs/MemberClubList";
 import RegistrationOverview from "../features/member-clubs/RegistrationOverview";

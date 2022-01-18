@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from "react";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 import { Api } from "../../http";
 import { Contact } from "../../models/Clubs";
 import { IContactData } from "../../services/Data";

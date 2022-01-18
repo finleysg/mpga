@@ -6,7 +6,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
 import useSession from "utilities/SessionHooks";
 
-import constants from "../constants";
+import constants from "../app-constants";
 
 export interface IPageMenuProps {
   subMenu: string;

@@ -1,6 +1,6 @@
 import { IContactData, IUserData } from "services/Data";
 
-import constants from "../constants";
+import constants from "../app-constants";
 import { Api, Auth } from "../http";
 import { PasswordResetRequest } from "../models/User";
 import { IApplicationState } from "./index";

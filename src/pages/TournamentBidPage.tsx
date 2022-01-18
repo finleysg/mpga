@@ -1,7 +1,7 @@
 import React from "react";
 
+import { PageCodes } from "../app-constants";
 import ContactLayout from "../components/layouts/ContactLayout";
-import { PageCodes } from "../constants";
 import ContactForm from "../features/contact/ContactForm";
 import PageContentDetail from "../features/content/PageContentDetail";
 import { ContactMessage } from "../models/ContactMessage";

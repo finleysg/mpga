@@ -1,7 +1,7 @@
 import React from "react";
 
+import constants, { PageCodes } from "../app-constants";
 import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
-import constants, { PageCodes } from "../constants";
 import PageContentDetail from "../features/content/PageContentDetail";
 
 const MatchPlayPage: React.FC = () => {

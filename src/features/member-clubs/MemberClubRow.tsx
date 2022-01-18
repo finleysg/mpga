@@ -3,7 +3,7 @@ import React from "react";
 import { FaLink } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 import { IClub } from "../../models/Clubs";
 
 type MemberClubRowProps = {

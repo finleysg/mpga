@@ -3,7 +3,7 @@ import * as React from "react";
 import MarkdownRender from "components/MarkdownRender";
 import { NavLink } from "react-router-dom";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 import { TournamentDetailProps } from "./tournamentPropTypes";
 
 const TournamentView: React.FC<TournamentDetailProps> = (props) => {

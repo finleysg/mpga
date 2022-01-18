@@ -2,8 +2,8 @@ import React from "react";
 
 import Container from "react-bootstrap/Container";
 
+import { PageCodes, PolicyCodes } from "../app-constants";
 import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
-import { PageCodes, PolicyCodes } from "../constants";
 import AnnouncementList from "../features/announcements/AnnouncementList";
 import PageContentDetail from "../features/content/PageContentDetail";
 import PolicyList from "../features/content/PolicyList";

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Button from "react-bootstrap/Button";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 import { MpgaDocument } from "../../models/Documents";
 import usePermissions from "../../utilities/Permissions";
 import DocumentDetail from "./DocumentDetail";

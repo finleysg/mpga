@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 
+import MaintenancePage from "pages/MaintenancePage";
 import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
+import Constants from "../app-constants";
 import SessionLayout from "../components/layouts/SessionLayout";
-import constants from "../constants";
 import AccountDetail from "../features/account/AccountDetail";
 import AccountActivation from "../features/session/AccountActivation";
 import ForgotPassword from "../features/session/ForgotPassword";
@@ -43,13 +44,11 @@ export const AppRoutes = () => {
     dispatch(UserActions.GetUser());
   }, [dispatch]);
 
-  if (constants.MaintenanceMode) {
+  if (Constants.Mode !== "Live") {
     return (
-      <Switch>
-        <Route path="*">
-          <MaintenancePage />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="*" element={<MaintenancePage />} />
+      </Routes>
     );
   }
 

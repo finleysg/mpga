@@ -2,8 +2,8 @@ import React from "react";
 
 import Container from "react-bootstrap/Container";
 
+import { PageCodes } from "../app-constants";
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
-import { PageCodes } from "../constants";
 import PageContentDetail from "../features/content/PageContentDetail";
 
 const CodeOfConductPage: React.FC = () => {

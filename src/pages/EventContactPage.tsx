@@ -3,9 +3,9 @@ import React from "react";
 import { useGetEventQuery } from "features/events/eventsApi";
 import { useParams } from "react-router-dom";
 
+import constants from "../app-constants";
 import ContactLayout from "../components/layouts/ContactLayout";
 import LoadingContainer from "../components/LoadingContainer";
-import constants from "../constants";
 import ContactForm from "../features/contact/ContactForm";
 import { ContactMessage } from "../models/ContactMessage";
 

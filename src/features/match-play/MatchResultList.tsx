@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import styled from "styled-components";
 
+import Constants from "../../app-constants";
 import LoadingContainer from "../../components/LoadingContainer";
-import Constants from "../../constants";
 import { MatchResult } from "../../models/Clubs";
 import { useGetMatchResultsQuery } from "./matchPlayApi";
 import MatchResultRow from "./MatchResultRow";

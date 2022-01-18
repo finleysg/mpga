@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 
+import constants from "../../app-constants";
 import LoadingContainer from "../../components/LoadingContainer";
-import constants from "../../constants";
 import { MpgaDocument } from "../../models/Documents";
 import { useGetDocumentsQuery } from "./documentApi";
 import DocumentEditModal from "./DocumentEditModal";

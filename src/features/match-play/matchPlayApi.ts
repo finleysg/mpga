@@ -1,7 +1,7 @@
 import { IMatchPlayResultData, ITeamData } from "services/Data";
 import { mpgaApi } from "services/MpgaApi";
 
-import constants from "../../constants";
+import constants from "../../app-constants";
 
 const extendedApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({

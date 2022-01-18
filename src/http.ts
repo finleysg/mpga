@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/browser";
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import constants from "./constants";
+import constants from "./app-constants";
 
 const Api = axios.create({
   baseURL: constants.ApiUrl,
