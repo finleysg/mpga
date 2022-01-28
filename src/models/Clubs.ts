@@ -176,7 +176,7 @@ export class Membership extends BaseModel {
     super();
     if (obj) {
       const mem = super.fromJson(obj);
-      mem.paymentDate = obj.payment_date ? moment(obj.payment_date).add(6, "hours").format("yyyy-MM-dd") : "";
+      mem.paymentDate = obj.payment_date ? moment(obj.payment_date).add(6, "hours").format("yyyy-MM-DD") : "";
       Object.assign(this, mem);
     }
   }

@@ -67,10 +67,15 @@ type EditableProps = {
 
 const EditContainer: React.FC<EditableProps> = (props) => {
   const { viewComponent, editComponent, doEdit, canEdit, hideEdit, onToggleEdit } = props;
+
+  const handleToggle = () => {
+    onToggleEdit();
+  };
+
   return (
     <EditOrView doEdit={doEdit}>
       {canEdit && hideEdit !== true && (
-        <ToggleEditButton isEditting={doEdit} openIcon={props.openIcon} onToggled={() => onToggleEdit()} />
+        <ToggleEditButton isEditting={doEdit} openIcon={props.openIcon} onToggled={handleToggle} />
       )}
       {doEdit ? editComponent : viewComponent}
     </EditOrView>

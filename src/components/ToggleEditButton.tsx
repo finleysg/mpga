@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { TiEdit, TiTimes } from "react-icons/ti";
+import { TiEdit } from "react-icons/ti";
 import styled from "styled-components";
 
 const EditButton = styled.div`
@@ -9,7 +9,6 @@ const EditButton = styled.div`
   height: 24px;
   text-align: right;
   margin: 0;
-  z-index: 999;
   cursor: pointer;
 `;
 EditButton.displayName = "EditButton";
@@ -23,13 +22,19 @@ type ToggleEditProps = {
 const ToggleEditButton: React.FC<ToggleEditProps> = (props) => {
   const { openIcon, isEditting, onToggled } = props;
   const open = openIcon || <TiEdit size={20} color={"warning"} />;
+
+  const handleClick = () => {
+    onToggled();
+  };
+
   return (
     <EditButton
       title={isEditting ? "Close" : "Edit"}
       className={isEditting ? "text-secondary" : "text-warning"}
-      onClick={() => onToggled()}
+      onClick={handleClick}
     >
-      {isEditting ? <TiTimes size={20} color={"primary"} /> : open}
+      {/* {isEditting ? <TiTimes size={20} color={"primary"} /> : open} */}
+      {!isEditting && open}
     </EditButton>
   );
 };

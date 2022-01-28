@@ -84,7 +84,11 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
   };
 
   const handleSave = async (updatedContact: IClubContact) => {
+    // Make sure we capture existing ids so we don't create new objects
     const data = ClubContact.Create(clubContact.club, updatedContact).prepJson() as IClubContactData;
+    data.id = clubContact.id;
+    data.contact.id = clubContact.contact.id;
+
     const mutation = data.id > 0 ? updateClubContact(data) : addClubContact(data);
     await mutation
       .unwrap()
@@ -271,7 +275,7 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
               title="Remove"
               OnDelete={() => setShowConfirmation(true)}
             />
-            <CancelButton canCancel={props.clubContact.id === 0} OnCancel={onClose} />
+            <CancelButton canCancel={true} OnCancel={onClose} />
           </Form>
         )}
       </Formik>

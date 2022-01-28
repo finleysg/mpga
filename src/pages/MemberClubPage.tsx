@@ -1,3 +1,5 @@
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+
 import React from "react";
 
 import Container from "react-bootstrap/Container";
@@ -13,7 +15,7 @@ import { Club } from "../models/Clubs";
 const MemberClubPage: React.FC = () => {
   const { name } = useParams();
   const { data: clubs } = useGetClubsQuery();
-  const { data, isLoading } = useGetClubQuery(clubs?.find((c) => c.system_name === name).id);
+  const { data, isLoading } = useGetClubQuery(clubs?.find((c) => c.system_name === name).id || skipToken);
   const selectedClub = new Club(data);
 
   return (

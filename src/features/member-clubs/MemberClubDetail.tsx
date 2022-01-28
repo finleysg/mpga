@@ -1,3 +1,5 @@
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+
 import React, { useRef, useState } from "react";
 
 import Button from "react-bootstrap/Button";
@@ -30,7 +32,7 @@ function MemberClubDetail(props: ClubProps) {
   const [makePayment, setMakePayment] = useState(false);
   const [addMembership, setAddMembership] = useState(false);
   const permissions = usePermissions();
-  const { data: memberships, isLoading } = useGetMembershipsForClubQuery(club.id);
+  const { data: memberships, isLoading } = useGetMembershipsForClubQuery(club?.id || skipToken);
   const closeRef = useRef<CloseHandle>();
 
   const getMostRecentMembership = () => {
