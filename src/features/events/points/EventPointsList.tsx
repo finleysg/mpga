@@ -13,7 +13,7 @@ const EventPointsList: React.FC<EventProps> = (props) => {
   const permissions = usePermissions();
   const [addNew, setAddNew] = React.useState(false);
 
-  const canAdd = eventDetail.policies?.findIndex((p) => p.id === 0) || -1 < 0; // no pending add
+  const canAdd = eventDetail.playerPoints?.findIndex((p) => p.id === 0) || -1 < 0; // no pending add
 
   return (
     <React.Fragment>
@@ -22,7 +22,12 @@ const EventPointsList: React.FC<EventProps> = (props) => {
         return <EventPointsDetail key={p.id} edit={false} points={p} onClose={() => setAddNew(false)} />;
       })}
       {addNew && (
-        <EventPointsDetail key={0} edit={true} points={new EventPoints({ id: 0 })} onClose={() => setAddNew(false)} />
+        <EventPointsDetail
+          key={0}
+          edit={true}
+          points={new EventPoints({ id: 0, event: eventDetail.id })}
+          onClose={() => setAddNew(false)}
+        />
       )}
       {permissions.canManageEvent() && (
         <Button variant="link" className="text-warning" disabled={!canAdd} onClick={() => setAddNew(true)}>
