@@ -24,20 +24,36 @@ export class BaseModel implements IModel {
     const newObj: { [index: string]: any } = {};
     if (obj) {
       for (const d in obj) {
-        if (obj.hasOwnProperty(d) && !this.isLocalProperty(d)) {
+        if (Object.prototype.hasOwnProperty.call(obj, d) && !this.isLocalProperty(d)) {
           const prop = d
             .replace(/[\w]([A-Z])/g, function (m) {
               return m[0] + "_" + m[1];
             })
             .toLowerCase();
-          if (!obj[d] && this.isBooleanProperty(prop)) {
-            obj[d] = false; // coerce null booleans to false
+          let value = obj[d];
+          if (value === null || value === undefined) {
+            if (this.isBooleanProperty(prop)) {
+              value = false; // coerce null booleans to false
+            }
+          } else {
+            if (this.isDate(prop)) {
+              newObj[prop] = moment(value).toISOString();
+            } else {
+              newObj[prop] = value;
+            }
           }
-          newObj[prop] = obj[d];
         }
       }
     }
     return newObj;
+  }
+
+  convertProperyName(name: string): string {
+    return name
+      .replace(/[\w]([A-Z])/g, function (m) {
+        return m[0] + "_" + m[1];
+      })
+      .toLowerCase();
   }
 
   isBooleanProperty(prop: string): boolean {

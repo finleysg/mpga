@@ -36,12 +36,14 @@ const MembershipEdit: React.FC<MembershipEditProps> = (props) => {
     payment_type: "CK",
   });
 
-  const handleSave = async (values: Membership) => {
-    await addMembershipForClub(values)
+  const handleSave = async (value: Membership) => {
+    const data = value.prepJson();
+    data.payment_date = data.payment_date.substring(0, 10);
+    await addMembershipForClub(data)
       .unwrap()
       .then(() => {
-        toast.success("Your changes have been saved.");
-        onSave(values);
+        toast.success("Membership record has been created.");
+        onSave(value);
       })
       .catch((error) => {
         toast.error("💣 " + error);
