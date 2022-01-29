@@ -33,8 +33,9 @@ const TournamentWinnerEdit: React.FC<TournamentWinnerEditProps> = (props) => {
   const [updateTournamentWinner, { isLoading: isUpdating }] = useUpdateTournamentWinnerMutation();
   const [addTournamentWinner, { isLoading: isSaving }] = useAddTournamentWinnerMutation();
 
-  const handleSave = async (winner: TournamentWinner) => {
-    const data = winner.prepJson();
+  const handleSave = async (value: TournamentWinner) => {
+    const data = value.prepJson();
+
     const mutation = winner.id > 0 ? updateTournamentWinner(data) : addTournamentWinner(data);
     await mutation
       .unwrap()

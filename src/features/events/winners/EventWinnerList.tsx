@@ -54,7 +54,7 @@ const EventWinnerList: React.FunctionComponent<EventProps> = (props) => {
           edit={true}
           winner={
             new TournamentWinner({
-              tournament: eventDetail.tournament,
+              tournament: eventDetail.tournament.id,
               year: eventDetail.eventYear,
               location: eventDetail.location.name,
             })

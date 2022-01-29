@@ -18,9 +18,9 @@ const schema = yup.object({
   city: yup.string().required(),
   state: yup.string().required(),
   zip: yup.string().required(),
-  website: yup.string().url(),
-  email: yup.string().email(),
-  phone: yup.string(),
+  website: yup.string().url().nullable(),
+  email: yup.string().email().nullable(),
+  phone: yup.string().nullable(),
 });
 
 const GolfCourseEdit: React.FC<GolfCourseEditProps> = (props) => {

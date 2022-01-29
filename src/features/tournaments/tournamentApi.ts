@@ -46,7 +46,10 @@ const tournamentApi = mpgaApi.injectEndpoints({
           data,
         };
       },
-      invalidatesTags: (_result, _error, { id }) => [{ type: "Tournament-Winners", id }],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Tournament-Winners", id },
+        { type: "Tournament-Winners", id: "LIST" },
+      ],
     }),
     updateTournamentWinner: build.mutation<ITournamentWinnerData, Partial<ITournamentWinnerData>>({
       query(data) {
