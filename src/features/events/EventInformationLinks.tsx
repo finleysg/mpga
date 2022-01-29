@@ -30,10 +30,11 @@ export function EventInformationLinks(props: EventProps) {
   const [addDocument, setAddDocument] = useState(false);
   const [addLink, setAddLink] = useState(false);
   const permissions = usePermissions();
+  const eventYear = eventDetail.startDate.getFullYear();
 
   const { data: eventDocuments, isLoading } = useGetDocumentsQuery({
-    key: `${eventDetail.startDate.getFullYear()}-${eventDetail.tournament.systemName}-event-detail`,
-    year: eventDetail.startDate.getFullYear(),
+    key: `${eventYear}-${eventDetail.tournament.systemName}-event-detail`,
+    year: eventYear,
     tournamentId: eventDetail.tournament.id,
   });
 
@@ -65,7 +66,7 @@ export function EventInformationLinks(props: EventProps) {
             document={
               new MpgaDocument({
                 id: 0,
-                year: eventDetail.startDate.getFullYear(),
+                year: eventYear,
                 tournament: eventDetail.tournament.id,
               })
             }

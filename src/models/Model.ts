@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export interface IModel {
   id: number | undefined;
   prepJson(obj: any): string;
@@ -58,7 +60,7 @@ export class BaseModel implements IModel {
             d.replace(/(_\w)/g, function (k) {
               return k[1].toUpperCase();
             })
-          ] = this.isDate(d) ? new Date(obj[d]) : obj[d];
+          ] = this.isDate(d) ? this.getDate(obj[d]) : obj[d];
         }
       }
     }
@@ -67,5 +69,12 @@ export class BaseModel implements IModel {
 
   isDate(propName: string): boolean {
     return propName != null && (propName.endsWith("_date") || propName.endsWith("_start") || propName.endsWith("_end"));
+  }
+
+  getDate(dateString: string): Date {
+    if (dateString?.length === 10) {
+      return moment(dateString).toDate();
+    }
+    return new Date(dateString);
   }
 }
