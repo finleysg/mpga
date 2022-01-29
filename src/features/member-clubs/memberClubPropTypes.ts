@@ -19,3 +19,7 @@ export type ClubContactDetailProps = ClubContactEditProps & {
 export type MemberClubEditProps = ClubProps & {
   onClose: () => void;
 };
+
+export type GolfCourseEditProps = ClubProps & {
+  onClose: () => void;
+};

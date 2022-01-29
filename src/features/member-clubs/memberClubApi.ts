@@ -25,6 +25,17 @@ const clubApi = mpgaApi.injectEndpoints({
       },
       invalidatesTags: (_result, _error, { id }) => [{ type: "Clubs", id }],
     }),
+    updateCourse: build.mutation<IClubData, Partial<IClubData>>({
+      query(data) {
+        const { id } = data.golf_course;
+        return {
+          url: `/courses/${id}/`,
+          method: "PATCH",
+          data: data.golf_course,
+        };
+      },
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Clubs", id }],
+    }),
     addClubContact: build.mutation<IClubContactData, Partial<IClubContactData>>({
       query(data) {
         return {
@@ -85,5 +96,6 @@ export const {
   useUpdateClubMutation,
   useAddClubContactMutation,
   useUpdateClubContactMutation,
+  useUpdateCourseMutation,
   useRemoveClubContactMutation,
 } = clubApi;
