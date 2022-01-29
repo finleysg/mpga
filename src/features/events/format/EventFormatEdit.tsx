@@ -10,7 +10,7 @@ import * as yup from "yup";
 
 import SubmitButton from "../../../components/SubmitButton";
 import { EventDetail } from "../../../models/Events";
-import { useUpdateEventMutation } from "../eventsApi";
+import { prepareEvent, useUpdateEventMutation } from "../eventsApi";
 import { EventEditProps } from "../eventsPropType";
 
 const schema = yup.object({
@@ -22,7 +22,7 @@ const EventFormatEdit: React.FunctionComponent<EventEditProps> = (props) => {
   const [updateEvent, { isLoading }] = useUpdateEventMutation();
 
   const handleSave = async (value: EventDetail) => {
-    const data = value.prepJson();
+    const data = prepareEvent(value);
     await updateEvent(data)
       .unwrap()
       .then(() => {

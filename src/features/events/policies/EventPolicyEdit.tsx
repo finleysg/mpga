@@ -12,7 +12,7 @@ import Confirm from "../../../components/Confirm";
 import DeleteButton from "../../../components/DeleteButton";
 import SubmitButton from "../../../components/SubmitButton";
 import { Policy } from "../../../models/Policies";
-import { useAddEventPolicyMutation, useRemoveEventPolicyMutation, useUpdateEventPolicyMutation } from "../eventsApi";
+import { useRemoveEventPolicyMutation, useUpdateEventPolicyMutation } from "../eventsApi";
 import { EventPolicyEditProps } from "../eventsPropType";
 
 const schema = yup.object({
@@ -27,11 +27,10 @@ const EventPolicyEdit: React.FC<EventPolicyEditProps> = (props) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const localPolicy = policy.policy;
 
-  const [addPolicy, { isLoading: isSaving }] = useAddEventPolicyMutation();
   const [updatePolicy, { isLoading: isUpdating }] = useUpdateEventPolicyMutation();
   const [deletePolicy, { isLoading: isDeleting }] = useRemoveEventPolicyMutation();
 
-  const isBusy = isSaving || isUpdating || isDeleting;
+  const isBusy = isUpdating || isDeleting;
 
   const handleConfirmDeleteCancel = () => {
     setShowConfirmation(false);
@@ -52,10 +51,9 @@ const EventPolicyEdit: React.FC<EventPolicyEditProps> = (props) => {
   };
 
   const handleSave = async (value: Policy) => {
-    policy.policy = value;
     const data = policy.prepJson();
-    const mutation = value.id > 0 ? updatePolicy(data) : addPolicy(data);
-    await mutation
+    data.policy = value.prepJson();
+    await updatePolicy(data)
       .unwrap()
       .then(() => {
         toast.success(`Policy ${value.name} has been saved.`);
@@ -71,7 +69,7 @@ const EventPolicyEdit: React.FC<EventPolicyEditProps> = (props) => {
       {policy.id > 0 && (
         <p className="text-muted">
           Policies are typically shared between tournaments, so changes to this policy will be reflected in elsewhere.
-          If you need a policy unique to this event, consider adding a new policy and removing this one.
+          If you need a policy unique to this event, contact the website administrator (Stuart).
         </p>
       )}
       <Formik validationSchema={schema} onSubmit={handleSave} initialValues={localPolicy}>

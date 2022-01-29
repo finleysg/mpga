@@ -1,5 +1,25 @@
+import { EventDetail } from "models/Events";
+import moment from "moment";
+
 import { IEventData, IEventLinkData, IEventPointsData, IEventPolicyData } from "../../services/Data";
 import { mpgaApi } from "../../services/MpgaApi";
+
+export const prepareEvent = (evt: EventDetail): Partial<IEventData> => {
+  return {
+    id: evt.id,
+    location: evt.location?.id,
+    tournament: evt.tournament?.id,
+    name: evt.name,
+    description: evt.description,
+    rounds: evt.rounds,
+    notes: evt.notes,
+    event_type: evt.eventType,
+    start_date: moment(evt.startDate).format("YYYY-MM-DD"),
+    registration_start: evt.registrationStart.toISOString(),
+    registration_end: evt.registrationEnd.toISOString(),
+    early_registration_end: evt.earlyRegistrationEnd.toISOString(),
+  };
+};
 
 const eventApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
@@ -16,7 +36,7 @@ const eventApi = mpgaApi.injectEndpoints({
         return response?.length === 1 ? response[0] : undefined;
       },
       providesTags: (result) => [
-        { type: "Events", id: result.id },
+        { type: "Events", id: result?.id },
         { type: "Events", id: "LIST" },
       ],
     }),
@@ -24,7 +44,7 @@ const eventApi = mpgaApi.injectEndpoints({
       query(data) {
         const { id } = data;
         return {
-          url: `/events/${id}`,
+          url: `/events/${id}/`,
           method: "PUT",
           data,
         };
@@ -93,21 +113,11 @@ const eventApi = mpgaApi.injectEndpoints({
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
-    addEventPolicy: build.mutation<IEventPolicyData, Partial<IEventPolicyData>>({
-      query(data) {
-        return {
-          url: "/event-policy/",
-          method: "POST",
-          data,
-        };
-      },
-      invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
-    }),
     updateEventPolicy: build.mutation<IEventPolicyData, Partial<IEventPolicyData>>({
       query(data) {
         const { id } = data;
         return {
-          url: `/event-policy/${id}/`,
+          url: `/event-policies/${id}/`,
           method: "PUT",
           data,
         };
@@ -118,7 +128,7 @@ const eventApi = mpgaApi.injectEndpoints({
       query(data) {
         const { id } = data;
         return {
-          url: `/event-policy/${id}/`,
+          url: `/event-policies/${id}/`,
           method: "DELETE",
         };
       },
@@ -130,7 +140,6 @@ const eventApi = mpgaApi.injectEndpoints({
 export const {
   useAddEventLinkMutation,
   useAddEventPointsMutation,
-  useAddEventPolicyMutation,
   useGetEventQuery,
   useGetEventsQuery,
   useRemoveEventLinkMutation,
