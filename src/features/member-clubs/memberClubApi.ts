@@ -18,7 +18,7 @@ const clubApi = mpgaApi.injectEndpoints({
       query(data) {
         const { id } = data;
         return {
-          url: `/clubs/${id}`,
+          url: `/clubs/${id}/`,
           method: "PUT",
           data,
         };

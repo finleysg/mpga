@@ -25,9 +25,10 @@ const MemberClubEdit: React.FC<MemberClubEditProps> = (props) => {
 
   const [updateClub, { isLoading }] = useUpdateClubMutation();
 
-  const handleSave = async (values: Club) => {
-    const newModel = Object.assign({}, club, values);
-    await updateClub(newModel)
+  const handleSave = async (value: Club) => {
+    const data = value.prepJson();
+    data.id = club.id;
+    await updateClub(data)
       .unwrap()
       .then(() => {
         toast.success("Your changes have been saved.");
