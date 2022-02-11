@@ -86,7 +86,7 @@
     "@types/styled-components": "^5.1.16",
     "@types/yup": "^0.29.13",
     "enzyme-adapter-react-16": "^1.15.6",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "react-test-renderer": "^17.0.2"
   }
 }
