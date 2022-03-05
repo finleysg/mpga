@@ -95,7 +95,7 @@ const CommitteeMemberEdit: React.FC<ExecutiveCommitteeEditProps> = (props) => {
   const handleSave = async (id: number, updatedMember: IExecutiveCommitteeData) => {
     const member = ExecutiveCommittee.Create(updatedMember);
     member.id = id;
-    const data = member.prepJson();
+    const data = member.toJson();
     const mutation = data.id > 0 ? updateCommittee(data) : addCommittee(data);
     await mutation
       .unwrap()

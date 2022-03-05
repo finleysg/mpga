@@ -19,12 +19,16 @@ const EventRegisrationDatesView: React.FC<EventProps> = (props) => {
               <Col>{moment(eventDetail.registrationStart).format("MMM Do YYYY")}</Col>
             </Row>
             <Row>
-              <Col>Mail-in Registration Ends:</Col>
-              <Col>{moment(eventDetail.earlyRegistrationEnd).format("MMM Do YYYY")}</Col>
+              <Col>Registration Ends:</Col>
+              <Col>{moment(eventDetail.registrationEnd).format("MMM Do YYYY")}</Col>
             </Row>
             <Row>
-              <Col>Online Registration Ends:</Col>
-              <Col>{moment(eventDetail.registrationEnd).format("MMM Do YYYY")}</Col>
+              <Col>
+                <span className="text-muted">
+                  Online registration ends at midnight on the end date above. Mail in registrations must be received by
+                  that date.
+                </span>
+              </Col>
             </Row>
           </div>
         )}

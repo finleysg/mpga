@@ -10,12 +10,11 @@ import * as yup from "yup";
 import { DatePickerField } from "../../../components/DatePickerField";
 import SubmitButton from "../../../components/SubmitButton";
 import { EventDetail } from "../../../models/Events";
-import { useUpdateEventMutation } from "../eventsApi";
+import { prepareEvent, useUpdateEventMutation } from "../eventsApi";
 import { EventEditProps } from "../eventsPropType";
 
 const schema = yup.object({
   registrationStart: yup.date().required(),
-  earlyRegistrationEnd: yup.date().required(),
   registrationEnd: yup.date().required(),
 });
 
@@ -24,7 +23,7 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
   const [updateEvent, { isLoading }] = useUpdateEventMutation();
 
   const handleSave = async (value: EventDetail) => {
-    const data = value.prepJson();
+    const data = prepareEvent(value);
     await updateEvent(data)
       .unwrap()
       .then(() => {
@@ -57,18 +56,6 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
               <Form.Control.Feedback type="invalid">{errors.registrationStart}</Form.Control.Feedback>
               <Form.Text className="text-muted">Registration starts at this date and time.</Form.Text>
             </Form.Group>
-            <Form.Group controlId="eventDetail.earlyRegistrationEnd">
-              <Form.Label className="full-width">Mail-In Registration Deadline</Form.Label>
-              <DatePickerField
-                name="earlyRegistrationEnd"
-                value={values.earlyRegistrationEnd}
-                onChange={setFieldValue}
-                onBlur={handleBlur}
-                dateFormat="yyyy-MM-dd"
-              />
-              <Form.Control.Feedback type="invalid">{errors.earlyRegistrationEnd}</Form.Control.Feedback>
-              <Form.Text className="text-muted">Registration forms must be postmarked by this date.</Form.Text>
-            </Form.Group>
             <Form.Group controlId="eventDetail.registrationEnd">
               <Form.Label className="full-width">Online Registration End</Form.Label>
               <DatePickerField
@@ -83,7 +70,7 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
                 dateFormat="yyyy-MM-dd h:mm aa"
               />
               <Form.Control.Feedback type="invalid">{errors.registrationEnd}</Form.Control.Feedback>
-              <Form.Text className="text-muted">Online registration ends at this date and time.</Form.Text>
+              <Form.Text className="text-muted">Registration ends at this date and time.</Form.Text>
             </Form.Group>
             <SubmitButton />
             <CancelButton canCancel={true} OnCancel={onClose} />

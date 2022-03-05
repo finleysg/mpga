@@ -10,20 +10,20 @@ const MatchPlayPage: React.FC = () => {
       LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
       RightColumn={
         <React.Fragment>
-          <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
-          <p>Team sign up should be available soon.</p>
-          {/* <div>
-                        <iframe
-                            title="2021-sign-up"
-                            src="https://docs.google.com/forms/d/e/1FAIpQLSfISGwD9LJepombufKhw4l0wBZj2EkfP2RnlbbSRn_YeeIHeQ/viewform?embedded=true"
-                            width="640"
-                            height="1522"
-                            frameBorder="0"
-                            marginHeight={0}
-                            marginWidth={0}>
-                            Loading…
-                        </iframe>
-                    </div> */}
+          <h3 className="text-primary">{constants.MatchPlayYear} Match Play Registration</h3>
+          <div>
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSdK-ZB7H1RppvXKq0ozfI__2duW3YmI-OXG_wAMrWES3xu9HQ/viewform?embedded=true"
+              title="MPGA Match Play Team Registration Form"
+              width="640"
+              height="1168"
+              frameBorder={0}
+              marginHeight={0}
+              marginWidth={0}
+            >
+              Loading…
+            </iframe>
+          </div>
           {/* <TeamList /> */}
         </React.Fragment>
       }

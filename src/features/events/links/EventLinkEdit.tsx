@@ -11,7 +11,7 @@ import Confirm from "../../../components/Confirm";
 import DeleteButton from "../../../components/DeleteButton";
 import SubmitButton from "../../../components/SubmitButton";
 import { EventLink } from "../../../models/Events";
-import { useAddEventLinkMutation, useRemoveEventLinkMutation, useUpdateEventMutation } from "../eventsApi";
+import { useAddEventLinkMutation, useRemoveEventLinkMutation, useUpdateEventLinkMutation } from "../eventsApi";
 import { EventLinkEditProps } from "../eventsPropType";
 
 const schema = yup.object({
@@ -25,7 +25,7 @@ const EventLinkEdit: React.FC<EventLinkEditProps> = (props) => {
 
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [addEventLink, { isLoading: isSaving }] = useAddEventLinkMutation();
-  const [updateEventLink, { isLoading: isUpdating }] = useUpdateEventMutation();
+  const [updateEventLink, { isLoading: isUpdating }] = useUpdateEventLinkMutation();
   const [removeEventLink, { isLoading: isDeleting }] = useRemoveEventLinkMutation();
 
   const isBusy = isSaving || isUpdating || isDeleting;
