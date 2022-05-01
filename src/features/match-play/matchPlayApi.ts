@@ -26,7 +26,10 @@ const extendedApi = mpgaApi.injectEndpoints({
           data,
         };
       },
-      invalidatesTags: (_result, _error, { id }) => [{ type: "MatchPlayResults", id }],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "MatchPlayResults", id },
+        { type: "MatchPlayResults", id: "LIST" },
+      ],
     }),
   }),
 });

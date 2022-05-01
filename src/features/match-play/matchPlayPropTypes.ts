@@ -2,6 +2,7 @@ import { ClubContact, MatchResult, Team } from "models/Clubs";
 
 export type TeamProps = {
   team: Team;
+  addSpace: boolean;
 };
 
 export type MatchResultProps = {

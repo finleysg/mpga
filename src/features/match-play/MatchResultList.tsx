@@ -42,7 +42,7 @@ export function MatchResultList() {
       isLoading,
     }),
   });
-  const groups = results?.map((t) => t.groupName) || [];
+  const groups = new Set(results?.map((t) => t.groupName) || []);
 
   const filteredMatchResults = (): MatchResult[] => {
     if (!selectedGroup) {
@@ -58,9 +58,9 @@ export function MatchResultList() {
         {Constants.MatchPlayYear} Match Results
         <select className="form-control form-control-sm" onChange={(e) => setSelectedGroup(e.target.value)}>
           <option value="">Show All</option>
-          {groups?.map((group, index) => {
+          {[...groups]?.map((group, index) => {
             return (
-              <option key={index} value={group}>
+              <option key={index} value={group.toString()}>
                 {group}
               </option>
             );

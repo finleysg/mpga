@@ -28,6 +28,8 @@ export function TeamList() {
     }),
   });
 
+  let groupName = "";
+
   return (
     <LoadingContainer loading={isLoading}>
       <Table striped size="sm">
@@ -40,9 +42,11 @@ export function TeamList() {
           </tr>
         </thead>
         <tbody>
-          {teams?.map((team: Team) => (
-            <TeamRow key={team.id} team={team} />
-          ))}
+          {teams?.map((team: Team) => {
+            const addSpace = groupName !== "" && team.groupName !== groupName;
+            groupName = team.groupName;
+            return <TeamRow key={team.id} team={team} addSpace={addSpace} />;
+          })}
         </tbody>
       </Table>
     </LoadingContainer>

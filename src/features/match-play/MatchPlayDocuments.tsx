@@ -26,7 +26,7 @@ const MatchPlayDocuments: React.FC = () => {
 
   return (
     <LoadingContainer loading={isLoading}>
-      <DocumentList documents={documents || []} render={documentRender} />;
+      <DocumentList documents={documents || []} render={documentRender} />
     </LoadingContainer>
   );
 };

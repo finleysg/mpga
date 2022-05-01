@@ -1,6 +1,8 @@
 import React from "react";
 
-import constants, { PageCodes } from "../app-constants";
+import { TeamList } from "features/match-play/TeamList";
+
+import { PageCodes } from "../app-constants";
 import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
 import PageContentDetail from "../features/content/PageContentDetail";
 
@@ -10,7 +12,7 @@ const MatchPlayPage: React.FC = () => {
       LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
       RightColumn={
         <React.Fragment>
-          <h3 className="text-primary">{constants.MatchPlayYear} Match Play Registration</h3>
+          {/* <h3 className="text-primary">{constants.MatchPlayYear} Match Play Registration</h3>
           <div>
             <iframe
               src="https://docs.google.com/forms/d/e/1FAIpQLSdK-ZB7H1RppvXKq0ozfI__2duW3YmI-OXG_wAMrWES3xu9HQ/viewform?embedded=true"
@@ -23,8 +25,8 @@ const MatchPlayPage: React.FC = () => {
             >
               Loading…
             </iframe>
-          </div>
-          {/* <TeamList /> */}
+          </div> */}
+          <TeamList />
         </React.Fragment>
       }
     />

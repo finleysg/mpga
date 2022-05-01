@@ -4,6 +4,7 @@ import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
+import useSession from "utilities/SessionHooks";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
@@ -26,6 +27,7 @@ const schema = yup.object({
 
 const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
   const { result, onClose } = props;
+  const { user } = useSession();
 
   const { teams } = useGetTeamsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -34,10 +36,12 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
   });
   const [addResult, { isLoading }] = useAddMatchResultMutation();
 
-  const groups = teams?.map((t) => t.groupName) || [];
+  const groups = new Set(teams?.map((t) => t.groupName) || []);
 
   const handleSave = async (value: MatchResult) => {
     const data = value.prepJson();
+    data.match_date = data.match_date.substring(0, 10);
+    data.entered_by = user.email;
     await addResult(data)
       .unwrap()
       .then(() => {
@@ -79,7 +83,7 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
                 onBlur={handleBlur}
               >
                 <option value={undefined}>--Select a Group--</option>
-                {groups.map((group, idx) => {
+                {[...groups].map((group, idx) => {
                   return (
                     <option key={idx} value={group}>
                       {group}
