@@ -21,10 +21,23 @@ const prepareFormData = (params: PhotoParams): FormData => {
   return form;
 };
 
+const prepareQueryString = (query: IPhotoSearch): string => {
+  let querystring = "?d=1";
+  const year = query.year || 0;
+  const tournamentId = query.tournamentId || 0;
+  if (year > 0) {
+    querystring = querystring + `&year=${year}`;
+  }
+  if (tournamentId > 0) {
+    querystring = querystring + `&tournament=${tournamentId}`;
+  }
+  return querystring;
+};
+
 const extendedApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
     getPhotos: build.query<IPhotoData[], IPhotoSearch>({
-      query: (q) => ({ url: `/photos/?tournament=${q.tournamentId}` + q.year ? `&year=${q.year}` : "", method: "GET" }),
+      query: (q) => ({ url: "/photos/" + prepareQueryString(q), method: "GET" }),
       providesTags: [{ type: "Photos", id: "LIST" }],
     }),
     getRandomPhoto: build.query<IPhotoData, number>({

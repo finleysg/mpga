@@ -15,7 +15,7 @@ const TournamentGalleryPage: React.FC = () => {
   return (
     <Container fluid={true}>
       <LoadingContainer loading={isLoading}>
-        <TournamentPhotoList tournament={new Tournament(tournament)} />
+        {tournament?.id && <TournamentPhotoList tournament={new Tournament(tournament)} />}
       </LoadingContainer>
     </Container>
   );
