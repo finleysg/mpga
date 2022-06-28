@@ -56,6 +56,7 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<ConnectedHomePage />} />
+        <Route path="home" element={<ConnectedHomePage />} />
         <Route path="tournaments" element={<TournamentsPage />} />
         <Route path="tournaments/hard-card" element={<HardCardPage />} />
         <Route path="tournaments/code-of-conduct" element={<CodeOfConductPage />} />
