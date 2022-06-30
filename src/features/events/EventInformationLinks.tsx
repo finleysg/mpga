@@ -84,6 +84,7 @@ export function EventInformationLinks(props: EventProps) {
           <EventLinkList eventDetail={eventDetail} title="Online Results" linkType="Results" />
           <EventDocumentList documents={eventDocuments} title="Results" documentType="Results" />
           <EventLinkList eventDetail={eventDetail} title="Media" linkType="Media" />
+          <EventDocumentList documents={eventDocuments} title="Other Event Documents" documentType="Other" />
         </LoadingContainer>
       )}
     </React.Fragment>

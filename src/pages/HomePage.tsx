@@ -21,6 +21,11 @@ const HomePage: React.FC = () => {
                 <img alt="MPGA 100th Anniversary" src={centennial} style={{ width: "100%" }} />
               </a>
             </div>
+            <h3 className="text-center mb-4">
+              <a href="http://mpgacentennial.wixsite.com/my-site" target="_blank" rel="noreferrer">
+                Visit Our 100th Anniversary Website
+              </a>
+            </h3>
             <AnnouncementList />
           </>
         }
