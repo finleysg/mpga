@@ -16,7 +16,7 @@
     "formik": "^2.2.9",
     "history": "^5.1.0",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
     "react-bootstrap": "^1.6.4",
