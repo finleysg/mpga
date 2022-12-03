@@ -42,7 +42,7 @@ const EventWinnerList: React.FunctionComponent<EventProps> = (props) => {
       : ({ year: eventDetail.eventYear - 1, location: "loading...", winners: [] } as ITournamentWinnerGroup);
 
   return (
-    <LoadingContainer loading={isLoading}>
+    <LoadingContainer loading={isLoading} hide={groups?.length === 0}>
       <h3 className="text-primary">{mostRecentWinner.year} Winners</h3>
       <h4>{mostRecentWinner.location}</h4>
       {mostRecentWinner.winners.map((winner) => {

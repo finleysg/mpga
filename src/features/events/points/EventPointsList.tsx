@@ -15,27 +15,31 @@ const EventPointsList: React.FC<EventProps> = (props) => {
 
   const canAdd = eventDetail.playerPoints?.findIndex((p) => p.id === 0) || -1 < 0; // no pending add
 
-  return (
-    <React.Fragment>
-      <h5 className="text-primary">Player Points</h5>
-      {eventDetail.playerPoints?.map((p) => {
-        return <EventPointsDetail key={p.id} edit={false} points={p} onClose={() => setAddNew(false)} />;
-      })}
-      {addNew && (
-        <EventPointsDetail
-          key={0}
-          edit={true}
-          points={new EventPoints({ id: 0, event: eventDetail.id })}
-          onClose={() => setAddNew(false)}
-        />
-      )}
-      {permissions.canManageEvent() && (
-        <Button variant="link" className="text-warning" disabled={!canAdd} onClick={() => setAddNew(true)}>
-          New Player Points
-        </Button>
-      )}
-    </React.Fragment>
-  );
+  if (eventDetail.playerPoints?.length > 0) {
+    return (
+      <React.Fragment>
+        <h5 className="text-primary">Player Points</h5>
+        {eventDetail.playerPoints?.map((p) => {
+          return <EventPointsDetail key={p.id} edit={false} points={p} onClose={() => setAddNew(false)} />;
+        })}
+        {addNew && (
+          <EventPointsDetail
+            key={0}
+            edit={true}
+            points={new EventPoints({ id: 0, event: eventDetail.id })}
+            onClose={() => setAddNew(false)}
+          />
+        )}
+        {permissions.canManageEvent() && (
+          <Button variant="link" className="text-warning" disabled={!canAdd} onClick={() => setAddNew(true)}>
+            New Player Points
+          </Button>
+        )}
+      </React.Fragment>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default EventPointsList;
