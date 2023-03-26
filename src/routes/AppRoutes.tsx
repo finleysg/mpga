@@ -29,7 +29,6 @@ import MatchPlayResultsPage from "../pages/MatchPlayResultsPage";
 import MatchPlayRulesPage from "../pages/MatchPlayRulesPage";
 import MemberClubPage from "../pages/MemberClubPage";
 import MemberClubsPage from "../pages/MemberClubsPage";
-import PaceOfPlayPage from "../pages/PaceOfPlayPage";
 import ReportsPage from "../pages/ReportsPage";
 import TournamentBidPage from "../pages/TournamentBidPage";
 import TournamentGalleryPage from "../pages/TournamentGalleryPage";
@@ -60,7 +59,7 @@ export const AppRoutes = () => {
         <Route path="tournaments" element={<TournamentsPage />} />
         <Route path="tournaments/hard-card" element={<HardCardPage />} />
         <Route path="tournaments/code-of-conduct" element={<CodeOfConductPage />} />
-        <Route path="tournaments/pace-of-play" element={<PaceOfPlayPage />} />
+        {/* <Route path="tournaments/pace-of-play" element={<PaceOfPlayPage />} /> */}
         <Route path="tournaments/detail/:name/:year" element={<EventDetailPage />} />
         <Route path="tournaments/history/:name" element={<TournamentHistoryPage />} />
         <Route path="tournaments/gallery/:name" element={<TournamentGalleryPage />} />

@@ -140,6 +140,7 @@ const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
                 <option value="ByLaws">ByLaws</option>
                 <option value="Club Registration">Club Registration</option>
                 <option value="Financial">Financial</option>
+                <option value="Hard Card">Hard Card</option>
                 <option value="Match Play">Match Play</option>
                 <option value="Match Play Brackets">Match Play Brackets</option>
                 <option value="Minutes">Minutes</option>

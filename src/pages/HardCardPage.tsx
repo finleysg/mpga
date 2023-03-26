@@ -1,19 +1,29 @@
 import React from "react";
 
+import LoadingContainer from "components/LoadingContainer";
+import { useGetDocumentsQuery } from "features/documents/documentApi";
+import { IDocumentSearch } from "features/documents/documentPropTypes";
 import Container from "react-bootstrap/Container";
 
-import { PolicyCodes } from "../app-constants";
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
-import PolicyList from "../features/content/PolicyList";
 
 const HardCardPage: React.FC = () => {
+  const query: IDocumentSearch = {
+    key: "dues",
+    year: 2023,
+    documentTypes: ["Hard Card"],
+  };
+  const { data: documents, isLoading } = useGetDocumentsQuery(query);
+  const hardCard = documents?.slice(0, 1);
+
   return (
     <Container fluid={true}>
       <OneCenteredColumn>
-        <>
-          <h4 className="text-primary mb-2">MPGA Hard Card</h4>
-          <PolicyList policyCode={PolicyCodes.LocalRule} />
-        </>
+        <LoadingContainer loading={isLoading}>
+          {hardCard?.length > 0 && (
+            <iframe title="MPGA Hard Card" src={hardCard[0].file} width="100%" height={window.innerHeight - 100} />
+          )}
+        </LoadingContainer>
       </OneCenteredColumn>
     </Container>
   );

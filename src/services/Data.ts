@@ -97,7 +97,7 @@ export interface IDocumentData {
   tournament?: number;
   created_by: string;
   last_update: string;
-  tags: IDocumentTagData[];
+  tags: ITagData[];
 }
 
 export interface IDocumentTagData {

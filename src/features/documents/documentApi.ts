@@ -12,7 +12,8 @@ const prepareFormData = (params: DocumentParams): FormData => {
     form.append("tournament", document.tournament.toString());
   }
   if (document.tags) {
-    form.append("tags", document.tags.map((t) => t.tag).join("|"));
+    const tags = document.tags.map((tag) => tag.name).join("|");
+    form.append("tags", tags);
   }
   form.append("document_type", document.document_type);
   form.append("year", document.year.toString());

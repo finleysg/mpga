@@ -85,9 +85,9 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
               <NavLink to={`/tournaments/code-of-conduct`} className="nav-link">
                 Code of Conduct
               </NavLink>
-              <NavLink to={`/tournaments/pace-of-play`} className="nav-link">
+              {/* <NavLink to={`/tournaments/pace-of-play`} className="nav-link">
                 Pace of Play
-              </NavLink>
+              </NavLink> */}
               <NavLink to={`/tournaments/bid`} className="nav-link">
                 Tournament Bid
               </NavLink>
