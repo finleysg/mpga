@@ -1,8 +1,9 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetDocumentsQuery } from "features/documents/documentApi";
+import { PolicyCodes } from "app-constants";
+import PolicyList from "features/content/PolicyList";
 import { IDocumentSearch } from "features/documents/documentPropTypes";
+import LatestOnly from "features/documents/LatestOnly";
 import Container from "react-bootstrap/Container";
 
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
@@ -13,17 +14,31 @@ const HardCardPage: React.FC = () => {
     year: 2023,
     documentTypes: ["Hard Card"],
   };
-  const { data: documents, isLoading } = useGetDocumentsQuery(query);
-  const hardCard = documents?.slice(0, 1);
 
   return (
     <Container fluid={true}>
       <OneCenteredColumn>
-        <LoadingContainer loading={isLoading}>
-          {hardCard?.length > 0 && (
-            <iframe title="MPGA Hard Card" src={hardCard[0].file} width="100%" height={window.innerHeight - 100} />
-          )}
-        </LoadingContainer>
+        <h4 className="text-primary mb-2">MPGA Terms of Competition</h4>
+        <LatestOnly query={query} />
+        <p>
+          Minnesota Public Golf Association tournament play is governed by the Rules of Golf and by the following Terms
+          of Competition and Definitions. Any changes or additions to these will be supplied on a Notice to Players
+          and/or supplemental Local Rules sheet at the specific championship site. Unless otherwise noted, the penalty
+          for the breach of a Local Rule or Condition is the <strong>General Penalty</strong>:
+        </p>
+        <ul>
+          <li>Match Play: Loss of hole</li>
+          <li>Stroke Play: Two strokes</li>
+        </ul>
+        <PolicyList policyCode={PolicyCodes.LocalRule} />
+        <div style={{ paddingLeft: "60px", paddingRight: "60px", textAlign: "center" }}>
+          <p>
+            <strong>
+              The Minnesota Public Golf Association has adopted the Terms of Competition (with minor adjustments) as
+              authorized by the Minnesota Golf Association’s Rules & Competitions and Executive Committees
+            </strong>
+          </p>
+        </div>
       </OneCenteredColumn>
     </Container>
   );
