@@ -21,7 +21,7 @@ const EventGalleryDetail: React.FC<EventProps> = (props) => {
   const { data: photo, isLoading } = useGetRandomPhotoQuery(eventDetail.tournament.id || skipToken);
 
   return (
-    <LoadingContainer loading={isLoading} hide={photo?.image_url === undefined}>
+    <LoadingContainer loading={isLoading} hide={false}>
       <EditOrView doEdit={doUpload}>
         {permissions.canManageEvent() && (
           <ToggleEditButton

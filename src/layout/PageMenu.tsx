@@ -80,7 +80,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
           return (
             <Nav>
               <NavLink to={`/tournaments/hard-card`} className="nav-link">
-                Hard Card
+                Terms of Competition
               </NavLink>
               <NavLink to={`/tournaments/code-of-conduct`} className="nav-link">
                 Code of Conduct

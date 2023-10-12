@@ -1,6 +1,7 @@
 import React from "react";
 
-//import { TeamList } from "features/match-play/TeamList";
+import { TeamList } from "features/match-play/TeamList";
+
 import constants, { PageCodes } from "../app-constants";
 import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
 import PageContentDetail from "../features/content/PageContentDetail";
@@ -22,8 +23,7 @@ const MatchPlayPage: React.FC = () => {
               Loading…
             </iframe>
           </div> */}
-          {/* <TeamList /> */}
-          <p>Coming soon...</p>
+          <TeamList />
         </React.Fragment>
       }
     />
