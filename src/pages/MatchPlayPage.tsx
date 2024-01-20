@@ -13,16 +13,15 @@ const MatchPlayPage: React.FC = () => {
       RightColumn={
         <React.Fragment>
           <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
-          {/* <div>
-            <iframe
-              src="https://docs.google.com/forms/d/e/1FAIpQLSe7ddnwzfsBes20GNs2BA3uEzV0WKtTaT0s0__wXPMv0qASAA/viewform?embedded=true"
-              title="MPGA Match Play Team Registration Form"
-              width="640"
-              height="1168"
-            >
-              Loading…
+          <div>
+            <iframe 
+              title="Match Play Team Registration"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc6LnTXNRHpCUgsfnbvnbE3Koi4ShgTGF4baiA2e4qEKPjJ_g/viewform?embedded=true" 
+              width="640" 
+              height="1168">
+                Loading…
             </iframe>
-          </div> */}
+          </div>
           <TeamList />
         </React.Fragment>
       }

@@ -12,7 +12,6 @@
     "@types/react-csv": "^1.1.2",
     "axios": "^0.24.0",
     "bootstrap": "^4.6.1",
-    "enzyme": "^3.11.0",
     "formik": "^2.2.9",
     "history": "^5.1.0",
     "lodash": "^4.17.21",
@@ -25,11 +24,9 @@
     "react-datepicker": "^4.5.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
-    "react-grid-gallery": "^0.5.5",
+    "react-grid-gallery": "^1.0.0",
     "react-icons": "^4.3.1",
-    "react-images": "^1.1.7",
     "react-markdown": "^7.1.1",
-    "react-photo-gallery": "^8.0.0",
     "react-redux": "^7.2.6",
     "react-resize-aware": "^3.1.1",
     "react-router-dom": "^6.2.1",
@@ -46,8 +43,8 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -69,7 +66,6 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^7.0.2",
     "@types/jest": "27.0.3",
     "@types/lodash": "^4.14.177",
     "@types/node": "16.11.11",
@@ -83,7 +79,6 @@
     "@types/showdown": "^1.9.4",
     "@types/styled-components": "^5.1.16",
     "@types/yup": "^0.29.13",
-    "node-sass": "^6.0.1",
-    "react-test-renderer": "^17.0.2"
+    "node-sass": "^9.0.0"
   }
 }

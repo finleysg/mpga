@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from "react"
 
-import { TiEdit } from "react-icons/ti";
-import styled from "styled-components";
+import { TiEdit } from "react-icons/ti"
+import styled from "styled-components"
 
 const EditButton = styled.div`
   float: right;
@@ -10,33 +10,33 @@ const EditButton = styled.div`
   text-align: right;
   margin: 0;
   cursor: pointer;
-`;
-EditButton.displayName = "EditButton";
+`
+EditButton.displayName = "EditButton"
 
 type ToggleEditProps = {
-  isEditting: boolean;
-  openIcon?: ReactNode;
-  onToggled: () => void;
-};
+  isEditting: boolean
+  openIcon?: ReactNode
+  onToggled: () => void
+}
 
 const ToggleEditButton: React.FC<ToggleEditProps> = (props) => {
-  const { openIcon, isEditting, onToggled } = props;
-  const open = openIcon || <TiEdit size={20} color={"warning"} />;
+  const { openIcon, isEditting, onToggled } = props
+  const open = openIcon || <TiEdit size={20} color={"warning"} />
 
   const handleClick = () => {
-    onToggled();
-  };
+    onToggled()
+  }
 
   return (
     <EditButton
       title={isEditting ? "Close" : "Edit"}
       className={isEditting ? "text-secondary" : "text-warning"}
+      style={{ position: "relative", zIndex: 1 }}
       onClick={handleClick}
     >
-      {/* {isEditting ? <TiTimes size={20} color={"primary"} /> : open} */}
       {!isEditting && open}
     </EditButton>
-  );
-};
+  )
+}
 
-export default ToggleEditButton;
+export default ToggleEditButton

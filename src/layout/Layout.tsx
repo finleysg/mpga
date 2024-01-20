@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 import Navbar from "react-bootstrap/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import useResizeAware from "react-resize-aware";
+// import useResizeAware from "react-resize-aware";
 import { Outlet, useLocation } from "react-router";
 import { ToastContainer } from "react-toastify";
 
@@ -20,12 +20,12 @@ import SidenavToggle from "./SidenavToggle";
 export default function Layout() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const [resizeListener, sizes] = useResizeAware();
+  // const [resizeListener, sizes] = useResizeAware();
   const layoutState = useSelector((state: IApplicationState) => state.layout);
 
-  useEffect(() => {
-    dispatch(LayoutActions.ViewPortChange(sizes));
-  }, [dispatch, sizes]);
+  // useEffect(() => {
+  //   dispatch(LayoutActions.ViewPortChange(sizes));
+  // }, [dispatch, sizes]);
 
   useEffect(() => {
     dispatch(LayoutActions.RouteChange(location.pathname));
@@ -45,7 +45,7 @@ export default function Layout() {
           {layoutState.subMenu && <PageMenu subMenu={layoutState.subMenu} segments={layoutState.segments} />}
         </Navbar>
         <div id="page">
-          {resizeListener}
+          {/* {resizeListener} */}
           <ToastContainer autoClose={3000} hideProgressBar={true} newestOnTop={true} />
           <ErrorBoundary>
             <Outlet />

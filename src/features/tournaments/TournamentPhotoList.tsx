@@ -4,7 +4,7 @@ import LoadingContainer from "components/LoadingContainer";
 import { useGetPhotosQuery } from "features/gallery/galleryApi";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Carousel, { Modal, ModalGateway } from "react-images";
+// import Carousel, { Modal, ModalGateway } from "react-images";
 import { useParams } from "react-router-dom";
 
 import { MpgaPhoto } from "../../models/Documents";
@@ -59,13 +59,13 @@ const TournamentPhotoList: React.FC<TournamentDetailProps> = (props) => {
       </Row>
       <LoadingContainer loading={isLoading}>
         <PhotoGallery photos={photos} onSelect={(idx) => toggleLightbox(idx)} />
-        <ModalGateway>
+        {/* <ModalGateway>
           {lightboxIsOpen ? (
             <Modal onClose={() => toggleLightbox(selectedIndex)}>
               <Carousel views={imageList(photos)} currentIndex={selectedIndex} />
             </Modal>
           ) : null}
-        </ModalGateway>
+        </ModalGateway> */}
       </LoadingContainer>
     </div>
   );

@@ -1,8 +1,14 @@
-import { EventDetail } from "models/Events";
-import moment from "moment";
+import { EventDetail } from "models/Events"
+import moment from "moment"
 
-import { IEventData, IEventLinkData, IEventPointsData, IEventPolicyData } from "../../services/Data";
-import { mpgaApi } from "../../services/MpgaApi";
+import {
+  IEventData,
+  IEventDetailData,
+  IEventLinkData,
+  IEventPointsData,
+  IEventPolicyData,
+} from "../../services/Data"
+import { mpgaApi } from "../../services/MpgaApi"
 
 export const prepareEvent = (evt: EventDetail): Partial<IEventData> => {
   return {
@@ -18,22 +24,22 @@ export const prepareEvent = (evt: EventDetail): Partial<IEventData> => {
     registration_start: evt.registrationStart.toISOString(),
     registration_end: evt.registrationEnd.toISOString(),
     early_registration_end: evt.earlyRegistrationEnd.toISOString(),
-  };
-};
+  }
+}
 
 const eventApi = mpgaApi.injectEndpoints({
   endpoints: (build) => ({
-    getEvents: build.query<IEventData[], number>({
+    getEvents: build.query<IEventDetailData[], number>({
       query: (year) => ({ url: "/events/?year=" + year, method: "GET" }),
       providesTags: (result) => [
         ...result.map(({ id }) => ({ type: "Events", id } as const)),
         { type: "Events", id: "LIST" },
       ],
     }),
-    getEvent: build.query<IEventData, { name: string; year: number }>({
+    getEvent: build.query<IEventDetailData, { name: string; year: number }>({
       query: ({ name, year }) => ({ url: `/events/?name=${name}&year=${year}`, method: "GET" }),
-      transformResponse: (response: IEventData[]) => {
-        return response?.length === 1 ? response[0] : undefined;
+      transformResponse: (response: IEventDetailData[]) => {
+        return response?.length === 1 ? response[0] : undefined
       },
       providesTags: (result) => [
         { type: "Events", id: result?.id },
@@ -42,12 +48,12 @@ const eventApi = mpgaApi.injectEndpoints({
     }),
     updateEvent: build.mutation<IEventData, Partial<IEventData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/events/${id}/`,
           method: "PUT",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { id }) => [{ type: "Events", id }],
     }),
@@ -57,28 +63,28 @@ const eventApi = mpgaApi.injectEndpoints({
           url: "/event-links/",
           method: "POST",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     updateEventLink: build.mutation<IEventLinkData, Partial<IEventLinkData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-links/${id}/`,
           method: "PUT",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     removeEventLink: build.mutation<IEventLinkData, Partial<IEventLinkData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-links/${id}/`,
           method: "DELETE",
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
@@ -88,54 +94,54 @@ const eventApi = mpgaApi.injectEndpoints({
           url: "/event-points/",
           method: "POST",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     updateEventPoints: build.mutation<IEventPointsData, Partial<IEventPointsData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-points/${id}/`,
           method: "PUT",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     removeEventPoints: build.mutation<IEventPointsData, Partial<IEventPointsData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-points/${id}/`,
           method: "DELETE",
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     updateEventPolicy: build.mutation<IEventPolicyData, Partial<IEventPolicyData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-policies/${id}/`,
           method: "PUT",
           data,
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
     removeEventPolicy: build.mutation<IEventPolicyData, Partial<IEventPolicyData>>({
       query(data) {
-        const { id } = data;
+        const { id } = data
         return {
           url: `/event-policies/${id}/`,
           method: "DELETE",
-        };
+        }
       },
       invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
     }),
   }),
-});
+})
 
 export const {
   useAddEventLinkMutation,
@@ -149,4 +155,4 @@ export const {
   useUpdateEventMutation,
   useUpdateEventPointsMutation,
   useUpdateEventPolicyMutation,
-} = eventApi;
+} = eventApi
