@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { TeamList } from "features/match-play/TeamList";
+import { TeamList } from "features/match-play/TeamList"
 
-import constants, { PageCodes } from "../app-constants";
-import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
-import PageContentDetail from "../features/content/PageContentDetail";
+import constants, { PageCodes } from "../app-constants"
+import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight"
+import PageContentDetail from "../features/content/PageContentDetail"
 
 const MatchPlayPage: React.FC = () => {
   return (
@@ -14,19 +14,19 @@ const MatchPlayPage: React.FC = () => {
         <React.Fragment>
           <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3>
           <div>
-            <iframe 
+            {/* <iframe 
               title="Match Play Team Registration"
               src="https://docs.google.com/forms/d/e/1FAIpQLSc6LnTXNRHpCUgsfnbvnbE3Koi4ShgTGF4baiA2e4qEKPjJ_g/viewform?embedded=true" 
               width="640" 
               height="1168">
                 Loading…
-            </iframe>
+            </iframe> */}
           </div>
           <TeamList />
         </React.Fragment>
       }
     />
-  );
-};
+  )
+}
 
-export default MatchPlayPage;
+export default MatchPlayPage

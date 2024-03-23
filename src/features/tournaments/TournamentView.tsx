@@ -42,7 +42,9 @@ const TournamentView: React.FC<TournamentDetailProps> = (props) => {
 
   return (
     <div id={tournament.systemName} style={{ position: "relative" }}>
-      <h4 className="text-secondary mb-3">{tournament.name}</h4>
+      <h4 className="text-secondary mb-3">
+        {constants.EventCalendarYear} {tournament.name}
+      </h4>
       {logoUrl && (
         <LogoImage>
           <img src={logoUrl} alt={`${tournament.name} host`} />
@@ -56,7 +58,7 @@ const TournamentView: React.FC<TournamentDetailProps> = (props) => {
         {constants.EventCalendarYear} Tournament Details
       </NavLink>
       <NavLink to={`/tournaments/history/${tournament.systemName}`} className="nav-link">
-        {tournament.name} Past Winners
+        Past {tournament.name} Winners
       </NavLink>
     </div>
   )

@@ -1,23 +1,23 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetPhotosQuery } from "features/gallery/galleryApi";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import LoadingContainer from "components/LoadingContainer"
+import { useGetPhotosQuery } from "features/gallery/galleryApi"
+import Col from "react-bootstrap/Col"
+import Row from "react-bootstrap/Row"
 // import Carousel, { Modal, ModalGateway } from "react-images";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
 
-import { MpgaPhoto } from "../../models/Documents";
-import GalleryMenu from "../gallery/GalleryMenu";
-import PhotoGallery from "../gallery/PhotoGallery";
-import { TournamentDetailProps } from "./tournamentPropTypes";
+import { MpgaPhoto } from "../../models/Documents"
+import GalleryMenu from "../gallery/GalleryMenu"
+import PhotoGallery from "../gallery/PhotoGallery"
+import { TournamentDetailProps } from "./tournamentPropTypes"
 
 const TournamentPhotoList: React.FC<TournamentDetailProps> = (props) => {
-  const { tournament } = props;
+  const { tournament } = props
 
-  const { year } = useParams();
-  const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const { year } = useParams()
+  const [lightboxIsOpen, setLightboxIsOpen] = useState(false)
+  // const [selectedIndex, setSelectedIndex] = useState(0);
   const { photos, isLoading } = useGetPhotosQuery(
     { tournamentId: tournament.id, year: year ? +year : undefined },
     {
@@ -26,26 +26,26 @@ const TournamentPhotoList: React.FC<TournamentDetailProps> = (props) => {
         isLoading,
       }),
     },
-  );
+  )
 
   const toggleLightbox = (index: number) => {
-    setLightboxIsOpen(!lightboxIsOpen);
-    setSelectedIndex(index);
-  };
+    setLightboxIsOpen(!lightboxIsOpen)
+    // setSelectedIndex(index);
+  }
 
-  const imageList = (photos: MpgaPhoto[]) => {
-    return photos.map((p: MpgaPhoto) => {
-      return {
-        caption: p.caption,
-        source: {
-          regular: p.imageUrl,
-          thumbnail: p.thumbnailUrl,
-          fullscreen: p.rawImage,
-          download: p.rawImage,
-        },
-      };
-    });
-  };
+  // const imageList = (photos: MpgaPhoto[]) => {
+  //   return photos.map((p: MpgaPhoto) => {
+  //     return {
+  //       caption: p.caption,
+  //       source: {
+  //         regular: p.imageUrl,
+  //         thumbnail: p.thumbnailUrl,
+  //         fullscreen: p.rawImage,
+  //         download: p.rawImage,
+  //       },
+  //     };
+  //   });
+  // };
 
   return (
     <div>
@@ -68,7 +68,7 @@ const TournamentPhotoList: React.FC<TournamentDetailProps> = (props) => {
         </ModalGateway> */}
       </LoadingContainer>
     </div>
-  );
-};
+  )
+}
 
-export default TournamentPhotoList;
+export default TournamentPhotoList

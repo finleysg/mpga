@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import Button from "react-bootstrap/Button";
-import styled from "styled-components";
+import Button from "react-bootstrap/Button"
 
-import { TeamProps } from "./matchPlayPropTypes";
-import TeamCaptains from "./TeamCaptains";
-
-// TODO: move styling here
-const TableCell = styled.td``;
+import { TeamProps } from "./matchPlayPropTypes"
+import TeamCaptains from "./TeamCaptains"
 
 const TeamRow: React.FC<TeamProps> = (props) => {
-  const { team } = props;
-  const [showCaptain, updateShowCaptain] = useState(false);
+  const { team } = props
+  const [showCaptain, updateShowCaptain] = useState(false)
 
   return (
     <React.Fragment>
@@ -19,10 +15,18 @@ const TeamRow: React.FC<TeamProps> = (props) => {
         <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>
           {team.isSenior ? "Sr." : ""}
         </td>
-        <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>{team.groupName}</td>
-        <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>{team.club?.name}</td>
         <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>
-          <Button variant="link" className="text-info pb-0 pt-0" onClick={() => updateShowCaptain(!showCaptain)}>
+          {team.groupName}
+        </td>
+        <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>
+          {team.club?.name}
+        </td>
+        <td style={{ borderTop: props.addSpace ? "4px solid #bcc0c4" : "1px solid #dee2e6" }}>
+          <Button
+            variant="link"
+            className="text-info pb-0 pt-0"
+            onClick={() => updateShowCaptain(!showCaptain)}
+          >
             {team.captainNames(team.isSenior!)}
           </Button>
         </td>
@@ -36,7 +40,7 @@ const TeamRow: React.FC<TeamProps> = (props) => {
         </tr>
       )}
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default TeamRow;
+export default TeamRow
