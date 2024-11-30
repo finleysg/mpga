@@ -25,8 +25,7 @@ const EventRegisrationDatesView: React.FC<EventProps> = (props) => {
             <Row>
               <Col>
                 <span className="text-muted">
-                  Online registration ends at midnight on the end date above. Mail in registrations must be received by
-                  that date.
+                  Online registration ends at midnight on the end date above.
                 </span>
               </Col>
             </Row>

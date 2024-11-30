@@ -1,20 +1,20 @@
-import React from "react";
+import React from "react"
 
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink } from "react-router-dom";
-import useSession from "utilities/SessionHooks";
+import Nav from "react-bootstrap/Nav"
+import Navbar from "react-bootstrap/Navbar"
+import NavDropdown from "react-bootstrap/NavDropdown"
+import { NavLink } from "react-router-dom"
+import useSession from "utilities/SessionHooks"
 
-import constants from "../app-constants";
+import constants from "../app-constants"
 
 export interface IPageMenuProps {
-  subMenu: string;
-  segments: string[];
+  subMenu: string
+  segments: string[]
 }
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
-  const { user } = useSession();
+  const { user } = useSession()
 
   const renderAccountLink = () => {
     if (user.isAuthenticated) {
@@ -22,13 +22,13 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
         <NavLink to="/account" className="nav-link">
           My Account ({user.name})
         </NavLink>
-      );
+      )
     }
-    return null;
-  };
+    return null
+  }
 
   const selectMenu = () => {
-    const { subMenu, segments } = props;
+    const { subMenu, segments } = props
     switch (subMenu) {
       case "home":
         return (
@@ -48,7 +48,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-        );
+        )
       case "tournaments":
         if (
           segments.indexOf("detail") === 1 ||
@@ -56,7 +56,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
           segments.indexOf("gallery") === 1 ||
           segments.indexOf("history") === 1
         ) {
-          const tournamentName = segments[2];
+          const tournamentName = segments[2]
           return (
             <Nav>
               <NavLink to={`/tournaments/history/${tournamentName}`} className="nav-link">
@@ -75,25 +75,28 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
                 Contact
               </NavLink>
             </Nav>
-          );
+          )
         } else {
-          return (
-            <Nav>
-              <NavLink to={`/tournaments/hard-card`} className="nav-link">
-                Terms of Competition
-              </NavLink>
-              <NavLink to={`/tournaments/code-of-conduct`} className="nav-link">
-                Code of Conduct
-              </NavLink>
-              {/* <NavLink to={`/tournaments/pace-of-play`} className="nav-link">
-                Pace of Play
-              </NavLink> */}
-              <NavLink to={`/tournaments/bid`} className="nav-link">
-                Tournament Bid
-              </NavLink>
-            </Nav>
-          );
+          return <></>
         }
+      // } else {
+      //   return (
+      //     <Nav>
+      //       <NavLink to={`/tournaments/hard-card`} className="nav-link">
+      //         Terms of Competition
+      //       </NavLink>
+      //       <NavLink to={`/tournaments/code-of-conduct`} className="nav-link">
+      //         Code of Conduct
+      //       </NavLink>
+      //       {/* <NavLink to={`/tournaments/pace-of-play`} className="nav-link">
+      //         Pace of Play
+      //       </NavLink> */}
+      //       <NavLink to={`/tournaments/bid`} className="nav-link">
+      //         Tournament Bid
+      //       </NavLink>
+      //     </Nav>
+      //   );
+      // }
       case "match-play":
         return (
           <Nav>
@@ -107,9 +110,9 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
               History
             </NavLink> */}
           </Nav>
-        );
+        )
       case "clubs":
-        return <></>;
+        return <></>
       case "about":
         return (
           <Nav>
@@ -120,11 +123,11 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
               Awards
             </NavLink>
           </Nav>
-        );
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
@@ -133,7 +136,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
         {renderAccountLink()}
       </Nav>
     </Navbar.Collapse>
-  );
-};
+  )
+}
 
-export default PageMenu;
+export default PageMenu

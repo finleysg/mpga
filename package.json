@@ -81,6 +81,6 @@
     "@types/showdown": "^1.9.4",
     "@types/styled-components": "^5.1.16",
     "@types/yup": "^0.29.13",
-    "node-sass": "^9.0.0"
+    "sass": "^1.79.4"
   }
 }
