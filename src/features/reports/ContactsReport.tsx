@@ -1,10 +1,10 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetContactsQuery } from "features/member-clubs/memberClubApi";
 import Table from "react-bootstrap/Table";
 import { CSVLink } from "react-csv";
 
+import LoadingContainer from "../../components/LoadingContainer";
+import { useGetContactsQuery } from "../../features/member-clubs/memberClubApi";
 import { Contact } from "../../models/Clubs";
 
 const ContactsReport: React.FC<{}> = () => {

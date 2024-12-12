@@ -1,12 +1,12 @@
-import * as React from "react"
-import { useEffect, useRef } from "react"
+import * as React from "react";
+import { useEffect, useRef } from "react";
 
-import MarkdownRender from "components/MarkdownRender"
-import { NavLink, useLocation } from "react-router-dom"
-import styled from "styled-components"
+import { NavLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
-import constants from "../../app-constants"
-import { TournamentDetailProps } from "./tournamentPropTypes"
+import constants from "../../app-constants";
+import MarkdownRender from "../../components/MarkdownRender";
+import { TournamentDetailProps } from "./tournamentPropTypes";
 
 const LogoImage = styled.div`
   position: absolute;

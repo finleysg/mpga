@@ -1,39 +1,27 @@
-import { Action, Reducer } from "redux"
-
-import { LayoutActionTypes } from "./LayoutActions"
+import { createSlice } from "@reduxjs/toolkit"
 
 export interface ILayoutState {
-  subMenu: string
-  segments: string[]
+	subMenu: string
+	segments: string[]
 }
 
 export const defaultState: ILayoutState = {
-  subMenu: "home",
-  segments: [],
+	subMenu: "home",
+	segments: [],
 }
 
-export interface IRouteChanged extends Action {
-  type: LayoutActionTypes.ROUTE_CHANGED
-  payload: string
-}
+const layoutSlice = createSlice({
+	name: "layout",
+	initialState: defaultState,
+	reducers: {
+		routeChanged(state, action: { payload: string }) {
+			var segments = action.payload.split("/")
+			var submenu = segments[1].length > 0 ? segments[1] : "home"
+			state.subMenu = submenu
+			state.segments = segments.slice(1)
+		},
+	},
+})
 
-type KnownActions = IRouteChanged
-
-export const reducer: Reducer<ILayoutState, KnownActions> = (
-  state: ILayoutState | undefined,
-  action: KnownActions,
-): ILayoutState => {
-  if (!state) {
-    state = { ...defaultState }
-  }
-
-  switch (action.type) {
-    case LayoutActionTypes.ROUTE_CHANGED: {
-      var segments = action.payload.split("/")
-      var submenu = segments[1].length > 0 ? segments[1] : "home"
-      return { ...state, subMenu: submenu, segments: segments.slice(1) }
-    }
-    default:
-      return state
-  }
-}
+export const { routeChanged } = layoutSlice.actions
+export default layoutSlice.reducer

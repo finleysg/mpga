@@ -1,17 +1,17 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
-import { MpgaDocument } from "models/Documents";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
 import { DatePickerField } from "../../components/DatePickerField";
+import LoadingContainer from "../../components/LoadingContainer";
+import { MarkdownField } from "../../components/MarkdownField";
 import SubmitButton from "../../components/SubmitButton";
 import { Announcement } from "../../models/Announcement";
+import { MpgaDocument } from "../../models/Documents";
 import { useAddAnnouncementMutation, useUpdateAnnouncementMutation } from "./announcementApi";
 import { AnnouncementEditProps } from "./announcementPropTypes";
 
@@ -33,10 +33,8 @@ const schema = yup.object({
   expires: yup.date().required(),
   documentId: yup.string().nullable(),
   externalUrl: yup.string().url().nullable(),
-  externalName: yup.string().when("externalUrl", {
-    is: (url) => url && url.length > 0,
-    then: yup.string().required("a display name is required for the url"),
-    otherwise: yup.string().nullable(),
+  externalName: yup.string().when("externalUrl", ([externalUrl], schema) => {
+    return externalUrl ? schema.required("a display name is required for the url") : schema.notRequired()
   }),
 });
 
@@ -117,7 +115,8 @@ const AnnouncementEdit: React.FC<AnnouncementEditProps> = (props) => {
                 timeCaption="Time"
                 dateFormat="yyyy-MM-dd h:mm aa"
               />
-              <Form.Control.Feedback type="invalid">{errors.starts}</Form.Control.Feedback>
+              {/* Wrap error object: https://github.com/jaredpalmer/formik/issues/3683 */}
+              <Form.Control.Feedback type="invalid"><>{errors.starts}</></Form.Control.Feedback>
               <Form.Text className="text-muted">Message is visible starting on this date.</Form.Text>
             </Form.Group>
             <Form.Group controlId="announcement.Expires">
@@ -133,7 +132,7 @@ const AnnouncementEdit: React.FC<AnnouncementEditProps> = (props) => {
                 timeCaption="Time"
                 dateFormat="yyyy-MM-dd h:mm aa"
               />
-              <Form.Control.Feedback type="invalid">{errors.expires}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid"><>{errors.expires}</></Form.Control.Feedback>
               <Form.Text className="text-muted">Message is no longer visible after this date.</Form.Text>
             </Form.Group>
             <Form.Group controlId="document">

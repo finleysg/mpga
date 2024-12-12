@@ -1,10 +1,11 @@
 import React from "react";
 
-import { useAppSelector } from "app-store";
 import { Formik } from "formik";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
+
+import { useAppSelector } from "../../app-store";
 
 export interface IForgotPasswordFormProps {
   email?: string;

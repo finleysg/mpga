@@ -1,10 +1,9 @@
-import React from "react"
+import React from "react";
 
-import { TeamList } from "features/match-play/TeamList"
-
-import constants, { PageCodes } from "../app-constants"
-import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight"
-import PageContentDetail from "../features/content/PageContentDetail"
+import constants, { PageCodes } from "../app-constants";
+import SmallLeftLargeRight from "../components/layouts/SmallLeftLargeRight";
+import PageContentDetail from "../features/content/PageContentDetail";
+import { TeamList } from "../features/match-play/TeamList";
 
 const MatchPlayPage: React.FC = () => {
   return (

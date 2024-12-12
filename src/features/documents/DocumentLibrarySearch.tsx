@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useGetTournamentsQuery } from "features/tournaments/tournamentApi";
 import { Formik } from "formik";
 import { Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -8,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
+import { useGetTournamentsQuery } from "../../features/tournaments/tournamentApi";
 import { DocumentLibrarySearchProps } from "./documentPropTypes";
 
 interface IQuery {

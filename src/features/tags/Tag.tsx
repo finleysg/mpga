@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import Badge from 'react-bootstrap/Badge';
-import { TiTimes } from 'react-icons/ti';
-import styled from 'styled-components';
+import Badge from "react-bootstrap/Badge";
+import { TiTimes } from "react-icons/ti";
+import styled from "styled-components";
 
-import { ITag } from '../../models/Documents';
+import { ITag } from "../../models/Documents";
 
 const TagRemover = styled.a`
     color: white;
@@ -20,7 +20,7 @@ export interface ITagProps {
 const Tag: React.FC<ITagProps> = (props) => {
     const { tag } = props;
     return (
-        <Badge variant="info">
+        <Badge text="info">
             {tag.name}{" "}
             <TagRemover onClick={() => props.RemoveTag(tag)}>
                 <TiTimes size={16} />

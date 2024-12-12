@@ -6,8 +6,9 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import useSession from "utilities/SessionHooks";
 import * as yup from "yup";
+
+import useSession from "../../utilities/SessionHooks";
 
 export interface IPaymentData {
   email: string;

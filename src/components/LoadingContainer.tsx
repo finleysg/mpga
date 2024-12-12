@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 import { OverlaySpinner } from "./Spinner";
 
@@ -7,7 +7,7 @@ type LoadingContainerProps = {
   hide?: boolean;
 };
 
-const LoadingContainer: React.FC<LoadingContainerProps> = (props) => {
+const LoadingContainer = (props: PropsWithChildren<LoadingContainerProps>) => {
   const showComponent = props.hide === true;
   if (!showComponent) {
     return (

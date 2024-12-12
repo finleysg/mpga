@@ -1,13 +1,13 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
+import LoadingContainer from "../../components/LoadingContainer";
+import { MarkdownField } from "../../components/MarkdownField";
 import SubmitButton from "../../components/SubmitButton";
 import { Club } from "../../models/Clubs";
 import { useUpdateClubMutation } from "./memberClubApi";

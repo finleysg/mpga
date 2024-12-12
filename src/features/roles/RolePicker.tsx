@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { Typeahead, TypeaheadRef } from "react-bootstrap-typeahead";
 
 import { IRole } from "../../models/Clubs";
 import RoleList from "./RoleList";
@@ -14,7 +14,7 @@ export interface IRolePickerProps {
 const RolePicker: React.FC<IRolePickerProps> = (props) => {
   const [{ isLoading, isError, data }, setQuery] = useRoleApi("", []);
   const [roles, updateRoles] = useState(props.selectedRoles);
-  const instance = useRef<AsyncTypeahead<string>>();
+  const typeaheadRef = useRef<TypeaheadRef>();
 
   const removeRole = (role: IRole) => {
     const idx = roles.findIndex((t) => t.role === role.role);
@@ -28,26 +28,21 @@ const RolePicker: React.FC<IRolePickerProps> = (props) => {
 
   return (
     <div>
-      <AsyncTypeahead
+      <Typeahead
         id="role-picker"
-        ref={(typeahead) => (instance.current = typeahead)}
+        ref={typeaheadRef}
         placeholder="Search for roles..."
         isLoading={isLoading}
         minLength={1}
-        onSearch={(query) => {
-          setQuery(query);
-        }}
         onChange={(selected) => {
           roles.push({
             id: 0,
-            role: selected[0],
+            role: selected[0] as string,
           });
           const newRoles = roles.slice(0);
           updateRoles(newRoles);
           props.OnChange(newRoles);
-          if (instance && instance.current) {
-            instance.current.clear();
-          }
+          typeaheadRef.current?.clear()
         }}
         options={data}
       />

@@ -1,71 +1,96 @@
 /*
     DEMO STYLE
 */
-@import "~bootstrap/scss/_functions.scss";
-@import "~bootstrap/scss/_variables.scss";
+// Variables
+// @import "./assets/scss/variables";
+// Grays (no different than defaults)
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+// Variants
+$primary: #6f42c1;
+$secondary: #20c997;
+$success: green;
+$info: #2323ff;
+$warning: #ff9800;
+$danger: #ff5350;
+$light: $gray-300;
+$dark: $gray-600;
 
 $theme-colors: (
-  "primary": $purple,
-  "secondary": $teal,
-  "warning": $pink,
-  "info": $blue,
-  "dark": $gray-700,
+	primary: $primary,
+	secondary: $secondary,
+	success: $success,
+	info: $info,
+	warning: $warning,
+	danger: $danger,
+	light: $light,
+	dark: $dark,
 );
 
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~react-datepicker/dist/react-datepicker.css";
 
 html {
-  font-size: 14px;
+	font-size: 14px;
 }
 
 .clickable {
-  cursor: pointer;
+	cursor: pointer;
 }
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
 
 #sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  background: $gray-800;
-  height: 100vh;
-  z-index: 999;
-  transition: all 0.6s cubic-bezier(0.945, 0.02, 0.27, 0.665);
-  transform-origin: center left; /* Set the transformed position of sidebar to center left side. */
+	min-width: 250px;
+	max-width: 250px;
+	background: $gray-800;
+	height: 100vh;
+	z-index: 999;
+	transition: all 0.6s cubic-bezier(0.945, 0.02, 0.27, 0.665);
+	transform-origin: center left; /* Set the transformed position of sidebar to center left side. */
 }
 
 #sidebar.active {
-  margin-left: -250px;
-  transform: rotateY(100deg); /* Rotate sidebar vertically by 100 degrees. */
+	margin-left: -250px;
+	transform: rotateY(100deg); /* Rotate sidebar vertically by 100 degrees. */
 }
 
 #sidebar .sidebar-header {
-  width: 100%;
-  height: 120px;
-  background-image: url("../assets/img/mpga-lg.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
+	width: 100%;
+	height: 120px;
+	background-image: url("../assets/img/mpga-lg.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
 }
 
 #sidebar a {
-  color: $teal;
-  font-size: 1.1em;
+	color: $teal;
+	font-size: 1.1em;
 }
 
 #sidebar a.active {
-  outline: dotted $teal thin;
-  background: $gray-700;
+	outline: dotted $teal thin;
+	background: $gray-700;
 }
 
 #navbar .navbar-light .navbar-nav .show > .nav-link,
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
-  color: rgba(0, 0, 0, 0.9);
-  text-decoration: underline;
+	color: rgba(0, 0, 0, 0.9);
+	text-decoration: underline;
 }
 
 /* ---------------------------------------------------
@@ -73,63 +98,63 @@ html {
 ----------------------------------------------------- */
 
 #page {
-  padding: 20px;
+	padding: 20px;
 }
 
 #content {
-  width: calc(100% - 250px);
-  min-height: 100vh;
-  height: 100vh;
-  overflow-y: scroll;
-  transition: all 0.3s;
-  position: absolute;
-  top: 0;
-  right: 0;
+	width: calc(100% - 250px);
+	min-height: 100vh;
+	height: 100vh;
+	overflow-y: scroll;
+	transition: all 0.3s;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 #content.active {
-  width: 100%;
+	width: 100%;
 }
 
 .mpga {
-  visibility: hidden;
+	visibility: hidden;
 }
 
 #sidebarCollapse {
-  width: 50px;
-  height: 40px;
-  background: $teal;
-  margin-left: -12px;
+	width: 50px;
+	height: 40px;
+	background: $teal;
+	margin-left: -12px;
 }
 
 #sidebarCollapse span {
-  width: 80%;
-  height: 2px;
-  margin: 0 auto;
-  display: block;
-  background: #555;
-  transition: all 0.8s cubic-bezier(0.81, -0.33, 0.345, 1.375);
+	width: 80%;
+	height: 2px;
+	margin: 0 auto;
+	display: block;
+	background: #555;
+	transition: all 0.8s cubic-bezier(0.81, -0.33, 0.345, 1.375);
 }
 
 #sidebarCollapse span:first-of-type {
-  /* rotate first one */
-  transform: rotate(45deg) translate(2px, 2px);
+	/* rotate first one */
+	transform: rotate(45deg) translate(2px, 2px);
 }
 #sidebarCollapse span:nth-of-type(2) {
-  /* second one is not visible */
-  opacity: 0;
+	/* second one is not visible */
+	opacity: 0;
 }
 #sidebarCollapse span:last-of-type {
-  /* rotate third one */
-  transform: rotate(-45deg) translate(1px, -1px);
+	/* rotate third one */
+	transform: rotate(-45deg) translate(1px, -1px);
 }
 
 #sidebarCollapse.active span {
-  /* no rotation */
-  transform: none;
-  /* all bars are visible */
-  opacity: 1;
-  margin: 5px auto;
+	/* no rotation */
+	transform: none;
+	/* all bars are visible */
+	opacity: 1;
+	margin: 5px auto;
 }
 
 /* ---------------------------------------------------
@@ -137,50 +162,50 @@ html {
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
-  #sidebar.active {
-    margin-left: -250px;
-    transform: rotateY(90deg);
-  }
-  #sidebar {
-    margin-left: 0;
-    transform: none;
-  }
-  #sidebarCollapse.active span:first-of-type,
-  #sidebarCollapse.active span:nth-of-type(2),
-  #sidebarCollapse.active span:last-of-type {
-    transform: none;
-    opacity: 1;
-    margin: 5px auto;
-  }
-  #sidebarCollapse span {
-    margin: 0 auto;
-  }
-  #sidebarCollapse span:first-of-type {
-    transform: rotate(45deg) translate(2px, 2px);
-  }
-  #sidebarCollapse span:nth-of-type(2) {
-    opacity: 0;
-  }
-  #sidebarCollapse span:last-of-type {
-    transform: rotate(-45deg) translate(1px, -1px);
-  }
-  .mpga {
-    visibility: visible;
-  }
+	#sidebar.active {
+		margin-left: -250px;
+		transform: rotateY(90deg);
+	}
+	#sidebar {
+		margin-left: 0;
+		transform: none;
+	}
+	#sidebarCollapse.active span:first-of-type,
+	#sidebarCollapse.active span:nth-of-type(2),
+	#sidebarCollapse.active span:last-of-type {
+		transform: none;
+		opacity: 1;
+		margin: 5px auto;
+	}
+	#sidebarCollapse span {
+		margin: 0 auto;
+	}
+	#sidebarCollapse span:first-of-type {
+		transform: rotate(45deg) translate(2px, 2px);
+	}
+	#sidebarCollapse span:nth-of-type(2) {
+		opacity: 0;
+	}
+	#sidebarCollapse span:last-of-type {
+		transform: rotate(-45deg) translate(1px, -1px);
+	}
+	.mpga {
+		visibility: visible;
+	}
 }
 
 .wrapper {
-  position: relative;
-  height: 100vh;
+	position: relative;
+	height: 100vh;
 }
 
 .full-width {
-  width: 100%;
+	width: 100%;
 }
 
 .centennial {
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	display: inline-block;
 }

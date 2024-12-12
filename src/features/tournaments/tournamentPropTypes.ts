@@ -1,4 +1,4 @@
-import { ITournamentWinnerGroup, Tournament, TournamentWinner } from "models/Events"
+import { ITournamentWinnerGroup, Tournament, TournamentWinner } from "../../models/Events";
 
 export type TournamentViewProps = {
   systemName: string

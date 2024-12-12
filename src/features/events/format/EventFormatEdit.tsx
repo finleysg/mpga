@@ -1,13 +1,13 @@
 import React from "react";
 
-import CancelButton from "components/CancelButton";
-import LoadingContainer from "components/LoadingContainer";
-import { MarkdownField } from "components/MarkdownField";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
+import CancelButton from "../../../components/CancelButton";
+import LoadingContainer from "../../../components/LoadingContainer";
+import { MarkdownField } from "../../../components/MarkdownField";
 import SubmitButton from "../../../components/SubmitButton";
 import { EventDetail } from "../../../models/Events";
 import { prepareEvent, useUpdateEventMutation } from "../eventsApi";

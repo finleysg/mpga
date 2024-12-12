@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { OverlaySpinner } from "components/Spinner";
 import Button from "react-bootstrap/Button";
 
+import { OverlaySpinner } from "../../components/Spinner";
 import { Contact, ExecutiveCommittee } from "../../models/Clubs";
 import usePermissions from "../../utilities/Permissions";
 import ContactSearch from "../contacts/ContactSearch";

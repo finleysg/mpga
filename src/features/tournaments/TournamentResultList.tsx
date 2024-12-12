@@ -1,9 +1,8 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetDocumentsQuery } from "features/documents/documentApi";
-import { DocumentViewType, IDocumentRenderProps } from "features/documents/documentPropTypes";
-
+import LoadingContainer from "../../components/LoadingContainer";
+import { useGetDocumentsQuery } from "../../features/documents/documentApi";
+import { DocumentViewType, IDocumentRenderProps } from "../../features/documents/documentPropTypes";
 import DocumentList from "../documents/DocumentList";
 import { TournamentDetailProps } from "./tournamentPropTypes";
 

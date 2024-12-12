@@ -1,7 +1,6 @@
 import React from "react";
 
-import MarkdownRender from "components/MarkdownRender";
-
+import MarkdownRender from "../../../components/MarkdownRender";
 import { EventPolicyProps } from "../eventsPropType";
 
 const EventPolicyView: React.FC<EventPolicyProps> = (props) => {

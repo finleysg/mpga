@@ -1,9 +1,16 @@
 import React, { useRef } from "react";
 
-import { AsyncTypeahead, Highlighter } from "react-bootstrap-typeahead";
+import { Highlighter, Typeahead, TypeaheadRef } from "react-bootstrap-typeahead";
 
 import { Contact } from "../../models/Clubs";
 import useContactApi from "./ContactApi";
+
+interface ContactLookup {
+  id: number
+  email: string
+  label: string
+  name: string
+}
 
 export interface IContactSearchProps {
   allowNew: boolean;
@@ -12,19 +19,39 @@ export interface IContactSearchProps {
 
 const ContactSearch: React.FC<IContactSearchProps> = (props) => {
   const [{ isLoading, isError, data }, setQuery] = useContactApi("", []);
-  const instance = useRef<AsyncTypeahead<Contact>>();
+  const typeaheadRef = useRef<TypeaheadRef>();
+
+  const contacts =
+    data?.map((p) => {
+      return {
+        id: p.id,
+        label: p.name,
+        name: p.name,
+        email: p.email,
+      } as ContactLookup
+    }) ?? []
+
+  const handleSelect = (selected: ContactLookup) => {
+    if (data && selected) {
+      const selectedContact = data.find((d) => d.id === selected.id)
+      if (selectedContact) {
+        typeaheadRef.current?.clear()
+        props.OnSelect(selectedContact)
+      }
+    }
+  }
 
   return (
     <div className="mb-3">
       <p>First search for a contact already in our database. If you don't find one, select "Create new contact".</p>
-      <AsyncTypeahead
+      <Typeahead
         id="contact-search"
-        ref={(typeahead) => (instance.current = typeahead)}
+        ref={typeaheadRef}
+        filterBy={["name", "email"]}
         placeholder="Search for contact..."
-        labelKey="name"
         isLoading={isLoading}
         minLength={3}
-        renderMenuItemChildren={(option, props) => (
+        renderMenuItemChildren={(option: ContactLookup, props) => (
           <>
             <Highlighter key="name" search={props.text}>
               {option.name}
@@ -37,16 +64,8 @@ const ContactSearch: React.FC<IContactSearchProps> = (props) => {
         highlightOnlyResult={!props.allowNew}
         newSelectionPrefix={"Create new contact: "}
         allowNew={props.allowNew}
-        onSearch={(query) => {
-          setQuery(query);
-        }}
-        onChange={(selected) => {
-          props.OnSelect(selected[0]);
-          if (instance?.current) {
-            instance.current.clear();
-          }
-        }}
-        options={data}
+        onChange={(selected) => handleSelect(selected[0] as ContactLookup)}
+        options={contacts}
       />
       {isError && <span className="text-danger">Doh!</span>}
     </div>

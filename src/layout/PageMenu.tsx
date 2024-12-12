@@ -1,12 +1,12 @@
-import React from "react"
+import React from "react";
 
-import Nav from "react-bootstrap/Nav"
-import Navbar from "react-bootstrap/Navbar"
-import NavDropdown from "react-bootstrap/NavDropdown"
-import { NavLink } from "react-router-dom"
-import useSession from "utilities/SessionHooks"
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { NavLink } from "react-router-dom";
 
-import constants from "../app-constants"
+import constants from "../app-constants";
+import useSession from "../utilities/SessionHooks";
 
 export interface IPageMenuProps {
   subMenu: string

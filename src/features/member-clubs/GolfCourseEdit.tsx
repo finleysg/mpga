@@ -1,12 +1,12 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import CancelButton from "../../components/CancelButton";
+import LoadingContainer from "../../components/LoadingContainer";
 import SubmitButton from "../../components/SubmitButton";
 import { GolfCourse } from "../../models/Clubs";
 import { useUpdateCourseMutation } from "./memberClubApi";

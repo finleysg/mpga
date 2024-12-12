@@ -1,5 +1,5 @@
-import { MpgaPhoto } from "models/Documents";
-import { IPhotoData } from "services/Data";
+import { MpgaPhoto } from "../../models/Documents";
+import { IPhotoData } from "../../services/Data";
 
 export interface IPhotoSearch {
   tournamentId: number;

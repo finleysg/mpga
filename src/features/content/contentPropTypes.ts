@@ -1,4 +1,4 @@
-import { PageContent, Policy } from "models/Policies";
+import { PageContent, Policy } from "../../models/Policies";
 
 export type PageContentViewProps = {
   pageContent: PageContent;

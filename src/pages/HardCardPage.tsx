@@ -1,12 +1,12 @@
-import React from "react"
+import React from "react";
 
-import { PolicyCodes } from "app-constants"
-import PolicyList from "features/content/PolicyList"
-import { IDocumentSearch } from "features/documents/documentPropTypes"
-import LatestOnly from "features/documents/LatestOnly"
-import Container from "react-bootstrap/Container"
+import Container from "react-bootstrap/Container";
 
-import OneCenteredColumn from "../components/layouts/OneCenteredColumn"
+import { PolicyCodes } from "../app-constants";
+import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
+import PolicyList from "../features/content/PolicyList";
+import { IDocumentSearch } from "../features/documents/documentPropTypes";
+import LatestOnly from "../features/documents/LatestOnly";
 
 const HardCardPage: React.FC = () => {
   const query: IDocumentSearch = {

@@ -1,7 +1,6 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-
+import LoadingContainer from "../../components/LoadingContainer";
 import { useGetDocumentsQuery } from "./documentApi";
 import DocumentList from "./DocumentList";
 import { DocumentSearchProps, DocumentViewType, IDocumentRenderProps } from "./documentPropTypes";

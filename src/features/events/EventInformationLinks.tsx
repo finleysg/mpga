@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetDocumentsQuery } from "features/documents/documentApi";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
+import LoadingContainer from "../../components/LoadingContainer";
+import { useGetDocumentsQuery } from "../../features/documents/documentApi";
 import { MpgaDocument } from "../../models/Documents";
 import { EventLink } from "../../models/Events";
 import usePermissions from "../../utilities/Permissions";

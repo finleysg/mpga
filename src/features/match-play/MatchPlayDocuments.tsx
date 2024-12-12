@@ -1,10 +1,9 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetDocumentsQuery } from "features/documents/documentApi";
-import { DocumentViewType, IDocumentRenderProps, IDocumentSearch } from "features/documents/documentPropTypes";
-
 import constants from "../../app-constants";
+import LoadingContainer from "../../components/LoadingContainer";
+import { useGetDocumentsQuery } from "../../features/documents/documentApi";
+import { DocumentViewType, IDocumentRenderProps, IDocumentSearch } from "../../features/documents/documentPropTypes";
 import DocumentList from "../documents/DocumentList";
 
 const MatchPlayDocuments: React.FC = () => {

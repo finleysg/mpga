@@ -1,10 +1,10 @@
 import React from "react";
 
-import { useGetTournamentsQuery } from "features/tournaments/tournamentApi";
 import moment from "moment";
 import Badge from "react-bootstrap/Badge";
 import { FaPencilAlt, FaRegFile, FaRegFileExcel, FaRegFilePdf, FaRegFileWord } from "react-icons/fa";
 
+import { useGetTournamentsQuery } from "../../features/tournaments/tournamentApi";
 import { MpgaDocument } from "../../models/Documents";
 import { DocumentProps } from "./documentPropTypes";
 
@@ -61,7 +61,7 @@ const DocumentLibraryRow: React.FC<DocumentLibraryRowProps> = (props) => {
         <td>
           {document.tags?.map((t) => {
             return (
-              <Badge key={t.id} className="mr-1" variant="dark">
+              <Badge key={t.id} className="mr-1" text="dark">
                 {t.name}
               </Badge>
             );

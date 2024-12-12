@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import MarkdownRender from "components/MarkdownRender";
-
+import MarkdownRender from "../../../components/MarkdownRender";
 import { EventProps } from "../eventsPropType";
 
 const EventFormatView: React.FunctionComponent<EventProps> = (props) => {

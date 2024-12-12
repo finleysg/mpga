@@ -1,5 +1,5 @@
-import { MpgaDocument } from "models/Documents";
-import { IDocumentData } from "services/Data";
+import { MpgaDocument } from "../../models/Documents";
+import { IDocumentData } from "../../services/Data";
 
 export enum DocumentViewType {
   Link,

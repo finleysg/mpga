@@ -1,55 +1,55 @@
-import { Action, Reducer } from "redux";
-import { PaymentActionTypes } from "./PaymentActions";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { PaymentMethod, Stripe } from "@stripe/stripe-js"
+
+import { Club } from "models/Clubs"
+
+import { Api } from "../http"
 
 export interface IPaymentState {
-    paymentConfirmationId?: string;
-    paymentError?: string;
-    paymentProcessing: boolean;
-    hasError: boolean;
+	paymentConfirmationId?: string
+	paymentError?: string
+	paymentProcessing: boolean
+	hasError: boolean
 }
 
 export const defaultState: IPaymentState = {
-    paymentProcessing: false,
-    hasError: false,
-};
-
-export interface IPaymentsRequested extends Action {
-    type: PaymentActionTypes.PAY_CLUB_DUES_STARTED;
+	paymentProcessing: false,
+	hasError: false,
 }
 
-export interface IPaymentsSucceeded extends Action {
-    type: PaymentActionTypes.PAY_CLUB_DUES_COMPLETED;
-    payload: string;
-}
+const payClubDues = createAsyncThunk(
+	"payments/payClubDues",
+	async (data: { stripe: Stripe; club: Club; method: PaymentMethod }) => {
+		const response = await Api.get(`/club-dues/${data.club.id}/`)
+		const clientSecret = response.data
+		return await data.stripe.confirmCardPayment(clientSecret, { payment_method: data.method.id })
+	},
+)
 
-export interface IPaymentsFailed extends Action {
-    type: PaymentActionTypes.PAY_CLUB_DUES_FAILED;
-    payload: string;
-}
+const paymentSlice = createSlice({
+	name: "payments",
+	initialState: defaultState,
+	reducers: {},
+	extraReducers: (builder) => {
+		builder.addCase(payClubDues.pending, (state) => {
+			state.paymentProcessing = true
+		})
+		builder.addCase(payClubDues.fulfilled, (state, action) => {
+			state.paymentProcessing = false
+			if (action.payload.error) {
+				state.paymentError = action.payload.error.message
+			} else if (action.payload.paymentIntent) {
+				state.paymentConfirmationId = action.payload.paymentIntent.id
+			} else {
+				state.paymentError = "Unexpected result from the payment processor."
+			}
+		})
+		builder.addCase(payClubDues.rejected, (state) => {
+			state.paymentProcessing = false
+			state.paymentError = "An error occurred while processing the payment."
+		})
+	},
+})
 
-type KnownActions =
-    | IPaymentsRequested 
-    | IPaymentsSucceeded 
-    | IPaymentsFailed;
-
-export const PaymentsReducer: Reducer<IPaymentState, KnownActions> =
-    (state: IPaymentState | undefined, action: KnownActions): IPaymentState => {
-
-    if (!state) {
-        state = {...defaultState};
-    }
-
-    switch (action.type) {
-        case PaymentActionTypes.PAY_CLUB_DUES_STARTED: {
-            return {...state, paymentProcessing: true, paymentConfirmationId: undefined, paymentError: undefined }
-        }
-        case PaymentActionTypes.PAY_CLUB_DUES_COMPLETED: {
-            return {...state, paymentProcessing: false, paymentConfirmationId: action.payload }
-        }
-        case PaymentActionTypes.PAY_CLUB_DUES_FAILED: {
-            return {...state, paymentProcessing: false, paymentConfirmationId: undefined, paymentError: action.payload }
-        }
-        default:
-            return state;
-    }
-}
+export { payClubDues }
+export default paymentSlice.reducer

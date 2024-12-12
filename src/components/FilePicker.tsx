@@ -1,89 +1,96 @@
-import React from "react";
-import { useDropzone } from "react-dropzone";
-import styled from "styled-components";
+import { useMemo } from "react"
 
-const getColor = (props: any) => {
-    if (props.isDragAccept) {
-        return '#00e676';
-    }
-    if (props.isDragReject) {
-        return '#ff1744';
-    }
-    if (props.isDragActive) {
-        return '#2196f3';
-    }
-    return '#eeeeee';
+import { Accept, useDropzone } from "react-dropzone"
+
+const baseStyle = {
+	flex: 1,
+	display: "flex",
+	// flexDirection: "column" as const,
+	alignItems: "center",
+	justifyContent: "center",
+	height: "150px",
+	padding: "2rem",
+	borderWidth: "4px",
+	borderRadius: "4px",
+	borderColor: "#6c757d",
+	color: "#6c757d",
+	borderStyle: "dashed",
+	backgroundColor: "transparent",
+	outline: "none",
+	marginBottom: "1rem",
 }
 
-const FileDropContainer = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border-width: 2px;
-    border-radius: 2px;
-    border-color: ${props => getColor(props)};
-    border-style: dashed;
-    background-color: #fafafa;
-    color: #bdbdbd;
-    outline: none;
-    transition: border .24s ease-in-out;
-`;
-FileDropContainer.displayName = "FileDropContainer";
-
-const FileList = styled.aside`
-    > ul {
-        list-style-type: none;
-        > li {
-            color: #purple;
-        }
-    }
-`;
-FileList.displayName = "FileList";
-
-const defaultFileTypes: string = ".md,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/markdown,text/csv,text/plain";
-
-export interface IFilePickerProps {
-    multiple?: boolean;
-    accept?: string;
-    OnSelected: (files: any[]) => void;
+const focusedStyle = {
+	borderColor: "#2196f3",
+	color: "#2196f3",
 }
 
-const FilePicker: React.FC<IFilePickerProps> = (props) => {
-
-    const {
-        acceptedFiles,
-        getRootProps,
-        getInputProps,
-        isDragActive,
-        isDragAccept,
-        isDragReject
-    } = useDropzone({
-        multiple: props.multiple || false,
-        accept: props.accept || defaultFileTypes,
-        onDrop: acceptedFiles => {
-            props.OnSelected(acceptedFiles);
-        }
-    });
-
-    const files = acceptedFiles.map((file: any) => (
-        <li key={file.path}>
-          {file.path} - {file.size} bytes
-        </li>
-    ));
-
-    return (
-        <section className="container">
-            <FileDropContainer {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
-                <input {...getInputProps()} />
-                <p>Drop file here, or click to select</p>
-            </FileDropContainer>
-            <FileList>
-                <ul>{files}</ul>
-            </FileList>
-        </section>
-    );
+const acceptStyle = {
+	borderColor: "#00e676",
+	color: "#00e676",
 }
 
-export default FilePicker;
+const rejectStyle = {
+	borderColor: "#ff1744",
+	color: "#ff1744",
+}
+
+interface FilePickerProps {
+	accept?: Accept
+	onDrop: (files: File[]) => void
+	onSelected: (files: File[]) => void
+}
+
+export function FilePicker({ accept, onSelected }: FilePickerProps) {
+	const {
+		acceptedFiles,
+		getRootProps,
+		getInputProps,
+		isDragActive,
+		isDragAccept,
+		isDragReject,
+		isFocused,
+	} = useDropzone({
+		accept: accept,
+		maxFiles: 1,
+		multiple: false,
+		onDrop: (acceptedFiles) => {
+			onSelected(acceptedFiles)
+		},
+	})
+
+	const style = useMemo(
+		() => ({
+			...baseStyle,
+			...(isFocused ? focusedStyle : {}),
+			...(isDragAccept ? acceptStyle : {}),
+			...(isDragReject ? rejectStyle : {}),
+		}),
+		[isFocused, isDragAccept, isDragReject],
+	)
+
+	const files = acceptedFiles.map((file) => (
+		<p key={file.name}>
+			{file.name} - {file.size} bytes
+		</p>
+	))
+
+	return (
+		<section className="container">
+			<div {...getRootProps({ style })}>
+				<input {...getInputProps()} />
+				{isDragActive ? (
+					<div className="text-center">Drop the file here ...</div>
+				) : (
+					<div className="text-center">
+						Drag and drop a file here, <br />
+						or click to select a file
+					</div>
+				)}
+			</div>
+			<aside className="text-info text-center">
+				<div>{files}</div>
+			</aside>
+		</section>
+	)
+}

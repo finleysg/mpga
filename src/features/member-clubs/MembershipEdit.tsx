@@ -1,6 +1,5 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
@@ -9,6 +8,7 @@ import * as yup from "yup";
 import constants from "../../app-constants";
 import CancelButton from "../../components/CancelButton";
 import { DatePickerField } from "../../components/DatePickerField";
+import LoadingContainer from "../../components/LoadingContainer";
 import SubmitButton from "../../components/SubmitButton";
 import { Club, Membership } from "../../models/Clubs";
 import { useAddMembershipForClubMutation } from "./membershipApi";

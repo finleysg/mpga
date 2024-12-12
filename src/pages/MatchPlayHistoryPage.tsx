@@ -1,12 +1,12 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetTournamentQuery } from "features/tournaments/tournamentApi";
-import TournamentHistoryTable from "features/tournaments/TournamentHistoryTable";
-import { Tournament } from "models/Events";
 import Container from "react-bootstrap/Container";
 
 import OneCenteredColumn from "../components/layouts/OneCenteredColumn";
+import LoadingContainer from "../components/LoadingContainer";
+import { useGetTournamentQuery } from "../features/tournaments/tournamentApi";
+import TournamentHistoryTable from "../features/tournaments/TournamentHistoryTable";
+import { Tournament } from "../models/Events";
 
 const MatchPlayHistoryPage: React.FC = () => {
   const { data: tournament, isLoading } = useGetTournamentQuery("match-play");

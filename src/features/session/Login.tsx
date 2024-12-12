@@ -1,58 +1,62 @@
-import React from "react";
+import React from "react"
 
-import { useAppDispatch, useAppSelector } from "app-store";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { useNavigate } from "react-router";
-import useSession from "utilities/SessionHooks";
+import Button from "react-bootstrap/Button"
+import Card from "react-bootstrap/Card"
+import { useNavigate } from "react-router"
 
-import Loading from "../../components/Loading";
-import UserActions from "../../store/UserActions";
-import LoginForm, { ICredentials } from "./LoginForm";
+import { useAppDispatch, useAppSelector } from "../../app-store"
+import { login } from "../../store/UserStore"
+import useSession from "../../utilities/SessionHooks"
+import LoginForm, { ICredentials } from "./LoginForm"
 
-const Login: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const app = useAppSelector((state) => state.app);
-  const session = useAppSelector((state) => state.session);
-  const { user } = useSession();
+const Login = () => {
+	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
+	const { location } = useAppSelector((state) => state.app)
+	const { user, flags } = useSession()
 
-  const init: ICredentials = {
-    email: "",
-    password: "",
-    remember: true,
-  };
+	const init: ICredentials = {
+		email: "",
+		password: "",
+		remember: true,
+	}
 
-  if (user.isAuthenticated) {
-    navigate(app.location || "/account");
-  }
+	if (user.isAuthenticated) {
+		navigate(location ?? "/account")
+	}
 
-  const login = (credentials: ICredentials) => {
-    dispatch(UserActions.Login(credentials.email, credentials.password, credentials.remember));
-  };
+	const handleLogin = async (credentials: ICredentials) => {
+		await dispatch(login(credentials))
+		if (user.isAuthenticated) {
+			navigate(location ?? "/")
+		}
+	}
 
-  return (
-    <div>
-      {session.flags.isBusy && <Loading />}
-      <Card>
-        <Card.Header>
-          <Card.Title>Log in to MPGA.net</Card.Title>
-        </Card.Header>
-        <Card.Body>
-          <LoginForm credentials={init} OnLogin={(creds) => login(creds)} />
-          {session.flags.hasError && <p className="text-danger">{session.flags.errorMessage}</p>}
-        </Card.Body>
-        <Card.Footer>
-          <Button variant="outline-secondary" onClick={() => navigate("/account/forgot")}>
-            Forgot Password
-          </Button>
-          <Button variant="outline-secondary" className="ml-2" onClick={() => navigate("/account/register")}>
-            Register
-          </Button>
-        </Card.Footer>
-      </Card>
-    </div>
-  );
-};
+	return (
+		<div className="m-5 p-5">
+			<Card>
+				<Card.Header>
+					<Card.Title>Log in to MPGA.net</Card.Title>
+				</Card.Header>
+				<Card.Body>
+					<LoginForm credentials={init} onLogin={(creds) => handleLogin(creds)} />
+					{flags.hasError && <p className="text-danger">{flags.errorMessage}</p>}
+				</Card.Body>
+				<Card.Footer>
+					<Button variant="outline-secondary" onClick={() => navigate("/account/forgot")}>
+						Forgot Password
+					</Button>
+					<Button
+						variant="outline-secondary"
+						className="ms-2"
+						onClick={() => navigate("/account/register")}
+					>
+						Register
+					</Button>
+				</Card.Footer>
+			</Card>
+		</div>
+	)
+}
 
-export default Login;
+export default Login

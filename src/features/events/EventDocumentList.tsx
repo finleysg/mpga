@@ -1,8 +1,8 @@
 import React from "react";
 
-import DocumentList from "features/documents/DocumentList";
-import { DocumentViewType, IDocumentRenderProps } from "features/documents/documentPropTypes";
-import { IDocumentData } from "services/Data";
+import DocumentList from "../../features/documents/DocumentList";
+import { DocumentViewType, IDocumentRenderProps } from "../../features/documents/documentPropTypes";
+import { IDocumentData } from "../../services/Data";
 
 type EventDocuementProps = {
   documents: IDocumentData[];

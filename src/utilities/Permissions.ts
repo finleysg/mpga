@@ -1,5 +1,4 @@
-import { useAppSelector } from "app-store";
-
+import { useAppSelector } from "../app-store";
 import useSession from "./SessionHooks";
 
 const usePermissions = () => {

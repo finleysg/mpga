@@ -1,4 +1,4 @@
-import { ClubContact, MatchResult, Team } from "models/Clubs";
+import { ClubContact, MatchResult, Team } from "../../models/Clubs";
 
 export type TeamProps = {
   team: Team;

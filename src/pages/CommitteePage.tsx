@@ -1,12 +1,12 @@
-import React from "react"
+import React from "react";
 
-import PastPresidents from "features/awards/PastPresidents"
-import Container from "react-bootstrap/Container"
+import Container from "react-bootstrap/Container";
 
-import { PageCodes } from "../app-constants"
-import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns"
-import CommitteeList from "../features/committee/CommitteeList"
-import PageContentDetail from "../features/content/PageContentDetail"
+import { PageCodes } from "../app-constants";
+import ThreeEvenColumns from "../components/layouts/ThreeEvenColumns";
+import PastPresidents from "../features/awards/PastPresidents";
+import CommitteeList from "../features/committee/CommitteeList";
+import PageContentDetail from "../features/content/PageContentDetail";
 
 const CommitteePage: React.FC = () => {
   return (

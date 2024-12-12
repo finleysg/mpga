@@ -6,11 +6,11 @@ import { mpgaApi } from "./services/MpgaApi";
 import { reducers } from "./store/index";
 
 export const store = configureStore({
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mpgaApi.middleware),
   reducer: {
     ...reducers,
     [mpgaApi.reducerPath]: mpgaApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mpgaApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

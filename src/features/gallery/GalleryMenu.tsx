@@ -21,7 +21,7 @@ const GalleryMenu: React.FC<IGalleryMenuProps> = (props) => {
     }
     return years.map((year) => {
       return (
-        <Badge key={year} variant="secondary" className="clickable mr-2 mb-2" onClick={() => reload(year)}>
+        <Badge key={year} text="secondary" className="clickable mr-2 mb-2" onClick={() => reload(year)}>
           {year}
         </Badge>
       );

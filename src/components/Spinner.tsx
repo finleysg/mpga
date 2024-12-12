@@ -1,6 +1,7 @@
 import { ImSpinner } from "react-icons/im";
 import styled, { keyframes } from "styled-components";
-import { rgba } from "utilities/rgba";
+
+import { rgba } from "../utilities/rgba";
 
 const Loader = styled.div`
   position: absolute;

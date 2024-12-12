@@ -1,51 +1,42 @@
-import { Action, Reducer } from "redux";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { MessageActionTypes } from "./MessageActions";
-import { ContactMessage } from '../models/ContactMessage';
+import { Api } from "../http"
+import { ContactMessage } from "../models/ContactMessage"
 
 export interface IMessageState {
-    sending: boolean;
-    failed: boolean;
-    sent?: ContactMessage;
+	sending: boolean
+	failed: boolean
+	sent?: ContactMessage
 }
 
 export const defaultState: IMessageState = {
-    sending: false,
-    failed: false,
-};
-
-export interface IMessageStarted extends Action {
-    type: MessageActionTypes.MESSAGE_START;
-}
-export interface IMessageSent extends Action {
-    type: MessageActionTypes.MESSAGE_STOP;
-    payload: ContactMessage;
-}
-export interface IMessageFailed extends Action {
-    type: MessageActionTypes.MESSAGE_FAILED;
+	sending: false,
+	failed: false,
 }
 
-type KnownActions = IMessageStarted | IMessageSent | IMessageFailed;
+const sendMessage = createAsyncThunk("messages/sendMessage", async (message: ContactMessage) => {
+	const result = await Api.post("/messages/", message)
+	return result.data
+})
 
-export const MessageReducer: Reducer<IMessageState, KnownActions> = (
-    state: IMessageState | undefined,
-    action: KnownActions
-): IMessageState => {
-    if (!state) {
-        state = { ...defaultState };
-    }
+const messageSlice = createSlice({
+	name: "messages",
+	initialState: defaultState,
+	reducers: {},
+	extraReducers: (builder) => {
+		builder.addCase(sendMessage.pending, (state) => {
+			state.sending = true
+		})
+		builder.addCase(sendMessage.fulfilled, (state, action) => {
+			state.sending = false
+			state.sent = action.payload
+		})
+		builder.addCase(sendMessage.rejected, (state) => {
+			state.sending = false
+			state.failed = true
+		})
+	},
+})
 
-    switch (action.type) {
-        case MessageActionTypes.MESSAGE_START: {
-            return { ...state, sending: true, sent: undefined, failed: false };
-        }
-        case MessageActionTypes.MESSAGE_STOP: {
-            return { ...state, sending: false, sent: action.payload, failed: false };
-        }
-        case MessageActionTypes.MESSAGE_FAILED: {
-            return { ...state, sending: false, failed: true };
-        }
-        default:
-            return state;
-    }
-};
+export { sendMessage }
+export default messageSlice.reducer

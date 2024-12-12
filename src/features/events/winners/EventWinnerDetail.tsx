@@ -1,8 +1,7 @@
 import React from "react";
 
-import { TournamentWinnerDetailProps } from "features/tournaments/tournamentPropTypes";
-
 import { CloseableEditContainer, CloseHandle } from "../../../components/WithEdit";
+import { TournamentWinnerDetailProps } from "../../../features/tournaments/tournamentPropTypes";
 import usePermissions from "../../../utilities/Permissions";
 import TournamentWinnerEdit from "../../tournaments/TournamentWinnerEdit";
 import EventWinnerView from "./EventWinnerView";

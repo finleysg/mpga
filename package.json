@@ -1,86 +1,83 @@
 {
-  "name": "mpga",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.6.2",
-    "@sentry/browser": "^6.15.0",
-    "@stripe/react-stripe-js": "^1.7.0",
-    "@stripe/stripe-js": "^1.22.0",
-    "@toast-ui/editor-plugin-color-syntax": "^3.0.2",
-    "@toast-ui/react-editor": "^3.1.2",
-    "@types/react-csv": "^1.1.2",
-    "axios": "^0.24.0",
-    "bootstrap": "^4.6.1",
-    "formik": "^2.2.9",
-    "history": "^5.1.0",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.1",
-    "react": "^17.0.2",
-    "react-app-polyfill": "^2.0.0",
-    "react-bootstrap": "^1.6.4",
-    "react-bootstrap-typeahead": "^5.2.1",
-    "react-csv": "^2.2.1",
-    "react-datepicker": "^4.5.0",
-    "react-dom": "^17.0.2",
-    "react-dropzone": "^11.4.2",
-    "react-grid-gallery": "^1.0.0",
-    "react-icons": "^4.3.1",
-    "react-markdown": "^7.1.1",
-    "react-redux": "^7.2.6",
-    "react-resize-aware": "^3.1.1",
-    "react-router-dom": "^6.2.1",
-    "react-router-redux": "^4.0.8",
-    "react-scripts": "^4.0.3",
-    "react-toastify": "^8.1.0",
-    "redux-devtools-extension": "^2.13.9",
-    "rehype-raw": "^6.1.1",
-    "rehype-sanitize": "^5.0.1",
-    "remark-gfm": "^3.0.1",
-    "showdown": "^1.9.1",
-    "styled-components": "^5.3.3",
-    "typescript": "^4.5.2",
-    "usehooks-ts": "^3.0.2",
-    "yup": "^0.32.11"
-  },
-  "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all",
-      "ie 11"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
-      "ie 11"
-    ]
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/jest": "27.0.3",
-    "@types/lodash": "^4.14.177",
-    "@types/node": "16.11.11",
-    "@types/react": "17.0.37",
-    "@types/react-bootstrap-typeahead": "^5.1.8",
-    "@types/react-datepicker": "^4.3.2",
-    "@types/react-dom": "17.0.11",
-    "@types/react-redux": "^7.1.20",
-    "@types/react-router-dom": "^5.3.2",
-    "@types/react-router-redux": "^5.0.20",
-    "@types/showdown": "^1.9.4",
-    "@types/styled-components": "^5.1.16",
-    "@types/yup": "^0.29.13",
-    "sass": "^1.79.4"
-  }
+	"name": "mpga",
+	"version": "2025.1",
+	"private": true,
+	"type": "module",
+	"devDependencies": {
+		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+		"@types/lodash": "^4.17.13",
+		"@types/node": "^22.10.1",
+		"@types/react": "^18.3.12",
+		"@types/react-csv": "^1.1.10",
+		"@types/react-datepicker": "^6.2.0",
+		"@types/react-dom": "^18.3.1",
+		"@types/react-router-dom": "^5.3.3",
+		"@types/showdown": "^2.0.6",
+		"@types/styled-components": "^5.1.34",
+		"@types/yup": "^0.29.14",
+		"@vitejs/plugin-react": "^4.3.4",
+		"sass": "^1.81.0",
+		"typescript": "5.3.3",
+		"vite": "^6.0.1"
+	},
+	"dependencies": {
+		"@reduxjs/toolkit": "^2.4.0",
+		"@stripe/react-stripe-js": "^1.7.0",
+		"@stripe/stripe-js": "^1.22.0",
+		"@toast-ui/editor": "file:../tui.editor/apps/editor",
+		"@toast-ui/editor-plugin-color-syntax": "file:../tui.editor/plugins/color-syntax",
+		"@toast-ui/react-editor": "file:../tui.editor/apps/react-editor",
+		"axios": "^0.24.0",
+		"bootstrap": "^5.3.3",
+		"formik": "^2.4.6",
+		"history": "^5.3.0",
+		"lodash": "^4.17.21",
+		"moment": "^2.30.1",
+		"react": "^18.3.1",
+		"react-bootstrap": "^2.10.6",
+		"react-bootstrap-typeahead": "^6.3.4",
+		"react-csv": "^2.2.2",
+		"react-datepicker": "^7.5.0",
+		"react-dom": "^18.3.1",
+		"react-dropzone": "^14.3.5",
+		"react-grid-gallery": "^1.0.1",
+		"react-icons": "^5.3.0",
+		"react-markdown": "^9.0.1",
+		"react-redux": "^9.1.2",
+		"react-resize-aware": "^4.0.0",
+		"react-router-dom": "^7.0.1",
+		"react-toastify": "^10.0.6",
+		"rehype-raw": "^7.0.0",
+		"rehype-sanitize": "^6.0.0",
+		"remark-gfm": "^4.0.0",
+		"root": "github:finleysg/tui.editor",
+		"showdown": "^2.1.0",
+		"styled-components": "^6.1.13",
+		"tui-color-picker": "^2.2.8",
+		"usehooks-ts": "^3.1.0",
+		"yup": "^1.4.0"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "vite preview"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all",
+			"ie 11"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version",
+			"ie 11"
+		]
+	}
 }

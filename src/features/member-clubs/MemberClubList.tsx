@@ -1,9 +1,9 @@
 import React from "react";
 
-import LoadingContainer from "components/LoadingContainer";
 import Table from "react-bootstrap/Table";
 
 import constants from "../../app-constants";
+import LoadingContainer from "../../components/LoadingContainer";
 import { IClub } from "../../models/Clubs";
 import { useGetClubsQuery } from "./memberClubApi";
 import MemberClubRow from "./MemberClubRow";

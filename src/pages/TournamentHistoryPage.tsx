@@ -2,15 +2,15 @@ import { createSelector } from "@reduxjs/toolkit";
 
 import React, { useMemo } from "react";
 
-import LoadingContainer from "components/LoadingContainer";
-import { useGetTournamentQuery } from "features/tournaments/tournamentApi";
-import { Tournament } from "models/Events";
 import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom";
 
 import LargeLeftSmallRight from "../components/layouts/LargeLeftSmallRight";
+import LoadingContainer from "../components/LoadingContainer";
+import { useGetTournamentQuery } from "../features/tournaments/tournamentApi";
 import TournamentHistoryTable from "../features/tournaments/TournamentHistoryTable";
 import TournamentResultList from "../features/tournaments/TournamentResultList";
+import { Tournament } from "../models/Events";
 
 const TournamentHistoryPage: React.FC = () => {
   const { name } = useParams();

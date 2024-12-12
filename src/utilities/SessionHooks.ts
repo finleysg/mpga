@@ -1,6 +1,6 @@
-import { useAppSelector } from "app-store";
-import { Contact } from "models/Clubs";
-import { User } from "models/User";
+import { useAppSelector } from "../app-store";
+import { Contact } from "../models/Clubs";
+import { User } from "../models/User";
 
 const useSession = () => {
   const session = useAppSelector((state) => state.session);

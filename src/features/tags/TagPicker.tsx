@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { Typeahead, TypeaheadRef } from "react-bootstrap-typeahead";
 
 import { ITag } from "../../models/Documents";
 import useTagApi from "./TagApi";
@@ -12,9 +12,9 @@ export interface ITagPickerProps {
 }
 
 const TagPicker: React.FC<ITagPickerProps> = (props) => {
-  const [{ isLoading, isError, data }, setQuery] = useTagApi("", []);
+  const [{ isLoading, isError, data }] = useTagApi("", []);
   const [tags, updateTags] = useState(props.selectedTags);
-  const typeaheadRef = useRef<any>();
+  const typeaheadRef = useRef<TypeaheadRef>();
 
   const removeTag = (tag: ITag) => {
     const idx = tags.findIndex((t) => t.id === tag.id);
@@ -28,7 +28,7 @@ const TagPicker: React.FC<ITagPickerProps> = (props) => {
 
   return (
     <div>
-      <AsyncTypeahead
+      <Typeahead
         id="tag-picker"
         ref={typeaheadRef}
         labelKey="name"
@@ -37,15 +37,12 @@ const TagPicker: React.FC<ITagPickerProps> = (props) => {
         filterBy={["name"]}
         minLength={3}
         allowNew={true}
-        onSearch={(query) => {
-          setQuery(query);
-        }}
         onChange={(selected) => {
-          tags.push(selected[0]);
+          tags.push(selected[0] as ITag);
           const newTags = tags.slice(0);
           updateTags(newTags);
           props.OnChange(newTags);
-          typeaheadRef.current.clear();
+          typeaheadRef.current?.clear();
         }}
         options={data}
       />

@@ -1,7 +1,6 @@
 import React from "react";
 
-import MarkdownRender from "components/MarkdownRender";
-
+import MarkdownRender from "../../components/MarkdownRender";
 import { AnnouncementViewProps } from "./announcementPropTypes";
 
 const AnnouncementView: React.FC<AnnouncementViewProps> = (props) => {

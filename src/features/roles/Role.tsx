@@ -20,7 +20,7 @@ export interface IRoleProps {
 const Role: React.FC<IRoleProps> = (props) => {
   const { role } = props;
   return (
-    <Badge variant="secondary">
+    <Badge text="secondary">
       {role.role}{" "}
       <RoleRemover onClick={() => props.RemoveRole(role)}>
         <TiTimes size={16} />

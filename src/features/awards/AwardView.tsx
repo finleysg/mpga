@@ -1,7 +1,6 @@
 import React from "react";
 
-import MarkdownRender from "components/MarkdownRender";
-
+import MarkdownRender from "../../components/MarkdownRender";
 import { AwardViewProps } from "./awardPropTypes";
 import AwardWinnerList from "./AwardWinnerList";
 

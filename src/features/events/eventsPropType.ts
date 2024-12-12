@@ -1,4 +1,4 @@
-import { EventDetail, EventLink, EventPoints, EventPolicy } from "models/Events";
+import { EventDetail, EventLink, EventPoints, EventPolicy } from "../../models/Events";
 
 export type EventProps = {
   eventDetail: EventDetail;

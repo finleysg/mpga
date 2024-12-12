@@ -1,9 +1,8 @@
 import React from "react";
 
-import { useGetEventsQuery } from "features/events/eventsApi";
-
 import constants from "../../app-constants";
 import LoadingContainer from "../../components/LoadingContainer";
+import { useGetEventsQuery } from "../../features/events/eventsApi";
 import { EventDetail, Tournament } from "../../models/Events";
 import TournamentDetail from "./TournamentDetail";
 

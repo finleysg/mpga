@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import LoadingContainer from "components/LoadingContainer";
 import { Formik } from "formik";
 import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
@@ -9,6 +8,7 @@ import * as yup from "yup";
 import CancelButton from "../../components/CancelButton";
 import Confirm from "../../components/Confirm";
 import DeleteButton from "../../components/DeleteButton";
+import LoadingContainer from "../../components/LoadingContainer";
 import SubmitButton from "../../components/SubmitButton";
 import { Contact, ExecutiveCommittee } from "../../models/Clubs";
 import { useGetClubsQuery } from "../member-clubs/memberClubApi";

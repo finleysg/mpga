@@ -1,9 +1,3 @@
-const getStringFromConfig = (value: string) => {
-  return process && process.env && process.env[value]
-    ? (process.env[value] as string)
-    : "ERROR!ERROR!"
-}
-
 export class PolicyCodes {
   public static LocalRule: string = "LR"
   public static CodeOfConduct: string = "CC"
@@ -34,20 +28,19 @@ export class PageCodes {
 }
 
 export default class Constants {
-  // Use .env or .env.local to override REACT_APP_API_BASE_URL parameter
-  public static ServerUrl: string = getStringFromConfig("REACT_APP_SERVER_URL")
-  public static ApiUrl: string = getStringFromConfig("REACT_APP_API_URL")
-  public static AuthUrl: string = getStringFromConfig("REACT_APP_AUTH_URL")
-  public static AdminUrl: string = getStringFromConfig("REACT_APP_ADMIN_URL")
+  public static ServerUrl: string = import.meta.env.VITE_SERVER_URL
+  public static ApiUrl: string = import.meta.env.VITE_API_URL
+  public static AuthUrl: string = import.meta.env.VITE_AUTH_URL
+  public static AdminUrl: string = import.meta.env.VITE_ADMIN_URL
   public static EventCalendarYear: number = Number(
-    getStringFromConfig("REACT_APP_EVENT_CALENDAR_YEAR"),
+    import.meta.env.VITE_EVENT_CALENDAR_YEAR
   )
-  public static MatchPlayYear: number = Number(getStringFromConfig("REACT_APP_MATCH_PLAY_YEAR"))
-  public static MemberClubYear: number = Number(getStringFromConfig("REACT_APP_MEMBER_CLUB_YEAR"))
-  public static MembershipDues: number = Number(getStringFromConfig("REACT_APP_MEMBERSHIP_DUES"))
-  public static StripePublicKey: string = getStringFromConfig("REACT_APP_STRIPE_PUBLIC_KEY")
+  public static MatchPlayYear: number = Number(import.meta.env.VITE_MATCH_PLAY_YEAR)
+  public static MemberClubYear: number = Number(import.meta.env.VITE_MEMBER_CLUB_YEAR)
+  public static MembershipDues: number = Number(import.meta.env.VITE_MEMBERSHIP_DUES)
+  public static StripePublicKey: string = import.meta.env.VITE_STRIPE_PUBLIC_KEY
 
-  public static Mode: string = getStringFromConfig("REACT_APP_MODE")
+  public static Mode: string = import.meta.env.VITE_MODE
 
   public static BearerTokenName: string = "mpga-token"
   public static CrsfCookieName: string = "crsftoken"
