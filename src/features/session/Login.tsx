@@ -1,11 +1,9 @@
-import React from "react"
-
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import { useNavigate } from "react-router"
 
 import { useAppDispatch, useAppSelector } from "../../app-store"
-import { login } from "../../store/UserStore"
+import { getUser, login } from "../../store/UserStore"
 import useSession from "../../utilities/SessionHooks"
 import LoginForm, { ICredentials } from "./LoginForm"
 
@@ -27,6 +25,7 @@ const Login = () => {
 
 	const handleLogin = async (credentials: ICredentials) => {
 		await dispatch(login(credentials))
+		await dispatch(getUser())
 		if (user.isAuthenticated) {
 			navigate(location ?? "/")
 		}

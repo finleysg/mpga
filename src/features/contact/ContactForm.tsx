@@ -55,7 +55,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 				>
 					{({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
 						<Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
-							<Form.Group controlId="contactName">
+							<Form.Group controlId="contactName" className="mb-2">
 								<Form.Control
 									placeholder="Name"
 									name="contactName"
@@ -67,7 +67,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								/>
 								<Form.Control.Feedback type="invalid">{errors.contactName}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="contactEmail">
+							<Form.Group controlId="contactEmail" className="mb-2">
 								<Form.Control
 									placeholder="Email"
 									name="contactEmail"
@@ -79,7 +79,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								/>
 								<Form.Control.Feedback type="invalid">{errors.contactEmail}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="contactPhone">
+							<Form.Group controlId="contactPhone" className="mb-2">
 								<Form.Control
 									placeholder="Phone number"
 									name="contactPhone"
@@ -91,7 +91,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								/>
 								<Form.Control.Feedback type="invalid">{errors.contactPhone}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="course">
+							<Form.Group controlId="course" className="mb-2">
 								<Form.Control
 									placeholder="Home course"
 									name="course"
@@ -103,7 +103,7 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								/>
 								<Form.Control.Feedback type="invalid">{errors.course}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="announcement.Text">
+							<Form.Group controlId="announcement.Text" className="mb-2">
 								<Form.Control
 									as="textarea"
 									placeholder="Enter your message here"

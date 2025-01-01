@@ -160,6 +160,13 @@ const userSlice = createSlice({
 				state.flags = { ...defaultStateFlags, hasError: true }
 				state.flags.errorMessage = action.error.message
 			})
+			.addCase(logout.pending, (state) => {
+				state.flags.isBusy = true
+			})
+			.addCase(logout.fulfilled, (state) => {
+				state.user = defaultState.user
+				state.flags = defaultStateFlags
+			})
 			.addCase(createAccount.pending, (state, action) => {
 				state.accountRequest = action.meta.arg
 				state.flags.isBusy = true
