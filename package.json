@@ -25,7 +25,7 @@
 		"@stripe/react-stripe-js": "^1.7.0",
 		"@stripe/stripe-js": "^1.22.0",
 		"@toast-ui/editor": "file:../tui.editor/apps/editor",
-		"@toast-ui/editor-plugin-color-syntax": "file:../tui.editor/plugins/color-syntax",
+		"@toast-ui/editor-plugin-color-syntax": "^3.1.0",
 		"@toast-ui/react-editor": "file:../tui.editor/apps/react-editor",
 		"axios": "^0.24.0",
 		"bootstrap": "^5.3.3",

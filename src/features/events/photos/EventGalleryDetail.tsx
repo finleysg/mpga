@@ -22,7 +22,7 @@ const EventGalleryDetail: React.FC<EventProps> = (props) => {
 
 	return (
 		<LoadingContainer loading={isLoading} hide={false}>
-			<EditOrView doEdit={doUpload}>
+			<EditOrView $edit={doUpload}>
 				{permissions.canManageEvent() && (
 					<ToggleEditButton
 						isEditting={doUpload}
