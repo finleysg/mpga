@@ -18,7 +18,6 @@ import CodeOfConductPage from "../pages/CodeOfConductPage"
 import CommitteePage from "../pages/CommitteePage"
 import ContactUsPage from "../pages/ContactUsPage"
 import DocumentLibraryPage from "../pages/DocumentLibraryPage"
-import EventContactPage from "../pages/EventContactPage"
 import EventDetailPage from "../pages/EventDetailPage"
 import HardCardPage from "../pages/HardCardPage"
 import ConnectedHomePage from "../pages/HomePage"
@@ -30,7 +29,6 @@ import MatchPlayRulesPage from "../pages/MatchPlayRulesPage"
 import MemberClubPage from "../pages/MemberClubPage"
 import MemberClubsPage from "../pages/MemberClubsPage"
 import ReportsPage from "../pages/ReportsPage"
-import TournamentBidPage from "../pages/TournamentBidPage"
 import TournamentGalleryPage from "../pages/TournamentGalleryPage"
 import TournamentHistoryPage from "../pages/TournamentHistoryPage"
 import TournamentsPage from "../pages/TournamentsPage"
@@ -59,13 +57,10 @@ export const AppRoutes = () => {
 				<Route path="tournaments" element={<TournamentsPage />} />
 				<Route path="tournaments/hard-card" element={<HardCardPage />} />
 				<Route path="tournaments/code-of-conduct" element={<CodeOfConductPage />} />
-				{/* <Route path="tournaments/pace-of-play" element={<PaceOfPlayPage />} /> */}
 				<Route path="tournaments/detail/:name/:year" element={<EventDetailPage />} />
 				<Route path="tournaments/history/:name" element={<TournamentHistoryPage />} />
 				<Route path="tournaments/gallery/:name" element={<TournamentGalleryPage />} />
 				<Route path="tournaments/gallery/:name/:year" element={<TournamentGalleryPage />} />
-				<Route path="tournaments/contact/:name/:year" element={<EventContactPage />} />
-				<Route path="tournaments/bid" element={<TournamentBidPage />} />
 				<Route path="match-play" element={<MatchPlayPage />} />
 				<Route path="match-play/rules" element={<MatchPlayRulesPage />} />
 				<Route path="match-play/results" element={<MatchPlayResultsPage />} />

@@ -50,20 +50,20 @@ const extendedApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/photos/${id}/`),
 					method: "PUT",
-					data: prepareFormData(params),
+					body: prepareFormData(params),
 				}
 			},
-			invalidatesTags: [{ type: "Photos", id: "LIST" }],
+			invalidatesTags: [{ type: "Photos" }],
 		}),
 		addPhoto: build.mutation<IPhotoData, PhotoParams>({
 			query(params) {
 				return {
 					url: apiUrl("/photos/"),
 					method: "POST",
-					data: prepareFormData(params),
+					body: prepareFormData(params),
 				}
 			},
-			invalidatesTags: [{ type: "Photos", id: "LIST" }],
+			invalidatesTags: [{ type: "Photos" }],
 		}),
 		deletePhoto: build.mutation<IPhotoData, number>({
 			query(id) {
@@ -72,7 +72,7 @@ const extendedApi = mpgaApi.injectEndpoints({
 					method: "DELETE",
 				}
 			},
-			invalidatesTags: [{ type: "Photos", id: "LIST" }],
+			invalidatesTags: [{ type: "Photos" }],
 		}),
 	}),
 })

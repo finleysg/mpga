@@ -40,8 +40,8 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
 			<Formik validationSchema={schema} onSubmit={handleSave} initialValues={eventDetail}>
 				{({ handleSubmit, setFieldValue, handleBlur, values, errors }) => (
 					<Form noValidate onSubmit={handleSubmit}>
-						<Form.Group controlId="eventDetail.registrationStart">
-							<Form.Label className="full-width">Registration Start</Form.Label>
+						<Form.Group controlId="eventDetail.registrationStart" className="mb-2">
+							<Form.Label className="full-width mb-0">Registration Start</Form.Label>
 							<DatePickerField
 								name="registrationStart"
 								value={values.registrationStart}
@@ -56,12 +56,12 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
 							<Form.Control.Feedback type="invalid">
 								<>{errors.registrationStart}</>
 							</Form.Control.Feedback>
-							<Form.Text className="text-muted">
+							<Form.Text className="text-muted ms-2">
 								Registration starts at this date and time.
 							</Form.Text>
 						</Form.Group>
-						<Form.Group controlId="eventDetail.registrationEnd">
-							<Form.Label className="full-width">Online Registration End</Form.Label>
+						<Form.Group controlId="eventDetail.registrationEnd" className="mb-2">
+							<Form.Label className="full-width mb-0">Online Registration End</Form.Label>
 							<DatePickerField
 								name="registrationEnd"
 								value={values.registrationEnd}
@@ -76,7 +76,9 @@ const EventRegistrationDatesEdit: React.FC<EventEditProps> = (props) => {
 							<Form.Control.Feedback type="invalid">
 								<>{errors.registrationEnd}</>
 							</Form.Control.Feedback>
-							<Form.Text className="text-muted">Registration ends at this date and time.</Form.Text>
+							<Form.Text className="text-muted ms-2">
+								Registration ends at this date and time.
+							</Form.Text>
 						</Form.Group>
 						<SubmitButton />
 						<CancelButton canCancel={true} OnCancel={onClose} />

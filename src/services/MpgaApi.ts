@@ -17,6 +17,8 @@ export const mpgaApi = createApi({
 		"Pages",
 		"Photos",
 		"Policies",
+		"Roles",
+		"Tags",
 		"Tournaments",
 		"Tournament-Winners",
 	],

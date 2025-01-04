@@ -102,8 +102,8 @@ const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
 			<Formik validationSchema={schema} onSubmit={handleSave} initialValues={doc}>
 				{({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 					<Form noValidate onSubmit={handleSubmit}>
-						<Form.Group controlId="doc.Year">
-							<Form.Label>Year</Form.Label>
+						<Form.Group controlId="doc.Year" className="mb-2">
+							<Form.Label className="mb-0">Year</Form.Label>
 							<Form.Control
 								placeholder="Year"
 								name="year"
@@ -115,8 +115,8 @@ const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="doc.Title">
-							<Form.Label>Title</Form.Label>
+						<Form.Group controlId="doc.Title" className="mb-2">
+							<Form.Label className="mb-0">Title</Form.Label>
 							<Form.Control
 								placeholder="Document title"
 								name="title"
@@ -128,8 +128,8 @@ const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="doc.DocumentType">
-							<Form.Label>Document type</Form.Label>
+						<Form.Group controlId="doc.DocumentType" className="mb-2">
+							<Form.Label className="mb-0">Document type</Form.Label>
 							<Form.Control
 								as="select"
 								name="documentType"
@@ -155,8 +155,8 @@ const DocumentEdit: React.FC<DocumentEditProps> = (props) => {
 								<option value="Tee Times">Tee Times</option>
 							</Form.Control>
 						</Form.Group>
-						<Form.Group>
-							<Form.Label>Tournament</Form.Label>
+						<Form.Group className="mb-2">
+							<Form.Label className="mb-0">Tournament</Form.Label>
 							<Form.Control
 								as="select"
 								name="tournamentId"

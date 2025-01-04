@@ -18,7 +18,7 @@ const awardApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/awards/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Awards", id }],
@@ -28,10 +28,10 @@ const awardApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/award-winners/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { award }) => [{ type: "Awards", id: award }],
+			invalidatesTags: (_result, _error) => [{ type: "Awards" }],
 		}),
 		updateWinner: build.mutation<IAwardWinnerData, Partial<IAwardWinnerData>>({
 			query(data) {
@@ -39,7 +39,7 @@ const awardApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/award-winners/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { award }) => [{ type: "Awards", id: award }],

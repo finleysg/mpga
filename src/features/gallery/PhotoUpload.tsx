@@ -64,8 +64,8 @@ const PhotoUpload: React.FC<PhotoUploadProps> = (props) => {
 				{({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 					<Form noValidate onSubmit={handleSubmit}>
 						{props.year === undefined && (
-							<Form.Group controlId="doc.Year">
-								<Form.Label>Year</Form.Label>
+							<Form.Group controlId="doc.Year" className="mb-2">
+								<Form.Label className="mb-0">Year</Form.Label>
 								<Form.Control
 									placeholder="Year"
 									name="year"
@@ -78,8 +78,8 @@ const PhotoUpload: React.FC<PhotoUploadProps> = (props) => {
 								<Form.Control.Feedback type="invalid">{errors.year}</Form.Control.Feedback>
 							</Form.Group>
 						)}
-						<Form.Group controlId="caption">
-							<Form.Label>Caption</Form.Label>
+						<Form.Group controlId="caption" className="mb-2">
+							<Form.Label className="mb-0">Caption</Form.Label>
 							<Form.Control
 								placeholder="Caption - please include name(s)"
 								name="caption"

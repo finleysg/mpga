@@ -5,11 +5,12 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import Spinner from "react-bootstrap/Spinner"
 import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import styled from "styled-components"
 import * as yup from "yup"
 
 import { useAppDispatch } from "../../app-store"
-import { ContactMessage } from "../../models/ContactMessage"
 import { IApplicationState } from "../../store"
 import { sendMessage } from "../../store/MessageStore"
 
@@ -22,78 +23,90 @@ const ContactFormContainer = styled.div`
 `
 ContactFormContainer.displayName = "ContactFormContainer"
 
-export interface IContactFormProps {
-	message: ContactMessage
-}
-
 const schema = yup.object({
 	course: yup.string().required(),
-	contactName: yup.string().required(),
-	contactEmail: yup.string().email().required(),
-	contactPhone: yup.string().nullable(),
+	contact_name: yup.string().required(),
+	contact_email: yup.string().email().required(),
+	contact_phone: yup.string().nullable(),
 	message: yup.string().required(),
 })
 
-const ContactForm: React.FC<IContactFormProps> = (props) => {
+const initialValues = {
+	course: "",
+	contact_name: "",
+	contact_email: "",
+	contact_phone: "",
+	message: "",
+}
+
+const ContactForm = () => {
 	const dispatch = useAppDispatch()
 	const state = useSelector((state: IApplicationState) => state.messaging)
-	let message = props.message
+	const navigate = useNavigate()
+
+	const handleSendMessage = async (values: any) => {
+		await dispatch(sendMessage(values))
+		if (!state.failed) {
+			toast.success("Your message has been sent. Thank you!")
+			navigate("/")
+		}
+	}
 
 	return (
 		<React.Fragment>
 			<ContactFormContainer>
 				<Formik
 					validationSchema={schema}
-					onSubmit={(values, actions) => {
-						const message = Object.assign(new ContactMessage(), props.message, values)
-						dispatch(sendMessage(message))
+					onSubmit={(values) => {
+						handleSendMessage(values)
 					}}
-					onReset={(values, actions) => {
-						actions.resetForm({ values: new ContactMessage() })
-					}}
-					initialValues={message}
+					initialValues={initialValues}
 				>
-					{({ handleSubmit, handleReset, handleChange, handleBlur, values, touched, errors }) => (
-						<Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
-							<Form.Group controlId="contactName" className="mb-2">
+					{({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
+						<Form noValidate onSubmit={handleSubmit}>
+							<Form.Group className="mb-2">
 								<Form.Control
 									placeholder="Name"
-									name="contactName"
-									value={values.contactName}
-									isValid={touched.contactName && !errors.contactName}
-									isInvalid={!!errors.contactName}
+									id="contact_name"
+									name="contact_name"
+									value={values.contact_name}
+									isValid={touched.contact_name && !errors.contact_name}
+									isInvalid={!!errors.contact_name}
 									onChange={handleChange}
 									onBlur={handleBlur}
 								/>
-								<Form.Control.Feedback type="invalid">{errors.contactName}</Form.Control.Feedback>
+								<Form.Control.Feedback type="invalid">{errors.contact_name}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="contactEmail" className="mb-2">
+							<Form.Group className="mb-2">
 								<Form.Control
 									placeholder="Email"
-									name="contactEmail"
-									value={values.contactEmail}
-									isValid={touched.contactEmail && !errors.contactEmail}
-									isInvalid={!!errors.contactEmail}
+									id="contact_email"
+									name="contact_email"
+									value={values.contact_email}
+									isValid={touched.contact_email && !errors.contact_email}
+									isInvalid={!!errors.contact_email}
 									onChange={handleChange}
 									onBlur={handleBlur}
 								/>
-								<Form.Control.Feedback type="invalid">{errors.contactEmail}</Form.Control.Feedback>
+								<Form.Control.Feedback type="invalid">{errors.contact_email}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="contactPhone" className="mb-2">
+							<Form.Group className="mb-2">
 								<Form.Control
 									placeholder="Phone number"
-									name="contactPhone"
-									value={values.contactPhone}
-									isValid={touched.contactPhone && !errors.contactPhone}
-									isInvalid={!!errors.contactPhone}
+									id="contact_phone"
+									name="contact_phone"
+									value={values.contact_phone}
+									isValid={touched.contact_phone && !errors.contact_phone}
+									isInvalid={!!errors.contact_phone}
 									onChange={handleChange}
 									onBlur={handleBlur}
 								/>
-								<Form.Control.Feedback type="invalid">{errors.contactPhone}</Form.Control.Feedback>
+								<Form.Control.Feedback type="invalid">{errors.contact_phone}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="course" className="mb-2">
+							<Form.Group className="mb-2">
 								<Form.Control
 									placeholder="Home course"
+									id="course"
 									name="course"
 									value={values.course}
 									isValid={touched.course && !errors.course}
@@ -103,11 +116,12 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								/>
 								<Form.Control.Feedback type="invalid">{errors.course}</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Group controlId="announcement.Text" className="mb-2">
+							<Form.Group className="mb-2">
 								<Form.Control
 									as="textarea"
 									placeholder="Enter your message here"
 									rows={6}
+									id="message"
 									name="message"
 									value={values.message}
 									isValid={touched.message && !errors.message}
@@ -121,17 +135,21 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 								variant="secondary"
 								type="submit"
 								size="sm"
-								disabled={state.sending || state.sent !== undefined}
+								disabled={state.sending || state.sent}
 							>
 								{state.sending && (
-									<Spinner as="span" animation="border" variant="secondary" role="status">
+									<Spinner
+										as="div"
+										animation="border"
+										variant="primary"
+										size="sm"
+										role="status"
+										className="me-2"
+									>
 										<span className="visually-hidden">Sending...</span>
 									</Spinner>
 								)}
 								Send
-							</Button>
-							<Button className="ml-2" variant="light" type="reset" size="sm">
-								Reset
 							</Button>
 						</Form>
 					)}
@@ -140,10 +158,9 @@ const ContactForm: React.FC<IContactFormProps> = (props) => {
 			{state.failed && (
 				<p className="text-danger mt-2">
 					Something went wrong and your message was not sent. You can try again, or contact the MPGA
-					directly at info@mpga.net.
+					directly at secretary@mpga.net.
 				</p>
 			)}
-			{state.sent !== undefined && <p className="text-success mt-2">Thank you for your message.</p>}
 		</React.Fragment>
 	)
 }

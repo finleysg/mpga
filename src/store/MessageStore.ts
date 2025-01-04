@@ -1,20 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import { Api } from "../http"
-import { ContactMessage } from "../models/ContactMessage"
 
 export interface IMessageState {
 	sending: boolean
 	failed: boolean
-	sent?: ContactMessage
+	sent: boolean
 }
 
 export const defaultState: IMessageState = {
 	sending: false,
 	failed: false,
+	sent: false,
 }
 
-const sendMessage = createAsyncThunk("messages/sendMessage", async (message: ContactMessage) => {
+const sendMessage = createAsyncThunk("messages/sendMessage", async (message: any) => {
+	message.message_type = "general"
 	const result = await Api.post("/messages/", message)
 	return result.data
 })
@@ -29,7 +30,8 @@ const messageSlice = createSlice({
 		})
 		builder.addCase(sendMessage.fulfilled, (state, action) => {
 			state.sending = false
-			state.sent = action.payload
+			state.failed = false
+			state.sent = true
 		})
 		builder.addCase(sendMessage.rejected, (state) => {
 			state.sending = false

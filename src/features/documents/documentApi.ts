@@ -1,3 +1,4 @@
+import { ITag } from "../../models/Documents"
 import { IDocumentData } from "../../services/Data"
 import { mpgaApi } from "../../services/MpgaApi"
 import { apiUrl } from "../../utilities/HttpClient"
@@ -52,26 +53,30 @@ const extendedApi = mpgaApi.injectEndpoints({
 			query: (q) => apiUrl("/documents/" + prepareQueryString(q)),
 			providesTags: [{ type: "Documents", id: "LIST" }],
 		}),
+		getTags: build.query<ITag[], void>({
+			query: () => apiUrl("/tags/"),
+			providesTags: [{ type: "Tags", id: "LIST" }],
+		}),
 		updateDocument: build.mutation<IDocumentData, DocumentParams>({
 			query(params) {
 				const { id } = params.document
 				return {
 					url: apiUrl(`/documents/${id}/`),
 					method: "PUT",
-					data: prepareFormData(params),
+					body: prepareFormData(params),
 				}
 			},
-			invalidatesTags: [{ type: "Documents", id: "LIST" }],
+			invalidatesTags: [{ type: "Documents" }],
 		}),
 		addDocument: build.mutation<IDocumentData, DocumentParams>({
 			query(params) {
 				return {
 					url: apiUrl("/documents/"),
 					method: "POST",
-					data: prepareFormData(params),
+					body: prepareFormData(params),
 				}
 			},
-			invalidatesTags: [{ type: "Documents", id: "LIST" }],
+			invalidatesTags: [{ type: "Documents" }],
 		}),
 		deleteDocument: build.mutation<IDocumentData, number>({
 			query(id) {
@@ -80,13 +85,14 @@ const extendedApi = mpgaApi.injectEndpoints({
 					method: "DELETE",
 				}
 			},
-			invalidatesTags: [{ type: "Documents", id: "LIST" }],
+			invalidatesTags: [{ type: "Documents" }],
 		}),
 	}),
 })
 
 export const {
 	useGetDocumentsQuery,
+	useGetTagsQuery,
 	useAddDocumentMutation,
 	useUpdateDocumentMutation,
 	useDeleteDocumentMutation,

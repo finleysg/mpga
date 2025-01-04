@@ -10,26 +10,17 @@ const extendedApi = mpgaApi.injectEndpoints({
 		}),
 		getMatchResults: build.query<IMatchPlayResultData[], void>({
 			query: () => apiUrl(`/match-results/?year=${constants.MatchPlayYear}`),
-			providesTags: (result) =>
-				result
-					? [
-							...result.map(({ id }) => ({ type: "MatchPlayResults", id } as const)),
-							{ type: "MatchPlayResults", id: "LIST" },
-					  ]
-					: [{ type: "MatchPlayResults", id: "LIST" }],
+			providesTags: () => [{ type: "MatchPlayResults" }],
 		}),
 		addMatchResult: build.mutation<IMatchPlayResultData, Partial<IMatchPlayResultData>>({
 			query(data) {
 				return {
 					url: apiUrl("/match-results/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [
-				{ type: "MatchPlayResults", id },
-				{ type: "MatchPlayResults", id: "LIST" },
-			],
+			invalidatesTags: (_result, _error) => [{ type: "MatchPlayResults" }],
 		}),
 	}),
 })

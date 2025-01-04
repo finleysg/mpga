@@ -6,13 +6,7 @@ const tournamentApi = mpgaApi.injectEndpoints({
 	endpoints: (build) => ({
 		getTournaments: build.query<ITournamentData[], void>({
 			query: () => apiUrl("/tournaments/"),
-			providesTags: (result) =>
-				result
-					? [
-							...result.map(({ id }) => ({ type: "Tournaments", id } as const)),
-							{ type: "Tournaments", id: "LIST" },
-					  ]
-					: [{ type: "Tournaments", id: "LIST" }],
+			providesTags: () => [{ type: "Tournaments" }],
 		}),
 		getTournament: build.query<ITournamentData, string>({
 			query: (name) => apiUrl(`/tournaments/?name=${name}`),
@@ -27,10 +21,10 @@ const tournamentApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/tournaments/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [{ type: "Tournaments", id }],
+			invalidatesTags: (_result, _error) => [{ type: "Tournaments" }, { type: "Events" }],
 		}),
 		getTournamentWinners: build.query<ITournamentWinnerData[], string>({
 			query: (name) => apiUrl("/tournament-winners/?name=" + name),
@@ -47,13 +41,10 @@ const tournamentApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/tournament-winners/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [
-				{ type: "Tournament-Winners", id },
-				{ type: "Tournament-Winners", id: "LIST" },
-			],
+			invalidatesTags: (_result, _error) => [{ type: "Tournament-Winners" }],
 		}),
 		updateTournamentWinner: build.mutation<ITournamentWinnerData, Partial<ITournamentWinnerData>>({
 			query(data) {
@@ -61,7 +52,7 @@ const tournamentApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/tournament-winners/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Tournament-Winners", id }],

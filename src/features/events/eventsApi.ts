@@ -42,10 +42,7 @@ const eventApi = mpgaApi.injectEndpoints({
 			transformResponse: (response: IEventDetailData[]) => {
 				return response?.length === 1 ? response[0] : undefined
 			},
-			providesTags: (result) => [
-				{ type: "Events", id: result?.id },
-				{ type: "Events", id: "LIST" },
-			],
+			providesTags: (result) => [{ type: "Events", id: result?.id }],
 		}),
 		updateEvent: build.mutation<IEventData, Partial<IEventData>>({
 			query(data) {
@@ -53,17 +50,17 @@ const eventApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/events/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [{ type: "Events", id }],
+			invalidatesTags: (_result, _error) => [{ type: "Events" }],
 		}),
 		addEventLink: build.mutation<IEventLinkData, Partial<IEventLinkData>>({
 			query(data) {
 				return {
 					url: apiUrl("/event-links/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
@@ -74,7 +71,7 @@ const eventApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/event-links/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
@@ -94,7 +91,7 @@ const eventApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/event-points/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
@@ -105,7 +102,7 @@ const eventApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/event-points/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],
@@ -126,7 +123,7 @@ const eventApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/event-policies/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { event }) => [{ type: "Events", id: event }],

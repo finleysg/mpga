@@ -24,10 +24,10 @@ const extendedApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/memberships/?club=${club}`),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { club }) => [{ type: "Memberships", id: club }],
+			invalidatesTags: (_result, _error) => [{ type: "Memberships" }],
 		}),
 	}),
 })

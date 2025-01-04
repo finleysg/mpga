@@ -59,8 +59,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 			<Formik validationSchema={schema} onSubmit={handleSave} initialValues={result}>
 				{({ handleSubmit, setFieldValue, handleChange, handleBlur, values, touched, errors }) => (
 					<Form noValidate onSubmit={handleSubmit}>
-						<Form.Group controlId="matchDate">
-							<Form.Label>Match Date</Form.Label>
+						<Form.Group controlId="matchDate" className="mb-2">
+							<Form.Label className="mb-0">Match Date</Form.Label>
 							<br />
 							<DatePickerField
 								name="matchDate"
@@ -74,8 +74,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 								<>{errors.matchDate}</>
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="groupName">
-							<Form.Label>Group</Form.Label>
+						<Form.Group controlId="groupName" className="mb-2">
+							<Form.Label className="mb-0">Group</Form.Label>
 							<Form.Control
 								as="select"
 								name="groupName"
@@ -96,8 +96,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 							</Form.Control>
 							<Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="homeTeam">
-							<Form.Label>Home Team</Form.Label>
+						<Form.Group controlId="homeTeam" className="mb-2">
+							<Form.Label className="mb-0">Home Team</Form.Label>
 							<Form.Control
 								as="select"
 								name="homeTeam"
@@ -120,8 +120,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 							</Form.Control>
 							<Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="homeTeamScore">
-							<Form.Label>Home Team Score</Form.Label>
+						<Form.Group controlId="homeTeamScore" className="mb-2">
+							<Form.Label className="mb-0">Home Team Score</Form.Label>
 							<Form.Control
 								name="homeTeamScore"
 								value={values.homeTeamScore.toString()}
@@ -132,8 +132,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.homeTeamScore}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="awayTeam">
-							<Form.Label>Away Team</Form.Label>
+						<Form.Group controlId="awayTeam" className="mb-2">
+							<Form.Label className="mb-0">Away Team</Form.Label>
 							<Form.Control
 								as="select"
 								name="awayTeam"
@@ -156,8 +156,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 							</Form.Control>
 							<Form.Control.Feedback type="invalid">{errors.groupName}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="awayTeamScore">
-							<Form.Label>Away Team Score</Form.Label>
+						<Form.Group controlId="awayTeamScore" className="mb-2">
+							<Form.Label className="mb-0">Away Team Score</Form.Label>
 							<Form.Control
 								name="awayTeamScore"
 								value={values.awayTeamScore.toString()}
@@ -168,7 +168,7 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.awayTeamScore}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="forfeit">
+						<Form.Group controlId="forfeit" className="mb-2">
 							<Form.Check
 								type="switch"
 								name="forfeit"
@@ -177,8 +177,8 @@ const MatchResultEdit: React.FC<MatchResultEditProps> = (props) => {
 								onChange={handleChange}
 							/>
 						</Form.Group>
-						<Form.Group controlId="notes">
-							<Form.Label>Notes</Form.Label>
+						<Form.Group controlId="notes" className="mb-2">
+							<Form.Label className="mb-0">Notes</Form.Label>
 							<Form.Control
 								as="textarea"
 								rows={3}

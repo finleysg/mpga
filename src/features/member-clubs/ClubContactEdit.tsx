@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 
 import { Formik } from "formik"
 import Form from "react-bootstrap/Form"
@@ -65,7 +65,7 @@ const translateClubContact = (cc: ClubContact): IClubContact => {
 	}
 }
 
-const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
+const ClubContactEdit = (props: ClubContactEditProps) => {
 	const { clubContact, onClose } = props
 
 	const cc = translateClubContact(clubContact)
@@ -119,8 +119,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 			<Formik validationSchema={schema} onSubmit={handleSave} initialValues={cc}>
 				{({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
 					<Form noValidate onSubmit={handleSubmit}>
-						<Form.Group controlId="cc.firstName">
-							<Form.Label>First name</Form.Label>
+						<Form.Group controlId="cc.firstName" className="mb-2">
+							<Form.Label className="mb-0">First name</Form.Label>
 							<Form.Control
 								placeholder="First name"
 								name="firstName"
@@ -132,8 +132,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.firstName}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="cc.lastName">
-							<Form.Label>Last name</Form.Label>
+						<Form.Group controlId="cc.lastName" className="mb-2">
+							<Form.Label className="mb-0">Last name</Form.Label>
 							<Form.Control
 								placeholder="Last name"
 								name="lastName"
@@ -145,8 +145,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.lastName}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="cc.email">
-							<Form.Label>Email</Form.Label>
+						<Form.Group controlId="cc.email" className="mb-2">
+							<Form.Label className="mb-0">Email</Form.Label>
 							<Form.Control
 								placeholder="Email"
 								name="email"
@@ -158,8 +158,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 							/>
 							<Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId="cc.primaryPhone">
-							<Form.Label>Primary phone</Form.Label>
+						<Form.Group controlId="cc.primaryPhone" className="mb-2">
+							<Form.Label className="mb-0">Primary phone</Form.Label>
 							<Form.Control
 								placeholder="xxx-xxx-xxxx"
 								name="primaryPhone"
@@ -172,14 +172,14 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 							<Form.Control.Feedback type="invalid">{errors.primaryPhone}</Form.Control.Feedback>
 							<Form.Text className="text-muted">Format: xxx-xxx-xxxx</Form.Text>
 						</Form.Group>
-						<Form.Group controlId="cc.roles">
-							<Form.Label>Roles</Form.Label>
+						<Form.Group controlId="cc.roles" className="mb-2">
+							<Form.Label className="mb-0">Roles</Form.Label>
 							<RolePicker
 								selectedRoles={values.roles || []}
 								OnChange={(roles: IRole[]) => (values.roles = roles)}
 							/>
 						</Form.Group>
-						<Form.Group controlId="cc.isPrimary">
+						<Form.Group controlId="cc.isPrimary" className="mb-2">
 							<Form.Check
 								name="isPrimary"
 								label={"This is a primary contact"}
@@ -189,7 +189,7 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 								onBlur={handleBlur}
 							/>
 						</Form.Group>
-						<Form.Group controlId="cc.useForMailings">
+						<Form.Group controlId="cc.useForMailings" className="mb-2">
 							<Form.Check
 								name="useForMailings"
 								label={"Send mailings to this contact"}
@@ -202,8 +202,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 								onBlur={handleBlur}
 							/>
 						</Form.Group>
-						<Form.Group controlId="cc.notes">
-							<Form.Label>Notes</Form.Label>
+						<Form.Group controlId="cc.notes" className="mb-2">
+							<Form.Label className="mb-0">Notes</Form.Label>
 							<Form.Control
 								name="notes"
 								value={values.notes || ""}
@@ -219,8 +219,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 						</Form.Group>
 						{showAddress && (
 							<>
-								<Form.Group controlId="cc.addressTxt">
-									<Form.Label>Address</Form.Label>
+								<Form.Group controlId="cc.addressTxt" className="mb-2">
+									<Form.Label className="mb-0">Address</Form.Label>
 									<Form.Control
 										placeholder="Street address"
 										name="addressTxt"
@@ -232,8 +232,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 									/>
 									<Form.Control.Feedback type="invalid">{errors.addressTxt}</Form.Control.Feedback>
 								</Form.Group>
-								<Form.Group controlId="cc.city">
-									<Form.Label>City</Form.Label>
+								<Form.Group controlId="cc.city" className="mb-2">
+									<Form.Label className="mb-0">City</Form.Label>
 									<Form.Control
 										placeholder="City"
 										name="city"
@@ -245,8 +245,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 									/>
 									<Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
 								</Form.Group>
-								<Form.Group controlId="cc.state">
-									<Form.Label>State</Form.Label>
+								<Form.Group controlId="cc.state" className="mb-2">
+									<Form.Label className="mb-0">State</Form.Label>
 									<Form.Control
 										placeholder="State"
 										name="state"
@@ -259,8 +259,8 @@ const ClubContactEdit: React.FC<ClubContactEditProps> = (props) => {
 									<Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
 									<Form.Text className="text-muted">Two-letter state code (MN, WI, etc.)</Form.Text>
 								</Form.Group>
-								<Form.Group controlId="cc.zip">
-									<Form.Label>Zip code</Form.Label>
+								<Form.Group controlId="cc.zip" className="mb-2">
+									<Form.Label className="mb-0">Zip code</Form.Label>
 									<Form.Control
 										placeholder="Zip code"
 										name="zip"

@@ -24,7 +24,7 @@ const clubApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/clubs/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Clubs", id }],
@@ -35,7 +35,7 @@ const clubApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/courses/${id}/`),
 					method: "PATCH",
-					data: data.golf_course,
+					body: data.golf_course,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Clubs", id }],
@@ -45,7 +45,7 @@ const clubApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/club-contacts/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { club }) => [{ type: "Clubs", id: club }],
@@ -56,7 +56,7 @@ const clubApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/club-contacts/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { club }) => [{ type: "Clubs", id: club }],
@@ -89,6 +89,10 @@ const clubApi = mpgaApi.injectEndpoints({
 			},
 			providesTags: ["Contacts"],
 		}),
+		getRoles: build.query<{ id: number; name: string }[], void>({
+			query: () => apiUrl("/roles/"),
+			providesTags: ["Roles"],
+		}),
 	}),
 })
 
@@ -97,6 +101,7 @@ export const {
 	useGetClubQuery,
 	useGetClubsQuery,
 	useGetContactsQuery,
+	useGetRolesQuery,
 	useUpdateClubMutation,
 	useAddClubContactMutation,
 	useUpdateClubContactMutation,

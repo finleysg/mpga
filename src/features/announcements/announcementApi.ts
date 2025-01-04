@@ -20,7 +20,7 @@ const extendedApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/announcements/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Announcements", id }],
@@ -30,10 +30,10 @@ const extendedApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/announcements/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: [{ type: "Announcements", id: "LIST" }],
+			invalidatesTags: [{ type: "Announcements" }],
 		}),
 		deleteAnnouncement: build.mutation<IAnnouncementData, Partial<IAnnouncementData>>({
 			query(data) {
@@ -43,14 +43,14 @@ const extendedApi = mpgaApi.injectEndpoints({
 					method: "DELETE",
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [{ type: "Announcements", id }],
+			invalidatesTags: (_result, _error) => [{ type: "Announcements" }],
 		}),
 		sendMessage: build.mutation<IContactMessageData, Partial<IContactMessageData>>({
 			query(data) {
 				return {
 					url: apiUrl("/messages/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
 		}),

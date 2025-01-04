@@ -21,7 +21,7 @@ const committeeApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl(`/committee/${id}/`),
 					method: "PUT",
-					data,
+					body: data,
 				}
 			},
 			invalidatesTags: (_result, _error, { id }) => [{ type: "Committee", id }],
@@ -31,10 +31,10 @@ const committeeApi = mpgaApi.injectEndpoints({
 				return {
 					url: apiUrl("/committee/"),
 					method: "POST",
-					data,
+					body: data,
 				}
 			},
-			invalidatesTags: (_result, _error, { id }) => [{ type: "Committee", id: id }],
+			invalidatesTags: (_result, _error) => [{ type: "Committee" }],
 		}),
 		deleteCommittee: build.mutation<ICommitteeData, Partial<ICommitteeData>>({
 			query(data) {
@@ -44,6 +44,7 @@ const committeeApi = mpgaApi.injectEndpoints({
 					method: "DELETE",
 				}
 			},
+			invalidatesTags: (_result, _error) => [{ type: "Committee" }],
 		}),
 	}),
 })
