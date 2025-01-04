@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { FaLink } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { FaLink } from "react-icons/fa"
+import { NavLink } from "react-router-dom"
 
-import constants from "../../app-constants";
-import { IClub } from "../../models/Clubs";
+import constants from "../../app-constants"
+import { IClub } from "../../models/Clubs"
 
 type MemberClubRowProps = {
   club: IClub;
@@ -16,7 +16,7 @@ const MemberClubRow: React.FC<MemberClubRowProps> = (props) => {
   return (
     <tr>
       <td className="text-secondary" style={{ fontWeight: "bold" }}>
-        {club.isCurrent && `${constants.MemberClubYear} Member`}
+        {club.isCurrent && `${constants.CurrentYear} Member`}
       </td>
       <td>
         <NavLink to={"/clubs/" + club.systemName} className="nav-link">

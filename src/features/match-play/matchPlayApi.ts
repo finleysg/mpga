@@ -6,10 +6,10 @@ import { apiUrl } from "../../utilities/HttpClient"
 const extendedApi = mpgaApi.injectEndpoints({
 	endpoints: (build) => ({
 		getTeams: build.query<ITeamData[], void>({
-			query: () => apiUrl(`/teams/?year=${constants.MatchPlayYear}`),
+			query: () => apiUrl(`/teams/?year=${constants.CurrentYear}`),
 		}),
 		getMatchResults: build.query<IMatchPlayResultData[], void>({
-			query: () => apiUrl(`/match-results/?year=${constants.MatchPlayYear}`),
+			query: () => apiUrl(`/match-results/?year=${constants.CurrentYear}`),
 			providesTags: () => [{ type: "MatchPlayResults" }],
 		}),
 		addMatchResult: build.mutation<IMatchPlayResultData, Partial<IMatchPlayResultData>>({

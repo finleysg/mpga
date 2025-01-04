@@ -23,8 +23,8 @@ const MatchPlayPage = () => {
 			LeftColumn={<PageContentDetail pageCode={PageCodes.MatchPlay} />}
 			RightColumn={
 				<React.Fragment>
-					{/* <h3 className="text-primary">{constants.MatchPlayYear} Match Play Teams</h3> */}
-					<h3 className="text-primary">{constants.MatchPlayYear} Match Play Sign Up</h3>
+					{/* <h3 className="text-primary">{constants.CurrentYear} Match Play Teams</h3> */}
+					<h3 className="text-primary">{constants.CurrentYear} Match Play Sign Up</h3>
 					<h6 className="text-success">
 						Click the button below to request a team for the 2025 season. You should repeat this for
 						each team your club wants to enter.

@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import constants from "../../app-constants";
-import LoadingContainer from "../../components/LoadingContainer";
-import { useGetDocumentsQuery } from "../../features/documents/documentApi";
-import { DocumentViewType, IDocumentRenderProps, IDocumentSearch } from "../../features/documents/documentPropTypes";
-import DocumentList from "../documents/DocumentList";
+import constants from "../../app-constants"
+import LoadingContainer from "../../components/LoadingContainer"
+import { useGetDocumentsQuery } from "../../features/documents/documentApi"
+import { DocumentViewType, IDocumentRenderProps, IDocumentSearch } from "../../features/documents/documentPropTypes"
+import DocumentList from "../documents/DocumentList"
 
 const MatchPlayDocuments: React.FC = () => {
   const queryKey = "match-play";
@@ -12,7 +12,7 @@ const MatchPlayDocuments: React.FC = () => {
   const query: IDocumentSearch = {
     key: queryKey,
     documentTypes: ["Match Play", "Match Play Brackets"],
-    year: constants.MatchPlayYear,
+    year: constants.CurrentYear,
   };
 
   const { data: documents, isLoading } = useGetDocumentsQuery(query);

@@ -16,7 +16,7 @@ const GalleryMenu: React.FC<IGalleryMenuProps> = (props) => {
 
   const renderBadges = () => {
     const years = [];
-    for (let year = 2000; year <= constants.EventCalendarYear; year++) {
+    for (let year = 2000; year <= constants.CurrentYear; year++) {
       years.push(year);
     }
     return years.map((year) => {

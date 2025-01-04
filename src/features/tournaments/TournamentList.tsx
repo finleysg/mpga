@@ -1,13 +1,15 @@
-import React from "react";
+import React from "react"
 
-import constants from "../../app-constants";
-import LoadingContainer from "../../components/LoadingContainer";
-import { useGetEventsQuery } from "../../features/events/eventsApi";
-import { EventDetail, Tournament } from "../../models/Events";
-import TournamentDetail from "./TournamentDetail";
+import constants from "../../app-constants"
+import LoadingContainer from "../../components/LoadingContainer"
+import { useGetEventsQuery } from "../../features/events/eventsApi"
+import { EventDetail, Tournament } from "../../models/Events"
+import { useGetAppConfigQuery } from "../content/contentApi"
+import TournamentDetail from "./TournamentDetail"
 
 const TournamentList: React.FC = () => {
-  const { data: events, isLoading: eventsLoading } = useGetEventsQuery(constants.EventCalendarYear)
+  const { data: appConfig } = useGetAppConfigQuery()
+  const { data: events, isLoading: eventsLoading } = useGetEventsQuery(appConfig?.eventCalendarYear ?? constants.CurrentYear)
 
   return (
     <LoadingContainer loading={eventsLoading}>

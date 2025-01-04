@@ -30,7 +30,7 @@ const MembershipEdit: React.FC<MembershipEditProps> = (props) => {
 	const [addMembershipForClub, { isLoading }] = useAddMembershipForClubMutation()
 
 	const membership = new Membership({
-		year: constants.MemberClubYear,
+		year: constants.CurrentYear,
 		club: club.id,
 		payment_type: "CK",
 	})

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { Api } from "../http"
+import { apiUrl, httpClient } from "../utilities/HttpClient"
 
 export interface IMessageState {
 	sending: boolean
@@ -16,7 +16,7 @@ export const defaultState: IMessageState = {
 
 const sendMessage = createAsyncThunk("messages/sendMessage", async (message: any) => {
 	message.message_type = "general"
-	const result = await Api.post("/messages/", message)
+	const result = await httpClient(apiUrl("/messages/"), {body: JSON.stringify(message)})
 	return result.data
 })
 

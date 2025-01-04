@@ -6,6 +6,7 @@ import NavDropdown from "react-bootstrap/NavDropdown"
 import { NavLink } from "react-router-dom"
 
 import constants from "../app-constants"
+import { useGetAppConfigQuery } from "../features/content/contentApi"
 import useSession from "../utilities/SessionHooks"
 
 export interface IPageMenuProps {
@@ -15,6 +16,8 @@ export interface IPageMenuProps {
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
 	const { user } = useSession()
+  const { data: appConfig } = useGetAppConfigQuery()
+  const season = appConfig?.eventCalendarYear ?? constants.CurrentYear
 
 	const renderAccountLink = () => {
 		if (user.isAuthenticated) {
@@ -63,7 +66,7 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
 								History
 							</NavLink>
 							<NavLink
-								to={`/tournaments/gallery/${tournamentName}/${constants.EventCalendarYear}`}
+								to={`/tournaments/gallery/${tournamentName}/${season}`}
 								className="nav-link"
 							>
 								Gallery

@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import Button from "react-bootstrap/Button";
+import Button from "react-bootstrap/Button"
 
-import constants from "../../app-constants";
-import { MpgaDocument } from "../../models/Documents";
-import usePermissions from "../../utilities/Permissions";
-import DocumentDetail from "./DocumentDetail";
-import { DocumentListProps } from "./documentPropTypes";
+import constants from "../../app-constants"
+import { MpgaDocument } from "../../models/Documents"
+import usePermissions from "../../utilities/Permissions"
+import { useGetAppConfigQuery } from "../content/contentApi"
+import DocumentDetail from "./DocumentDetail"
+import { DocumentListProps } from "./documentPropTypes"
 
 const DocumentList: React.FC<DocumentListProps> = (props) => {
   const { documents, render } = props;
+  const { data: appConfig } = useGetAppConfigQuery()
+
   const [addNew, setAddNew] = useState(false);
   const permissions = usePermissions();
   const canAdd = documents?.findIndex((d) => d.id === 0) || -1 < 0;
@@ -24,7 +27,7 @@ const DocumentList: React.FC<DocumentListProps> = (props) => {
       {addNew && (
         <DocumentDetail
           key={0}
-          document={new MpgaDocument({ id: 0, year: constants.EventCalendarYear })}
+          document={new MpgaDocument({ id: 0, year: appConfig?.eventCalendarYear || constants.CurrentYear })}
           render={render}
           edit={true}
           onClose={() => setAddNew(false)}

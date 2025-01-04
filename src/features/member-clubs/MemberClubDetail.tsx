@@ -1,11 +1,11 @@
 import { skipToken } from "@reduxjs/toolkit/query"
 
-import React, { useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 import Button from "react-bootstrap/Button"
 import styled from "styled-components"
 
-import constants from "../../app-constants"
+import constants, { default as Constants } from "../../app-constants"
 import LoadingContainer from "../../components/LoadingContainer"
 import { CloseableEditContainer, CloseHandle } from "../../components/WithEdit"
 import { Membership } from "../../models/Clubs"
@@ -28,7 +28,6 @@ CreateMembershipContainer.displayName = "CreateMembershipContainer"
 
 function MemberClubDetail(props: ClubProps) {
 	const { club } = props
-
 	const [makePayment, setMakePayment] = useState(false)
 	const [addMembership, setAddMembership] = useState(false)
 	const permissions = usePermissions()
@@ -52,13 +51,12 @@ function MemberClubDetail(props: ClubProps) {
 	}
 
 	const renderDuesPayment = () => {
-		if ((getMostRecentMembership()?.year || 0) < constants.MemberClubYear) {
+		if ((getMostRecentMembership()?.year || 0) < Constants.CurrentYear) {
 			if (makePayment) {
 				return (
 					<ClubDuesPayment
 						club={club}
-						amountDue={constants.MembershipDues}
-						title={`Pay ${constants.MemberClubYear} Dues Online`}
+						title={`Pay ${Constants.CurrentYear} Dues Online`}
 						Cancel={() => setMakePayment(false)}
 					/>
 				)
@@ -79,7 +77,7 @@ function MemberClubDetail(props: ClubProps) {
 	}
 
 	const renderMembershipEdit = () => {
-		if ((getMostRecentMembership()?.year || 0) < constants.MemberClubYear) {
+		if ((getMostRecentMembership()?.year || 0) < constants.CurrentYear) {
 			if (addMembership) {
 				return (
 					<CreateMembershipContainer>

@@ -8,17 +8,19 @@ import { useGetDocumentsQuery } from "../../features/documents/documentApi"
 import { Announcement } from "../../models/Announcement"
 import { MpgaDocument } from "../../models/Documents"
 import usePermissions from "../../utilities/Permissions"
+import { useGetAppConfigQuery } from "../content/contentApi"
 import { useGetAnnouncementsQuery } from "./announcementApi"
 import AnnouncementDetail from "./AnnouncementDetail"
 
 const AnnouncementList: React.FC = () => {
 	const [addNew, setAddNew] = React.useState(false)
 	const permissions = usePermissions()
+  const { data: appConfig } = useGetAppConfigQuery()
 	const { data: announcements, isLoading } = useGetAnnouncementsQuery()
 	const { documents, docsLoading } = useGetDocumentsQuery(
 		{
 			key: "current-documents",
-			year: Constants.EventCalendarYear - 1,
+			year: appConfig?.eventCalendarYear ? appConfig.eventCalendarYear - 1 : Constants.CurrentYear,
 		},
 		{
 			selectFromResult: ({ data, isLoading }) => ({

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 
 import Table from "react-bootstrap/Table"
 import styled from "styled-components"
@@ -55,7 +55,7 @@ export function MatchResultList() {
 	return (
 		<LoadingContainer loading={isLoading}>
 			<h3 className="text-primary">
-				{Constants.MatchPlayYear} Match Results
+				{Constants.CurrentYear} Match Results
 				<select
 					className="form-control form-control-sm"
 					onChange={(e) => setSelectedGroup(e.target.value)}

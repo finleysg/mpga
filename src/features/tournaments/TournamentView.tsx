@@ -6,6 +6,7 @@ import styled from "styled-components"
 
 import constants from "../../app-constants"
 import MarkdownRender from "../../components/MarkdownRender"
+import { useGetAppConfigQuery } from "../content/contentApi"
 import { TournamentDetailProps } from "./tournamentPropTypes"
 
 const LogoImage = styled.div`
@@ -25,6 +26,8 @@ const TournamentView: React.FC<TournamentDetailProps> = (props) => {
 	const { tournament, logoUrl } = props
 	const location = useLocation()
 	const lastHashRef = useRef<string>("")
+  const { data: appConfig } = useGetAppConfigQuery()
+  const season = appConfig?.eventCalendarYear ?? constants.CurrentYear
 
 	useEffect(() => {
 		if (location.hash) {
@@ -43,7 +46,7 @@ const TournamentView: React.FC<TournamentDetailProps> = (props) => {
 	return (
 		<div id={tournament.systemName} style={{ position: "relative" }}>
 			<h4 className="text-secondary mb-3">
-				{constants.EventCalendarYear} {tournament.name}
+				{season} {tournament.name}
 			</h4>
 			{logoUrl && (
 				<LogoImage>
@@ -52,10 +55,10 @@ const TournamentView: React.FC<TournamentDetailProps> = (props) => {
 			)}
 			<MarkdownRender text={tournament.description} />
 			<NavLink
-				to={`/tournaments/detail/${tournament.systemName}/${constants.EventCalendarYear}`}
+				to={`/tournaments/detail/${tournament.systemName}/${season}`}
 				className="nav-link text-info"
 			>
-				{constants.EventCalendarYear} Tournament Details
+				{season} Tournament Details
 			</NavLink>
 			<NavLink
 				to={`/tournaments/history/${tournament.systemName}`}

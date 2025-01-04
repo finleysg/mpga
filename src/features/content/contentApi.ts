@@ -1,9 +1,21 @@
+import { AppConfig } from "../../models/AppConfig"
 import { ILandingPageData, IPolicyData } from "../../services/Data"
 import { mpgaApi } from "../../services/MpgaApi"
 import { apiUrl } from "../../utilities/HttpClient"
 
 const contentApi = mpgaApi.injectEndpoints({
 	endpoints: (build) => ({
+    getAppConfig: build.query<AppConfig, void>({
+      query: () => apiUrl("/settings/"),
+      providesTags: ["AppConfig"],
+      transformResponse: (response: any[]) => {
+        return {
+          eventCalendarYear: response[0].event_calendar_year,
+          membershipDues: response[0].membership_dues,
+          stripePublicKey: response[0].stripe_public_key
+        } as AppConfig
+      },
+    }),
 		getPolicies: build.query<IPolicyData[], string>({
 			query: (policyType) => apiUrl(`/policies/?type=${policyType}`),
 			providesTags: (result) => {
@@ -74,6 +86,7 @@ const contentApi = mpgaApi.injectEndpoints({
 export const {
 	useAddPolicyMutation,
 	useDeletePolicyMutation,
+  useGetAppConfigQuery,
 	useGetPageContentQuery,
 	useGetPoliciesQuery,
 	useUpdatePageContentMutation,

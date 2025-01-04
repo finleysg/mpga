@@ -1,14 +1,15 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { PaymentMethod, StripeError } from "@stripe/stripe-js";
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
+import { PaymentIntent } from "@stripe/stripe-js"
 
-import React, { useState } from "react";
+import { useState } from "react"
 
-import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import { Formik } from "formik"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
+import * as yup from "yup"
 
-import useSession from "../../utilities/SessionHooks";
+import { apiUrl, httpClient } from "../../utilities/HttpClient"
+import useSession from "../../utilities/SessionHooks"
 
 export interface IPaymentData {
   email: string;
@@ -20,40 +21,70 @@ const schema = yup.object({
   email: yup.string().email().required("A valid email is required"),
 });
 
-export interface IPaymentFormProps {
+interface PaymentFormProps {
+  clubId: number
   Cancel: () => void;
-  OnPayment: (paymentMethod: PaymentMethod) => void;
 }
 
-const PaymentForm: React.FC<IPaymentFormProps> = (props) => {
+const PaymentForm = (props: PaymentFormProps) => {
   const { user } = useSession();
-  const [paymentError, setPaymentError] = useState<StripeError | undefined>(undefined);
+  const [paymentError, setPaymentError] = useState<Error | undefined>(undefined);
   const stripe = useStripe();
   const elements = useElements();
+
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      setPaymentError(error)
+    } else if (Object.prototype.hasOwnProperty.call(error, "message")) {
+      setPaymentError(new Error((error as { message: string }).message))
+    } else {
+      setPaymentError(new Error("An unknown error occurred."))
+    }
+  }
 
   const submitPayment = async (data: IPaymentData) => {
     if (!stripe || !elements) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement!,
-      billing_details: {
-        email: data.email,
-        name: data.name,
-      },
-    });
-
-    if (error) {
-      setPaymentError(error);
-    } else {
-      if (paymentMethod !== undefined) {
-        props.OnPayment(paymentMethod);
-      } else {
-        throw new Error("No payment method was created!");
+    try {
+      // 1. Validate the payment element.
+      const { error: submitError } = await elements!.submit()
+      if (submitError) {
+        handleError(submitError)
+        return
       }
+      // 2. Create the payment intent.
+      const intent = await httpClient(apiUrl(`/club-dues/${props.clubId}/`), {
+        body: JSON.stringify({
+          email: data.email,
+        })
+      }) as PaymentIntent
+
+      // 3. Confirm the payment.
+      const { error: confirmError } = await stripe!.confirmPayment({
+        elements: elements!,
+        clientSecret: intent.client_secret!,
+        confirmParams: {
+          payment_method_data: {
+            billing_details: {
+              name: data.name,
+              email: data.email,
+              address: {
+                country: "US",
+              },
+            },
+          },
+          return_url: `${window.location.origin}${window.location.pathname}/dues-confirmation`,
+        },
+      })
+
+      if (confirmError) {
+        handleError(confirmError)
+        return
+      }
+    } catch (error) {
+      handleError(error)
     }
   };
 
@@ -68,13 +99,13 @@ const PaymentForm: React.FC<IPaymentFormProps> = (props) => {
       initialValues={
         {
           name: user.isAuthenticated ? user.name : "",
-          email: user.email || "",
+          email: user.email ?? "",
         } as IPaymentData
       }
     >
       {({ handleSubmit, handleChange, handleBlur, values, touched, errors }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <Form.Group controlId="name">
+          <Form.Group controlId="name" className="mb-2">
             <Form.Control
               placeholder="Name"
               name="name"
@@ -86,7 +117,7 @@ const PaymentForm: React.FC<IPaymentFormProps> = (props) => {
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="email">
+          <Form.Group controlId="email" className="mb-2">
             <Form.Control
               placeholder="Email"
               name="email"
@@ -99,27 +130,31 @@ const PaymentForm: React.FC<IPaymentFormProps> = (props) => {
             />
             <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="card">
-            <CardElement
-              className="form-control"
+          <Form.Group controlId="card" className="mb-2">
+            {paymentError && <p className="text-danger mt-2 mb-2">{paymentError.message}</p>}
+            <PaymentElement
               options={{
-                style: {
-                  base: {
-                    color: "#212529",
-                    lineHeight: "1.429",
-                  },
-                  invalid: {
-                    color: "red",
+                business: { name: "BHMC" },
+                layout: {
+                  type: "accordion",
+                  defaultCollapsed: false,
+                  radios: false,
+                  spacedAccordionItems: true,
+                },
+                fields: {
+                  billingDetails: {
+                    name: "never",
+                    email: "never",
+                    address: { country: "never" },
                   },
                 },
               }}
             />
-            {paymentError && <p className="text-danger mt-1">{paymentError.message}</p>}
           </Form.Group>
           <Button variant="secondary" type="submit" size="sm" className="mt-2" disabled={!stripe}>
             Pay Dues
           </Button>
-          <Button variant="light" type="reset" size="sm" className="mt-2 ml-2" onClick={() => props.Cancel()}>
+          <Button variant="light" type="reset" size="sm" className="mt-2 ms-2" onClick={() => props.Cancel()}>
             Cancel
           </Button>
         </Form>

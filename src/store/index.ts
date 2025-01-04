@@ -1,7 +1,6 @@
 import appReducer, { IAppState } from "./AppStore"
 import layoutReducer, { ILayoutState } from "./LayoutStore"
 import messageReducer, { IMessageState } from "./MessageStore"
-import paymentsReducer, { IPaymentState } from "./PaymentStore"
 import userReducer, { IUserState } from "./UserStore"
 
 // The top-level state object
@@ -9,7 +8,6 @@ export interface IApplicationState {
 	app: IAppState
 	layout: ILayoutState
 	messaging: IMessageState
-	payments: IPaymentState
 	session: IUserState
 }
 
@@ -20,7 +18,6 @@ export const reducers = {
 	app: appReducer,
 	layout: layoutReducer,
 	messaging: messageReducer,
-	payments: paymentsReducer,
 	session: userReducer,
 }
 

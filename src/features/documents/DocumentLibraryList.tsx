@@ -1,28 +1,30 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button"
+import Table from "react-bootstrap/Table"
 
-import constants from "../../app-constants";
-import LoadingContainer from "../../components/LoadingContainer";
-import { MpgaDocument } from "../../models/Documents";
-import { useGetDocumentsQuery } from "./documentApi";
-import DocumentEditModal from "./DocumentEditModal";
-import DocumentLibraryRow from "./DocumentLibraryRow";
-import DocumentLibrarySearch from "./DocumentLibrarySearch";
-import { IDocumentSearch } from "./documentPropTypes";
+import constants from "../../app-constants"
+import LoadingContainer from "../../components/LoadingContainer"
+import { MpgaDocument } from "../../models/Documents"
+import { useGetAppConfigQuery } from "../content/contentApi"
+import { useGetDocumentsQuery } from "./documentApi"
+import DocumentEditModal from "./DocumentEditModal"
+import DocumentLibraryRow from "./DocumentLibraryRow"
+import DocumentLibrarySearch from "./DocumentLibrarySearch"
+import { IDocumentSearch } from "./documentPropTypes"
 
 const DocumentLibraryList: React.FC = () => {
+  const { data: appConfig } = useGetAppConfigQuery()
+
   const [doEdit, updateDoEdit] = useState(false);
   const [docToEdit, updateDocToEdit] = useState<MpgaDocument>();
   const [query, updateQuery] = useState<IDocumentSearch>({
     key: "library",
-    // year: new Date().getFullYear(),
   });
   const { data: documents, isLoading } = useGetDocumentsQuery(query);
 
   const createNewDocument = () => {
-    updateDocToEdit(new MpgaDocument({ id: 0, year: constants.EventCalendarYear }));
+    updateDocToEdit(new MpgaDocument({ id: 0, year: appConfig?.eventCalendarYear || constants.CurrentYear }));
     updateDoEdit(true);
   };
 

@@ -1,13 +1,13 @@
-import React from "react";
+import React from "react"
 
-import Table from "react-bootstrap/Table";
-import { CSVLink } from "react-csv";
+import Table from "react-bootstrap/Table"
+import { CSVLink } from "react-csv"
 
-import constants from "../../app-constants";
-import LoadingContainer from "../../components/LoadingContainer";
-import { useGetClubsQuery } from "../../features/member-clubs/memberClubApi";
-import { useGetMembershipsForYearQuery } from "../../features/member-clubs/membershipApi";
-import { IMembershipData } from "../../services/Data";
+import constants from "../../app-constants"
+import LoadingContainer from "../../components/LoadingContainer"
+import { useGetClubsQuery } from "../../features/member-clubs/memberClubApi"
+import { useGetMembershipsForYearQuery } from "../../features/member-clubs/membershipApi"
+import { IMembershipData } from "../../services/Data"
 
 interface IClubReportProps {
   current: boolean;
@@ -15,13 +15,13 @@ interface IClubReportProps {
 
 const ClubsReport: React.FC<IClubReportProps> = (props) => {
   const { current } = props;
-  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
+  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.CurrentYear);
   const { data: clubs, isLoading: clubsLoading } = useGetClubsQuery();
 
   const getClubList = (): any[] => {
     if (!clubsLoading && !membershipsLoading) {
       return clubs.map((club) => {
-        const membership = memberships.find((m) => m.club === club.id && m.year === constants.MemberClubYear);
+        const membership = memberships.find((m) => m.club === club.id && m.year === constants.CurrentYear);
         return {
           id: club.id,
           name: club.name,

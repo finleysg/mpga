@@ -4,6 +4,7 @@ export const mpgaApi = createApi({
 	reducerPath: "mpga-api",
 	baseQuery: fetchBaseQuery({ baseUrl: "", credentials: "include" }),
 	tagTypes: [
+    "AppConfig",
 		"Announcements",
 		"Awards",
 		"Clubs",
@@ -22,6 +23,6 @@ export const mpgaApi = createApi({
 		"Tournaments",
 		"Tournament-Winners",
 	],
-	keepUnusedDataFor: 150,
+	keepUnusedDataFor: 300,
 	endpoints: () => ({}),
 })

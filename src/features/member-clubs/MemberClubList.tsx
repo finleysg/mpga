@@ -1,22 +1,22 @@
-import React from "react";
+import React from "react"
 
-import Table from "react-bootstrap/Table";
+import Table from "react-bootstrap/Table"
 
-import constants from "../../app-constants";
-import LoadingContainer from "../../components/LoadingContainer";
-import { IClub } from "../../models/Clubs";
-import { useGetClubsQuery } from "./memberClubApi";
-import MemberClubRow from "./MemberClubRow";
-import { useGetMembershipsForYearQuery } from "./membershipApi";
+import constants from "../../app-constants"
+import LoadingContainer from "../../components/LoadingContainer"
+import { IClub } from "../../models/Clubs"
+import { useGetClubsQuery } from "./memberClubApi"
+import MemberClubRow from "./MemberClubRow"
+import { useGetMembershipsForYearQuery } from "./membershipApi"
 
 const MemberClubList: React.FC = () => {
-  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.MemberClubYear);
+  const { data: memberships, isLoading: membershipsLoading } = useGetMembershipsForYearQuery(constants.CurrentYear);
   const { data: clubs, isLoading: clubsLoading } = useGetClubsQuery();
 
   const getClubList = (): IClub[] => {
     if (!clubsLoading && !membershipsLoading) {
       return clubs.map((club) => {
-        const isCurrent = memberships.findIndex((m) => m.club === club.id && m.year === constants.MemberClubYear) >= 0;
+        const isCurrent = memberships.findIndex((m) => m.club === club.id && m.year === constants.CurrentYear) >= 0;
         return {
           id: club.id,
           name: club.name,
@@ -36,7 +36,7 @@ const MemberClubList: React.FC = () => {
       <Table striped size="sm">
         <thead>
           <tr>
-            <th>{constants.MemberClubYear}</th>
+            <th>{constants.CurrentYear}</th>
             <th>Club</th>
             <th>Website</th>
             <th>Location</th>

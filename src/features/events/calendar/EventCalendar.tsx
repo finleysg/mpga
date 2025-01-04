@@ -1,15 +1,19 @@
-import React from "react";
+import React from "react"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
-import constants from "../../../app-constants";
-import LoadingContainer from "../../../components/LoadingContainer";
-import { EventDetail } from "../../../models/Events";
-import { useGetEventsQuery } from "../eventsApi";
-import EventCalendarItem from "./EventCalendarItem";
+import constants from "../../../app-constants"
+import LoadingContainer from "../../../components/LoadingContainer"
+import { EventDetail } from "../../../models/Events"
+import { useGetAppConfigQuery } from "../../content/contentApi"
+import { useGetEventsQuery } from "../eventsApi"
+import EventCalendarItem from "./EventCalendarItem"
 
 const EventCalendar: React.FC = () => {
-  const { data: events, isLoading } = useGetEventsQuery(constants.EventCalendarYear)
+  const { data: appConfig } = useGetAppConfigQuery()
+  const season = appConfig?.eventCalendarYear ?? constants.CurrentYear
+
+  const { data: events, isLoading } = useGetEventsQuery(season)
   const navigate = useNavigate()
 
   const handleNavigation = (linkName: string) => {
@@ -22,7 +26,7 @@ const EventCalendar: React.FC = () => {
 
   return (
     <div>
-      <h3 className="text-primary mb-3">{constants.EventCalendarYear} Tournament Calendar</h3>
+      <h3 className="text-primary mb-3">{season} Tournament Calendar</h3>
       <LoadingContainer loading={isLoading}>
         {events
           ?.map((eventData) => new EventDetail(eventData))
