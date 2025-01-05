@@ -1,3 +1,5 @@
+import { SafeParseReturnType, ZodType } from "zod"
+
 import constants from "../app-constants"
 
 const parseError = (error: any) => {
@@ -79,4 +81,45 @@ export async function httpClient(endpoint: string, options?: Partial<RequestInit
 			return Promise.reject(parseError(error))
 		}
 	})
+}
+
+export async function getOne<TData extends object>(
+  endpoint: string,
+  schema: ZodType<TData>,
+): Promise<TData | undefined> {
+  const json = await httpClient(apiUrl(endpoint))
+  let result: SafeParseReturnType<TData, TData>
+  if (Array.isArray(json) && json.length >= 1) {
+    result = schema.safeParse(json[0])
+  } else if (typeof json === "object") {
+    result = schema.safeParse(json)
+  } else {
+    throw new Error(`No data returned from ${endpoint}`)
+  }
+  if (result.success) {
+    return result.data
+  } else {
+    // Unexpected data - should just be a development issue
+    console.error(`API data parsing error from ${endpoint}`)
+    throw result.error
+  }
+}
+
+export async function getMany<TData extends object>(
+  endpoint: string,
+  schema: ZodType<TData>,
+): Promise<TData[]> {
+  const data: TData[] = []
+  const json = await httpClient(apiUrl(endpoint))
+  json?.forEach((obj: unknown) => {
+    const result = schema.safeParse(obj)
+    if (result.success) {
+      data.push(result.data)
+    } else {
+      // Unexpected data - should just be a development issue
+      console.error(`API data parsing error from ${endpoint}`)
+      throw result.error
+    }
+  })
+  return data
 }

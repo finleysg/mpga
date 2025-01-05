@@ -16,8 +16,8 @@ export interface IPageMenuProps {
 
 const PageMenu: React.FC<IPageMenuProps> = (props) => {
 	const { user } = useSession()
-  const { data: appConfig } = useGetAppConfigQuery()
-  const season = appConfig?.eventCalendarYear ?? constants.CurrentYear
+	const { data: appConfig } = useGetAppConfigQuery()
+	const season = appConfig?.eventCalendarYear ?? constants.CurrentYear
 
 	const renderAccountLink = () => {
 		if (user.isAuthenticated) {
@@ -55,20 +55,19 @@ const PageMenu: React.FC<IPageMenuProps> = (props) => {
 			case "tournaments":
 				if (
 					segments.indexOf("detail") === 1 ||
-					segments.indexOf("contact") === 1 ||
 					segments.indexOf("gallery") === 1 ||
 					segments.indexOf("history") === 1
 				) {
 					const tournamentName = segments[2]
 					return (
 						<Nav>
+							<NavLink to={`/tournaments/detail/${tournamentName}/${season}`} className="nav-link">
+								Detail
+							</NavLink>
 							<NavLink to={`/tournaments/history/${tournamentName}`} className="nav-link">
 								History
 							</NavLink>
-							<NavLink
-								to={`/tournaments/gallery/${tournamentName}/${season}`}
-								className="nav-link"
-							>
+							<NavLink to={`/tournaments/gallery/${tournamentName}`} className="nav-link">
 								Gallery
 							</NavLink>
 						</Nav>

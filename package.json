@@ -24,6 +24,7 @@
 		"@reduxjs/toolkit": "^2.5.0",
 		"@stripe/react-stripe-js": "^3.1.1",
 		"@stripe/stripe-js": "^5.4.0",
+		"@tanstack/react-query": "^5.62.15",
 		"@toast-ui/editor": "file:../tui.editor/apps/editor",
 		"@toast-ui/editor-plugin-color-syntax": "^3.1.0",
 		"@toast-ui/react-editor": "file:../tui.editor/apps/react-editor",
@@ -54,7 +55,8 @@
 		"styled-components": "^6.1.14",
 		"tui-color-picker": "^2.2.8",
 		"usehooks-ts": "^3.1.0",
-		"yup": "^1.6.1"
+		"yup": "^1.6.1",
+		"zod": "^3.24.1"
 	},
 	"scripts": {
 		"dev": "vite",
