@@ -52,7 +52,9 @@ const Sidenav = () => {
 
 	return (
 		<div id="sidebar" className={sidebarOpen ? "" : " active"}>
-			<div className="sidebar-header" onClick={goHome}></div>
+			<div className="p-2">
+				<div className="sidebar-header" onClick={goHome}></div>
+			</div>
 			<div className="flex-column nav">
 				<NavLink to="/tournaments" onClick={closeSidebar} className="nav-link">
 					<MdGolfCourse size={iconSize} color={"secondary"} /> Tournaments
@@ -101,7 +103,7 @@ const Sidenav = () => {
 					</NavItem>
 				)}
 				{user.isAuthenticated && (
-					<NavItem onClick={() => handleLogout()} className="text-muted nav-link clickable">
+					<NavItem onClick={() => handleLogout()} className="nav-link clickable">
 						<TiPowerOutline size={iconSize} color={"muted"} /> Logout
 					</NavItem>
 				)}

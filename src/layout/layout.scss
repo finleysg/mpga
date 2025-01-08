@@ -4,38 +4,11 @@
 // Variables
 // @import "./assets/scss/variables";
 // Grays (no different than defaults)
-$white: #fff;
-$gray-100: #f8f9fa;
-$gray-200: #e9ecef;
-$gray-300: #dee2e6;
-$gray-400: #ced4da;
-$gray-500: #adb5bd;
-$gray-600: #6c757d;
-$gray-700: #495057;
-$gray-800: #343a40;
-$gray-900: #212529;
-$black: #000;
 
-// Variants
-$primary: #2e155c;
-$secondary: #20c997;
-$success: green;
-$info: #2323ff;
-$warning: #ff9800;
-$danger: #ff5350;
-$light: $gray-300;
-$dark: $gray-600;
+@import "~bootstrap/scss/functions.scss";
+@import "~bootstrap/scss/variables.scss";
 
-$theme-colors: (
-	primary: $primary,
-	secondary: $secondary,
-	success: $success,
-	info: $info,
-	warning: $warning,
-	danger: $danger,
-	light: $light,
-	dark: $dark,
-);
+@import "./variables";
 
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~react-datepicker/dist/react-datepicker.css";
@@ -69,8 +42,8 @@ html {
 #sidebar .sidebar-header {
 	width: 100%;
 	height: 120px;
-	background-image: url("../assets/img/mpga-lg.png");
-	background-size: cover;
+	background-image: url("../assets/img/mpga-new.png");
+	background-size: contain;
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
@@ -89,7 +62,7 @@ html {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
-	color: rgba(0, 0, 0, 0.9);
+	// color: $gray-200;
 	text-decoration: underline;
 }
 
@@ -123,7 +96,7 @@ html {
 #sidebarCollapse {
 	width: 50px;
 	height: 40px;
-	background: $teal;
+	background: $secondary;
 	margin-left: -12px;
 }
 

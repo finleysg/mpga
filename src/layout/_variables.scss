@@ -1,0 +1,35 @@
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+// Variants
+$primary: #2e155c;
+$secondary: #00a160;
+$success: #20c997;
+$info: #2323ff;
+$warning: #ff9800;
+$danger: #ff5350;
+$light: $gray-300;
+$dark: $gray-600;
+
+$theme-colors: (
+	primary: $primary,
+	secondary: $secondary,
+	success: $success,
+	info: $info,
+	warning: $warning,
+	danger: $danger,
+	light: $light,
+	dark: $dark,
+);
+
+$nav-link-color: $gray-200;
+$nav-link-hover-color: $gray-400;
